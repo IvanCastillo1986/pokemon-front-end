@@ -1,3 +1,10 @@
-.Cards li {
-    list-style: none;
+.CardsTable {
+    background-color: green;
+    border: 1px inset black;
+    width: 90%;
+}
+
+.Card {
+    background-color: grey;
+    border: 5px solid brown;
 }

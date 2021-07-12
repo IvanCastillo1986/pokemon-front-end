@@ -1,3 +1,6 @@
+IDEAS
+Make the 
+
 
 
 * App.js
