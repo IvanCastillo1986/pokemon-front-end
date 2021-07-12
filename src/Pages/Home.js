@@ -1,12 +1,12 @@
 import React from 'react'
-import mew from './Images/mew.png'
+import mew from '../Images/mew.png'
 
 export default function Home() {
 
     return (
-        <div>
+        <div clasName='Home'>
             <h1>Welcome to my Pokemon page!</h1>
-            <img src={mew} alt="Mew" />
+            <div><img src={mew} alt="Mew" className='center' /></div>
         </div>
     )
 }

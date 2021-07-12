@@ -1,5 +1,5 @@
 import React from 'react'
-import ash from './Images/ash-shrugged.png'
+import ash from '../Images/ash-shrugged.png'
 
 
 export default function FourOFour() {
@@ -10,7 +10,7 @@ export default function FourOFour() {
         
         <div>
             <h1>The url was not found</h1>
-            <img style={{height: "400px"}} src={ash} alt="Ash Ketchum" />
+            <img style={{height: "400px"}} src={ash} alt="Ash Ketchum" className='center' />
         </div>
     )
 }

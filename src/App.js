@@ -5,7 +5,7 @@ import './App.css'
 
 // Components
 import NavBar from './Navbar'
-import Cards from './Components/Cards'
+import CardsPage from './Pages/CardsPage'
 
 // Pages
 import Home from './Pages/Home'
@@ -22,7 +22,7 @@ export default function App() {
 
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/cards" component={Cards} />
+        <Route path="/cards" component={CardsPage} />
         <Route exact path="*" component={FourOFour} />
       </Switch>
     </div>

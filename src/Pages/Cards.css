@@ -1,0 +1,51 @@
+.Cards {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.CardsTable {
+    background-color: #3d7dca;
+    border: 5px inset black;
+    width: 90%;
+    padding: 20px;
+}
+
+.Card {
+    background-color: grey;
+    border: 12px solid #e4af2a;
+    border-radius: 10px;
+    display: inline-block;
+    width: 206px;
+    height: 288px;
+    margin: 20px;
+    font-size: 15px;
+    text-align: center;
+    text-transform: capitalize;
+}
+.Name {
+    font-weight: bold;
+    font-size: 20px;
+}
+.Row1 {
+    margin: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+.HP {
+    
+}
+.Type {
+    
+}
+.Image {
+    background-color: white;
+    display: block;
+    margin: auto;
+    height: 140px;
+    border: 2px solid #e4af2a;
+}
+.Move {
+    font-weight: bold;
+}
