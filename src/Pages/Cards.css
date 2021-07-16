@@ -7,6 +7,8 @@
 
 .CardsTable {
     background-color: #3d7dca;
+    display: flex;
+    flex-wrap: wrap;
     border: 5px inset black;
     width: 90%;
     padding: 20px;
@@ -19,7 +21,7 @@
     display: inline-block;
     width: 206px;
     height: 288px;
-    margin: 20px;
+    margin: 30px auto;
     font-size: 15px;
     text-align: center;
     text-transform: capitalize;
@@ -33,12 +35,6 @@
     display: flex;
     justify-content: space-around;
 }
-.HP {
-    
-}
-.Type {
-    
-}
 .Image {
     background-color: white;
     display: block;
@@ -48,4 +44,8 @@
 }
 .Move {
     font-weight: bold;
+}
+
+.Search {
+    margin-bottom: 20px;
 }

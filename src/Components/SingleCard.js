@@ -8,7 +8,6 @@ export default function SingleCard() {
     const [pokemon, setPokemon] = useState({})
     const [isReady, setIsReady] = useState(false)
     const { id } = useParams()
-    console.log(id)
 
     useEffect(() => {
         axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
@@ -22,9 +21,9 @@ export default function SingleCard() {
 
 
     return (
-        <div>
-            <h1>Single Card</h1>
-            <h2>Pokemon ID #{id}: {pokemon.name}</h2>
+        <div className='SingleCard'>
+            <h2>{pokemon.name}</h2>
+            <h2>Pokedex #{pokemon.id}</h2>
             {isReady ? <Card pokemon={pokemon} /> : null}
         </div>
     )

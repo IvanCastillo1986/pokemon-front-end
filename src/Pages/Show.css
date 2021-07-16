@@ -1,0 +1,9 @@
+
+.SingleCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.SingleCard h2 {
+    text-transform: capitalize;
+}

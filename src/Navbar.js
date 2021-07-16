@@ -9,6 +9,7 @@ export default function Navbar() {
             <div><img src={pokeball} style={{height: "100px"}} alt="pokeball" /></div>
             <Link to="/">Home</Link>
             <Link to="/cards">Cards</Link>
+            <Link to="/cards/new">New</Link>
         </div>
     )
 }

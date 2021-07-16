@@ -5,6 +5,15 @@
 }
 
 .NewCardForm {
+    background-color: rgb(232, 202, 202);
+    color: black;
     display: flex;
     flex-direction: column;
+    padding: 30px;
+    border: 8px solid rgb(0, 132, 255);
+    border-radius: 5px;
+    font-size: 1.4em;
+}
+.NewCardForm input {
+    margin-bottom: 20px;
 }
