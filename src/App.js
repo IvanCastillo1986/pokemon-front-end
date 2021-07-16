@@ -1,5 +1,5 @@
 // Dependencies
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import './App.css'
 
@@ -11,6 +11,7 @@ import CardsPage from './Pages/CardsPage'
 import Home from './Pages/Home'
 import FourOFour from './Pages/FourOFour'
 import Show from './Pages/Show'
+import New from './Pages/New'
 
 
 export default function App() {
@@ -22,8 +23,9 @@ export default function App() {
 
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/cards/new" component={New} />
         <Route exact path="/cards" component={CardsPage} />
-        <Route path="/cards/:id" component={Show} />
+        <Route exact path="/cards/:id" component={Show} />
         <Route exact path="*" component={FourOFour} />
       </Switch>
     </div>

@@ -1,0 +1,10 @@
+.New {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.NewCardForm {
+    display: flex;
+    flex-direction: column;
+}
