@@ -5,6 +5,8 @@ import Card from './Card'
 
 export default function SingleCard() {
 
+    // TURN THIS COMPONENT INTO A POKEDEX INSTEAD OF A CARD!!
+
     const [pokemon, setPokemon] = useState({})
     const [isReady, setIsReady] = useState(false)
     const { id } = useParams()
