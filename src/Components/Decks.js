@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Card from './Card'
+import '../Pages/RandomDeck.css'
 
 
 
@@ -30,14 +31,25 @@ export default function Deck() {
     }, [])
 
     return (
-        <div>
-            <h2>Deck Component</h2>
+        <div className='Decks'>
             <section className='Deck1'>
+                <h2>Player 1</h2>
                 {deck1.length === 7  ?  deck1.map(pokemon => {return <Card key={pokemon.name} pokemon={pokemon}/>})  :  <h2>Loading Deck 1...</h2>}
             </section>
             <section className='Deck2'>
+                <h2>Player 2</h2>
                 {deck2.length === 7  ?  deck2.map(pokemon => {return <Card key={pokemon.name} pokemon={pokemon}/>})  :  <h2>Loading Deck 2...</h2>}
             </section>
         </div>
     )
 }
+
+// remaining_HP variable for each Pokemon under each card.
+// Each pokemon is an object with different stats.
+// On first attack, the opposing Player's Pokemon is going to lose HP based on:
+    // Assuming his spd is higher, Player 1 goes first
+    // Player 1's atk 
+    // Player 2's def
+    // Player1       Player2
+    // (atk * 2) - def  =  hp
+
