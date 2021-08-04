@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Card from './Card'
+import BattleStats from './BattleStats'
 import '../Pages/RandomDeck.css'
 
 
@@ -9,6 +10,7 @@ export default function Deck() {
 
     const [ deck1, setDeck1 ] = useState([])
     const [ deck2, setDeck2 ] = useState([])
+    const [ loaded, setLoaded ] = useState(false)
     
     const randomNum = () => {
         return Math.floor(Math.random() * 151)
@@ -28,17 +30,19 @@ export default function Deck() {
 
     useEffect(() => {
         getDeck()
+        setLoaded(true)
     }, [])
 
     return (
         <div className='Decks'>
             <section className='Deck1'>
                 <h2>Player 1</h2>
-                {deck1.length === 7  ?  deck1.map(pokemon => {return <Card key={pokemon.name} pokemon={pokemon}/>})  :  <h2>Loading Deck 1...</h2>}
+                {loaded  ?  deck1.map(pokemon => {return <Card key={pokemon.name} pokemon={pokemon}/>})  :  <h2>Loading Deck 1...</h2>}
+                {loaded  ?  deck1.map(pokemon => {return <BattleStats key={pokemon.name} pokemon={pokemon}/>})  :  null}
             </section>
             <section className='Deck2'>
                 <h2>Player 2</h2>
-                {deck2.length === 7  ?  deck2.map(pokemon => {return <Card key={pokemon.name} pokemon={pokemon}/>})  :  <h2>Loading Deck 2...</h2>}
+                {loaded  ?  deck2.map(pokemon => {return <Card key={pokemon.name} pokemon={pokemon}/>})  :  <h2>Loading Deck 2...</h2>}
             </section>
         </div>
     )
@@ -50,6 +54,6 @@ export default function Deck() {
     // Assuming his spd is higher, Player 1 goes first
     // Player 1's atk 
     // Player 2's def
-    // Player1       Player2
+    //  Player1      Player2
     // (atk * 2) - def  =  hp
 
