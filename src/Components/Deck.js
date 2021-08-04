@@ -4,7 +4,7 @@ import axios from 'axios'
 
 export default function Deck() {
 
-    const [ pokemon, setPokemon ] = useState({})
+    const [ pokemon, setPokemon ] = useState([])
     const [ deck, setDeck ] = useState([])
     const [ count, setCount ] = useState(0)
     
@@ -12,6 +12,11 @@ export default function Deck() {
         return Math.floor(Math.random() * 151)
     }
     console.log(randomNum())
+
+    useEffect(() => {
+        axios.get(` https://pokeapi.co/api/v2/pokemon/?limit=20`)
+        .then(res => console.log(res))
+    })
 
     return (
         <div>
