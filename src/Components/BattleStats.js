@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react'
 
+// Two Pokemon are battling each other side by side
+    // When one pokemon has lost, flow goes to the next pair of pokemon to battle
+// There is one attack button in the center
+// The pokemon with the highest speed attacks first
+    // The attack will be based on:    Player 1  -  Player 2
+    //  remaining_hp = remaining_hp - ((atk * 3) - (def * 2))
+// handleClick() is wrapped in setTimeOut function
+// 
 
 
 export default function BattleStats({ battleDeck }) {
 
-    const [ newPokemon, setNewPokemon ] = useState([])
+    const [ pokemon, setPokemon ] = useState([])
+    const [ remaining_hp, setRemaining_hp ] = useState(0)
     
     useEffect(() => {
         const arr = []
@@ -23,42 +32,17 @@ export default function BattleStats({ battleDeck }) {
                 console.log(arr)
             }
         }
-        setNewPokemon(arr)
+        setPokemon(arr)
     }, [battleDeck])
 
+    const handleAttack = () => {
+        
+    }
 
     return (
         <div>
-            <p>Battle Stats</p>
-            {/* <p>{pokeStats.hp}</p> */}
+            {pokemon[0] ? <h3>{pokemon[0].hp}hp - {pokemon[7].hp}hp</h3> : null}
+            <button>Attack</button>
         </div>
     )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const [ pokeStats, setPokeStats ] = useState({
-//     name: pokemon.name,
-//     hp: pokemon.stats[0].base_stat,
-//     type: pokemon.types[0].type.name,
-//     atk: pokemon.stats[1].base_stat,
-//     def: pokemon.stats[2].base_stat,
-//     spd: pokemon.stats[5].base_stat
-// })
-// const [ remaining_hp, setRemaining_hp ] = useState(pokeStats.hp)
