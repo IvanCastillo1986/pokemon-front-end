@@ -10,7 +10,8 @@ export default function Deck() {
 
     const [ deck1, setDeck1 ] = useState([])
     const [ deck2, setDeck2 ] = useState([])
-    const [ loaded, setLoaded ] = useState(false)
+    const [ battleDeck, setBattleDeck ] = useState()
+    
     
     const randomNum = () => {
         return Math.floor(Math.random() * 151)
@@ -26,23 +27,39 @@ export default function Deck() {
         }
         setDeck1(arr.slice(0, 7))
         setDeck2(arr.slice(7))
+
+        setBattleDeck(arr)
     }
 
     useEffect(() => {
         getDeck()
-        setLoaded(true)
     }, [])
 
     return (
         <div className='Decks'>
             <section className='Deck1'>
                 <h2>Player 1</h2>
-                {loaded  ?  deck1.map(pokemon => {return <Card key={pokemon.name} pokemon={pokemon}/>})  :  <h2>Loading Deck 1...</h2>}
-                {loaded  ?  deck1.map(pokemon => {return <BattleStats key={pokemon.name} pokemon={pokemon}/>})  :  null}
+                {deck1.length === 7  ?  
+                deck1.map(pokemon => {return (
+                    <div>
+                        <Card key={pokemon.name} pokemon={pokemon}/> 
+                    </div>
+                )})  :  
+                <h2>Loading Deck 1...</h2>}
+            </section>
+            <section>
+                <h2>Battle Stats</h2>
+                <BattleStats battleDeck={battleDeck} />
             </section>
             <section className='Deck2'>
                 <h2>Player 2</h2>
-                {loaded  ?  deck2.map(pokemon => {return <Card key={pokemon.name} pokemon={pokemon}/>})  :  <h2>Loading Deck 2...</h2>}
+                {deck2.length === 7  ?  
+                deck2.map(pokemon => {return (
+                    <div>
+                        <Card key={pokemon.name} pokemon={pokemon}/>
+                    </div>
+                )})  :  
+                <h2>Loading Deck 2...</h2>}
             </section>
         </div>
     )
