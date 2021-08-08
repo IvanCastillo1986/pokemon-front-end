@@ -5,7 +5,7 @@ export default function Card({ pokemon }) {
     const [pokemonStats] = useState({
         name: pokemon.name,
         hp: pokemon.stats[0].base_stat,
-        image: pokemon.sprites.front_default,
+        image: pokemon.sprites.other.dream_world.front_default,
         move: pokemon.moves[0].move.name,
         attack: pokemon.stats[1].base_stat,
         defense: pokemon.stats[2].base_stat,
@@ -21,7 +21,7 @@ export default function Card({ pokemon }) {
                 <span className='HP'>{pokemon.stats[0].base_stat}HP</span> <span className='Type'>{pokemon.types[0].type.name}</span>
             </div>
             <div className='Row2'>
-                <img className='Image' src={pokemon.sprites.front_default} alt={pokemon.name} />
+                <img className='Image' src={pokemon.sprites.other.dream_world.front_default} alt={pokemon.name} />
             </div>
             <div>
                 <span className='Move'>{pokemon.moves[0].move.name}</span>

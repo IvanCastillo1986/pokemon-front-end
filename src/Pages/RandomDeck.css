@@ -18,3 +18,10 @@ h2 {
     flex-direction: column;
     padding: 30px;
 }
+
+.Decks .BattleStats {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

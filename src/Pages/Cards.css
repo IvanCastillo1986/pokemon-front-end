@@ -39,8 +39,9 @@
     background-color: white;
     display: block;
     margin: auto;
-    height: 140px;
+    height: 100px;
     border: 2px solid #e4af2a;
+    padding: 20px;
 }
 .Move {
     font-weight: bold;
