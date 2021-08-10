@@ -11,13 +11,11 @@ export default function Deck() {
 
     const [ deck1, setDeck1 ] = useState([])
     const [ deck2, setDeck2 ] = useState([])
-    const [ battleDeck, setBattleDeck ] = useState()
     
     
     const randomNum = () => {
         return Math.floor(Math.random() * 151)
     }
-    
     const getDeck = async () => {
         const arr1 = []
         const arr2 = []
@@ -34,30 +32,27 @@ export default function Deck() {
             })
         }
 
-
         setDeck1(makePokemon(arr1))
         setDeck2(makePokemon(arr2))
-
-        setBattleDeck(arr)
     }
+
 
     useEffect(() => {
         getDeck()
     }, [])
-
 
     
     return (
         <div className='Decks'>
             <h2>Battle!</h2>
             {
-            deck1 && deck2 
-            ?
-            deck1.map((component, i) => {
-                return <Battle key={i} deck1={deck1} deck2={deck2} /> 
-            })
-            :
-            null
+                deck1 && deck2
+                ?
+                deck1.map((component, i) => {
+                    return <Battle key={i} round={i} deck1={deck1} deck2={deck2} /> 
+                })
+                :
+                null
             }
         </div>
     )

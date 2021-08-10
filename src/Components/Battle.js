@@ -9,34 +9,31 @@ import React, { useState, useEffect } from 'react'
 // handleClick() is wrapped in setTimeOut function
 
 
-export default function Battle({ deck1, deck2 }) {
+export default function Battle({ round, deck1, deck2 }) {
 
-    // const [pokemon1, setPokemon1] = useState([])
-    
-    // useEffect(() => {
-    //     const arr1 = []
-    //     const arr2 = []
-    //     if (deck1) {
-    //         for (let item of deck1) {
-    //             let pokemon = {
-    //                 name: item.name,
-    //                 hp: item.stats[0].base_stat,
-    //                 type: item.types[0].type.name,
-    //                 move: item.moves[0].move.name,
-    //                 atk: item.stats[1].base_stat,
-    //                 def: item.stats[2].base_stat,
-    //                 spd: item.stats[5].base_stat
-    //             }
-    //             arr1.push(pokemon)
-    //         }
-    //     }
-    //     setPokemon1(arr1)
-    // }, [])
+    // const [HPleft1, setHPleft1] = useState(deck1[0].hp)
+    // const [HPleft2, setHPleft2] = useState(deck2[0].hp)
+
+    const handleAttack = (p1, p2) => {
+        let attack1 = p1.atk
+        let defense1 = p1.def
+        let attack2 = p2.atk
+        let defense2 = p2.def
+
+    }
 
 
     return (
         <div>
-            <h1>Battle component</h1>
+            <h3>Round {round + 1}</h3>
+            { deck1 && deck2 ?
+                <div>
+                    <span>Name: {}</span> - <span>Name: {}</span><br />
+                    <span>HP: {}</span> - <span>HP: {}</span><br />
+                    <button onClick={handleAttack}>Attack!</button>
+                </div> :
+                null
+            }
         </div>
     )
 }

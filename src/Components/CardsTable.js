@@ -16,7 +16,7 @@ export default function Cards() {
         const getPokemon = async () => {
             let array = []
             
-            for (let id = 1; id <= 9; id++) {
+            for (let id = 1; id <= 20; id++) {
                 await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
                 .then(response => {
                     array.push(response.data)

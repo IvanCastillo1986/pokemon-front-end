@@ -1,27 +1,9 @@
 .Decks {
     display: flex;
+    flex-direction: column;
 }
 
 h2 {
     text-align: center;
 }
 
-.Decks .Deck1 {
-    background-color: rgb(163, 126, 70);
-    display: flex;
-    flex-direction: column;
-    padding: 30px;
-}
-.Decks .Deck2 {
-    background-color: olivedrab;
-    display: flex;
-    flex-direction: column;
-    padding: 30px;
-}
-
-.Decks .BattleStats {
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
