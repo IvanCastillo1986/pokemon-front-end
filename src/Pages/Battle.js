@@ -1,11 +1,12 @@
 import React from 'react'
 import Decks from '../Components/Decks'
+import './Battle.css'
 
 
-export default function RandomDeck() {
+export default function Battle() {
 
     return (
-        <div>
+        <div className='Battle'>
             <Decks />
         </div>
     )

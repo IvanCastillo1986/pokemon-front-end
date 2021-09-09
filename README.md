@@ -1,3 +1,7 @@
+Pokemon Front-end Trello Board:
+https://trello.com/b/zg1yg28M/pokemon
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

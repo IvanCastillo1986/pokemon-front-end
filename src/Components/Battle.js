@@ -9,10 +9,9 @@ import React, { useState, useEffect } from 'react'
 // handleClick() is wrapped in setTimeOut function
 
 
-export default function Battle({ round, deck1, deck2 }) {
+export default function Battle({ round, pokemon1, pokemon2 }) {
 
-    // const [HPleft1, setHPleft1] = useState(deck1[0].hp)
-    // const [HPleft2, setHPleft2] = useState(deck2[0].hp)
+
 
     const handleAttack = (p1, p2) => {
         let attack1 = p1.atk
@@ -22,18 +21,16 @@ export default function Battle({ round, deck1, deck2 }) {
 
     }
 
+    console.log(round)
+    console.log(pokemon1)
+    console.log(pokemon2)
 
     return (
         <div>
             <h3>Round {round + 1}</h3>
-            { deck1 && deck2 ?
-                <div>
-                    <span>Name: {}</span> - <span>Name: {}</span><br />
-                    <span>HP: {}</span> - <span>HP: {}</span><br />
-                    <button onClick={handleAttack}>Attack!</button>
-                </div> :
-                null
-            }
+            <span>Name: {pokemon1.name}</span> VS <span>Name: {pokemon2.name}</span><br />
+            <span>HP: {}</span> - <span>HP: {}</span><br />
+            <button onClick={handleAttack}>Attack!</button>
         </div>
     )
 }

@@ -10,7 +10,7 @@ export default function Navbar() {
             <Link to="/">Home</Link>
             <Link to="/cards">Cards</Link>
             <Link to="/cards/new">New</Link>
-            <Link to="/cards/random">Battle</Link>
+            <Link to="/battle">Battle</Link>
         </div>
     )
 }

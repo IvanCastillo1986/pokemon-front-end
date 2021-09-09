@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import Card from './Card'
 import Battle from './Battle'
-import '../Pages/RandomDeck.css'
 import { makePokemon } from '../Helper/makePokemon.js'
 
 
 
-export default function Deck() {
+export default function Decks() {
 
     const [ deck1, setDeck1 ] = useState([])
     const [ deck2, setDeck2 ] = useState([])
+    const [ isLoaded, setIsLoaded ] = useState(false)
     
     
     const randomNum = () => {
@@ -34,25 +33,25 @@ export default function Deck() {
 
         setDeck1(makePokemon(arr1))
         setDeck2(makePokemon(arr2))
+        setIsLoaded(true)
     }
-
 
     useEffect(() => {
         getDeck()
     }, [])
 
+
+    if (!isLoaded) {
+        return <h2>...Loading</h2>
+    }
     
     return (
         <div className='Decks'>
-            <h2>Battle!</h2>
+            <h1>Battle!</h1>
             {
-                deck1 && deck2
-                ?
                 deck1.map((component, i) => {
-                    return <Battle key={i} round={i} deck1={deck1} deck2={deck2} /> 
+                    return <Battle key={i} round={i} pokemon1={deck1[i]} pokemon2={deck2[i]} /> 
                 })
-                :
-                null
             }
         </div>
     )

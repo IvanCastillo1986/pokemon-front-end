@@ -12,7 +12,7 @@ import Home from './Pages/Home'
 import FourOFour from './Pages/FourOFour'
 import Show from './Pages/Show'
 import New from './Pages/New'
-import RandomDeck from './Pages/RandomDeck'
+import Battle from './Pages/Battle'
 
 
 export default function App() {
@@ -25,7 +25,7 @@ export default function App() {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/cards/new" component={New} />
-        <Route path="/cards/random" component={RandomDeck} />
+        <Route path="/battle" component={Battle} />
         <Route exact path="/cards" component={CardsPage} />
         <Route exact path="/cards/:id" component={Show} />
         <Route exact path="*" component={FourOFour} />

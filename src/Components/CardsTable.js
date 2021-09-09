@@ -16,7 +16,7 @@ export default function Cards() {
         const getPokemon = async () => {
             let array = []
             
-            for (let id = 1; id <= 20; id++) {
+            for (let id = 1; id <= 151; id++) {
                 await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
                 .then(response => {
                     array.push(response.data)
@@ -37,7 +37,7 @@ export default function Cards() {
     
     return (
         <div className='CardsTable'>
-            {finishedCall ? pokemonMap : null}
+            {finishedCall ? pokemonMap : <h1>Loading...</h1>}
         </div>
     )
 }
