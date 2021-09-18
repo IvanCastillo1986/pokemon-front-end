@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import {capitalize} from '../Helper/capitalize'
 
 // Two Pokemon are battling each other side by side
     // When one pokemon has lost, flow goes to the next pair of pokemon to battle
@@ -11,7 +12,7 @@ import React, { useState, useEffect } from 'react'
 
 export default function Battle({ round, pokemon1, pokemon2 }) {
 
-
+    console.log(capitalize)
 
     const handleAttack = (p1, p2) => {
         let attack1 = p1.atk
@@ -21,14 +22,14 @@ export default function Battle({ round, pokemon1, pokemon2 }) {
 
     }
 
-    console.log(round)
-    console.log(pokemon1)
-    console.log(pokemon2)
+    // console.log(round)
+    // console.log(pokemon1)
+    // console.log(pokemon2)
 
     return (
         <div>
             <h3>Round {round + 1}</h3>
-            <span>Name: {pokemon1.name}</span> VS <span>Name: {pokemon2.name}</span><br />
+            <span>Name: {capitalize(pokemon1.name)}</span> VS <span>Name: {capitalize(pokemon2.name)}</span><br />
             <span>HP: {}</span> - <span>HP: {}</span><br />
             <button onClick={handleAttack}>Attack!</button>
         </div>
