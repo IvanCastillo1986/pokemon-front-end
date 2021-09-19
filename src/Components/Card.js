@@ -2,17 +2,6 @@ import React, { useState } from 'react'
 
 export default function Card({ pokemon }) {
 
-    // const [pokemonStats] = useState({
-    //     name: pokemon.name,
-    //     hp: pokemon.stats[0].base_stat,
-    //     image: pokemon.sprites.other.dream_world.front_default,
-    //     move: pokemon.moves[0].move.name,
-    //     attack: pokemon.stats[1].base_stat,
-    //     defense: pokemon.stats[2].base_stat,
-    //     speed: pokemon.stats[5].base_stat
-    // })
-
-    // console.log(pokemonStats)
 
     return (
         <div className='Card'>

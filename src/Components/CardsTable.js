@@ -15,7 +15,7 @@ export default function Cards() {
         console.time('popArr')
         const getPokemon = async () => {
             let array = []
-            
+
             for (let id = 1; id <= 151; id++) {
                 await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
                 .then(response => {

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Battle from './Battle'
-import { makePokemon } from '../Helper/makePokemon.js'
+import { makeBattlePokemon } from '../Helper/makeBattlePokemon'
+import { capitalizeObject } from '../Helper/capitalize'
 
 
 
@@ -15,28 +16,25 @@ export default function Decks() {
     const randomNum = () => {
         return Math.floor(Math.random() * 151)
     }
-    const getDeck = async () => {
-        const arr1 = []
-        const arr2 = []
-        const arr = []
-        for (let i = 1; i <= 14; i++) {
-            await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNum()}`)
-            .then((res) => {
-                if (i % 2 !== 0) {
-                    arr1.push(res.data)
-                } else {
-                    arr2.push(res.data)
-                }
-                arr.push(res.data)
-            })
-        }
-
-        setDeck1(makePokemon(arr1))
-        setDeck2(makePokemon(arr2))
-        setIsLoaded(true)
-    }
-
+    
     useEffect(() => {
+        const getDeck = async () => {
+            const arr1 = []
+            const arr2 = []        
+            for (let i = 1; i <= 14; i++) {
+                await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNum()}`)
+                .then((res) => {
+                    if (i % 2 !== 0) {
+                        arr1.push(capitalizeObject(res.data))
+                    } else {
+                        arr2.push(res.data)
+                    }
+                })
+            }
+            setDeck1(makeBattlePokemon(arr1))
+            setDeck2(makeBattlePokemon(arr2))
+            setIsLoaded(true)
+        }
         getDeck()
     }, [])
 
@@ -44,7 +42,7 @@ export default function Decks() {
     if (!isLoaded) {
         return <h2>...Loading</h2>
     }
-    
+
     return (
         <div className='Decks'>
             <h1>Battle!</h1>

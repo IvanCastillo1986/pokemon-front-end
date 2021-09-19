@@ -19,7 +19,7 @@ export default function SingleCard() {
         )
         .then(() => {setIsReady(true)})
         .catch(c => console.warn(`Catch in SingleCard: `, c))
-    }, [])
+    }, [id])
 
 
     return (
