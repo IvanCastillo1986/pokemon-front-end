@@ -1,3 +1,8 @@
+.Battle {
+    width: 100%;
+    text-align: center;
+}
+
 .Decks {
     display: flex;
     flex-direction: column;
@@ -7,3 +12,35 @@ h2 {
     text-align: center;
 }
 
+.BattleGrounds {
+    text-align: center;
+    margin-bottom: 70px;
+}
+.CardsDiv {
+    display: flex;
+    justify-content: space-around;
+}
+.CardsDiv h2 {
+    align-self: center;
+}
+.PlayerDiv {
+    display: flex;
+    flex-direction: column;
+}
+button {
+    background-color: #3d7dca;
+    color: white;
+    font: 19px monospace;
+    font-weight: bold;
+    width: 100px;
+    height: 40px;
+    border: 3px solid #3B4CCA;
+    border-radius: 5px;
+}
+hr {
+    background-color: red;
+    margin-top: 40px;
+    width: 60%;
+    border: 6px solid red;
+    border-radius: 10px;
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import Battle from './Battle'
+import BattleGrounds from './BattleGrounds'
 import { makeBattlePokemon } from '../Helper/makeBattlePokemon'
 import { capitalizeObject } from '../Helper/capitalize'
 
@@ -48,7 +48,7 @@ export default function Decks() {
             <h1>Battle!</h1>
             {
                 deck1.map((component, i) => {
-                    return <Battle key={i} round={i} pokemon1={deck1[i]} pokemon2={deck2[i]} /> 
+                    return <BattleGrounds key={i} round={i} pokemon1={deck1[i]} pokemon2={deck2[i]} /> 
                 })
             }
         </div>
