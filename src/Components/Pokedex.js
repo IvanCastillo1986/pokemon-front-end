@@ -14,19 +14,19 @@ export default function Pokedex({ pokemon }) {
             <div className='LeftHalf'>
                 <div className='Console'>
                     <div className='EmptySpace'></div>
-                    <div className='ScreenPlate'>
-                        <div className='Screen'></div>
+                    <div className='ScreenPlate border'>
+                        <div className='Screen border'></div>
                     </div>
                     <div className='NESController'>
                         <div className='JoystickContainer'>
-                            <div className='Joystick'></div>
+                            <div className='Joystick border'></div>
                         </div>
                         <div className='ButtonHolder'>
                             <div className='ButtonPair1'>
-                                <div className='Button1 Pause'></div>
-                                <div className='Button2 Pause'></div>
+                                <div className='Button1 pause border'></div>
+                                <div className='Button2 pause border'></div>
                             </div>
-                            <div className='TurquoiseSquare'></div>
+                            <div className='GreenSquare border'></div>
                         </div>
                         <div className='DpadContainer'>
                             <div className='Dpad'></div>
@@ -37,9 +37,16 @@ export default function Pokedex({ pokemon }) {
             </div>
             <div className='RightHalf'>
                 <div className='EmptySpace'></div>
-                <div className='BlackBox'></div>
-                <div className='BlueBox'></div>
-                <span className='Button3 Pause'></span> <span className='Button4 Pause'></span>
+                <div className='BlackBox border'></div>
+                <div className='BlueBox border'></div>
+                <div className='ButtonPair2'>
+                    <span className='Button3 pause border'></span>
+                    <span className='Button4 pause border'></span>
+                </div>
+                <div className='BoxLightContainer'>
+                    <div className='DoubleButtons border'></div>
+                    <div className='BigYellow light border'></div>
+                </div>
             </div>
         </div>
 
