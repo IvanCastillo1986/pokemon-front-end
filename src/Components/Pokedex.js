@@ -44,8 +44,12 @@ export default function Pokedex({ pokemon }) {
                     <span className='Button4 pause border'></span>
                 </div>
                 <div className='BoxLightContainer'>
-                    <div className='DoubleButtons border'></div>
+                    <div className='DoubleButtons border radius'></div>
                     <div className='BigYellow light border'></div>
+                </div>
+                <div className='RectangleContainer'>
+                    <div className='Rectangle R1 border radius'></div>
+                    <div className='Rectangle R2 border radius'></div>
                 </div>
             </div>
         </div>
