@@ -48,7 +48,7 @@ export default function Decks() {
             <h1>Battle!</h1>
             {
                 deck1.map((component, i) => {
-                    return <BattleGrounds key={i} round={i} pokemon1={deck1[i]} pokemon2={deck2[i]} /> 
+                    return <BattleGrounds key={i} round={i} pokemonOne={deck1[i]} pokemonTwo={deck2[i]} /> 
                 })
             }
         </div>
