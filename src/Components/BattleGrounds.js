@@ -16,36 +16,43 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
     const [pokemon1, setPokemon1] = useState(pokemonOne)
     const [pokemon2, setPokemon2] = useState(pokemonTwo)
 
-    const randomAttack = (min, max) => {
-        min = .7
-        max = 1.3
-        return (Math.random() * (max - min) + min) * 10
+    const randomDamage = () => {
+        let min = 7
+        let max = 13
+        return (Math.random() * (max - min) + min)
+    }
+    const randomSpeed = () => {
+        let min = .6
+        let max = 1.4
+        return (Math.random() * (max - min) + min)
     }
 
     const pokemon1Attack = () => {
         let atkOutput = pokemon1.atk/2
         let defOutput = pokemon2.def/2
         setPokemon2(prevPokemon => {
-            return {...prevPokemon, remaining_hp: Math.round(pokemon2.remaining_hp - (atkOutput/defOutput) * randomAttack())}
+            return {...prevPokemon, remaining_hp: Math.round(pokemon2.remaining_hp - (atkOutput/defOutput) * randomDamage())}
         })
-        console.log(randomAttack())
+        console.log('Random Damage: ', randomDamage())
     }
     const pokemon2Attack = () => {
         let atkOutput = pokemon2.atk
         let defOutput = pokemon1.def
         setPokemon1(prevPokemon => {
-            return {...prevPokemon, remaining_hp: Math.round(pokemon1.remaining_hp - ((atkOutput/defOutput) * 10 * randomAttack()))}
+            return {...prevPokemon, remaining_hp: Math.round(pokemon1.remaining_hp - (atkOutput/defOutput) * randomDamage())}
         })
-        console.log(randomAttack())
+        console.log('Random Damage: ', randomDamage())
     }
 
     const handleClick = () => {
-        if (pokemon1.spd > pokemon2.spd) {
-            console.log('Pokemon 1 is faster')
+        let pokeAcc1 = pokemon1.spd * randomSpeed()
+        let pokeAcc2 = pokemon2.spd * randomSpeed()
+        if (pokeAcc1 > pokeAcc2) {
+            console.log('Pokemon 1 is faster', randomSpeed())
             pokemon1Attack()
             pokemon2Attack()
         } else {
-            console.log('pokemon2 is faster')
+            console.log('pokemon2 is faster', randomSpeed())
             pokemon2Attack()
             pokemon1Attack()
         }

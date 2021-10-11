@@ -31,6 +31,10 @@ export default function Decks() {
                     }
                 })
             }
+            arr1.forEach(pokemon => {
+                console.log(`${pokemon.name}`, pokemon.moves[0])
+                console.log(`${pokemon.name}`, pokemon.moves[3])
+            })
             setDeck1(makeBattlePokemon(arr1))
             setDeck2(makeBattlePokemon(arr2))
             setIsLoaded(true)

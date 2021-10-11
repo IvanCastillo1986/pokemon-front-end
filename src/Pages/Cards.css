@@ -43,8 +43,12 @@
     border: 2px solid #e4af2a;
     padding: 20px;
 }
+.Card>div:nth-of-type(4) {
+    margin: 5px 0 4px 0;
+}
 .Move {
     font-weight: bold;
+    margin-top: 40px;
 }
 
 .Search {

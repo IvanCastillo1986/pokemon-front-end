@@ -12,7 +12,8 @@ const makeBattlePokemon = (arr) => {
             def: item.stats[2].base_stat,
             spd: item.stats[5].base_stat,
             image: item.sprites.other.dream_world.front_default,
-            move: item.moves[0].move.name,
+            move1: item.moves[0].move.name,
+            move2: item.moves[3].move.name,
         }
         newArr.push(pokemon)
     }

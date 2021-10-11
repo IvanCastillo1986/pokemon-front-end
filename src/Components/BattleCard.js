@@ -15,7 +15,8 @@ export default function Card({ pokemon }) {
                 <img className='Image' src={pokemon.image} alt={pokemon.name} />
             </div>
             <div>
-                <span className='Move'>{pokemon.move}</span>
+                <span className='Move'>{pokemon.move1}</span><br/>
+                <span className='Move'>{pokemon.move2}</span>
             </div>
             <div>
                 <span className='Atk'>Atk: {pokemon.atk}</span> <span className='Def'>Def: {pokemon.def}</span>
