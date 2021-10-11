@@ -16,19 +16,26 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
     const [pokemon1, setPokemon1] = useState(pokemonOne)
     const [pokemon2, setPokemon2] = useState(pokemonTwo)
 
+    const randomAttack = (min, max) => {
+        min = .7
+        max = 1.3
+        return Math.random() * (max - min) + min
+    }
+
     const pokemon1Attack = () => {
         let atkOutput = pokemon1.atk/2
         let defOutput = pokemon2.def/2
         setPokemon2(prevPokemon => {
-            return {...prevPokemon, hp: pokemon2.hp - ((atkOutput/defOutput) * 10)}
+            return {...prevPokemon, remaining_hp: Math.round(pokemon2.remaining_hp - ((atkOutput/defOutput) * randomAttack()))}
         })
     }
     const pokemon2Attack = () => {
         let atkOutput = pokemon2.atk
         let defOutput = pokemon1.def
         setPokemon1(prevPokemon => {
-            return {...prevPokemon, hp: pokemon1.hp - ((atkOutput/defOutput) * 10)}
+            return {...prevPokemon, remaining_hp: Math.round(pokemon1.remaining_hp - ((atkOutput/defOutput) * randomAttack()))}
         })
+        console.log(randomAttack() * 10)
     }
 
     const handleClick = () => {
@@ -50,12 +57,12 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
             <div className='CardsDiv'>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon1} />
-                    <span>HP: {pokemon1.hp}</span>
+                    <span>Remaining HP: {pokemon1.remaining_hp}</span>
                 </div>
                 <h2>VS</h2>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon2} />
-                    <span>HP: {pokemon2.hp}</span>
+                    <span>Remaining HP: {pokemon2.remaining_hp}</span>
                 </div>
             </div>
             <button onClick={handleClick}>Attack!</button>
