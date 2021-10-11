@@ -17,13 +17,17 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
     const [pokemon2, setPokemon2] = useState(pokemonTwo)
 
     const pokemon1Attack = () => {
+        let atkOutput = pokemon1.atk/2
+        let defOutput = pokemon2.def/2
         setPokemon2(prevPokemon => {
-            return {...prevPokemon, hp: pokemon2.hp - Math.round(pokemon1.atk / 3)}
+            return {...prevPokemon, hp: pokemon2.hp - ((atkOutput/defOutput) * 10)}
         })
     }
     const pokemon2Attack = () => {
+        let atkOutput = pokemon2.atk
+        let defOutput = pokemon1.def
         setPokemon1(prevPokemon => {
-            return {...prevPokemon, hp: pokemon1.hp - Math.round(pokemon2.atk / 3) }
+            return {...prevPokemon, hp: pokemon1.hp - ((atkOutput/defOutput) * 10)}
         })
     }
 
@@ -46,13 +50,11 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
             <div className='CardsDiv'>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon1} />
-                    {/* <span>Name: {capitalize(pokemon1.name)}</span> */}
                     <span>HP: {pokemon1.hp}</span>
                 </div>
                 <h2>VS</h2>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon2} />
-                    {/* <span>Name: {capitalize(pokemon2.name)}</span> */}
                     <span>HP: {pokemon2.hp}</span>
                 </div>
             </div>
