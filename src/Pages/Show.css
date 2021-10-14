@@ -12,6 +12,25 @@
     flex-direction: column;
 }
 
+.shadow {
+    box-shadow: 3px 3px rgba(58, 58, 58, 0.577);
+}
+.border {
+    border: 4px solid black;
+}
+.radius {
+    border-radius: 5px;
+}
+.light {
+    border-radius: 100%;
+}
+.pause {
+    width: 28px;
+    height: 3px;
+    background-color: rgb(53, 53, 53);
+    border-radius: 10px;
+}
+
 .TopBar {
     width: 356px;
     background-color: red;
@@ -23,6 +42,33 @@
     box-shadow: 27px 12px rgba(58, 58, 58, 0.577);
     position: relative;
     z-index: -1;
+}
+.Camera {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(103, 189, 255);
+    border: 3px solid black;
+    border-radius: 100%;
+}
+.LightContainer {
+    display: flex;
+    width: 70px;
+    justify-content: space-between;
+}
+.FirstLight {
+    background-color: red;
+    width: 10px;
+    height: 10px;
+}
+.SecondLight {
+    background-color: yellow;
+    width: 10px;
+    height: 10px;
+}
+.ThirdLight {
+    background-color: green;
+    width: 10px;
+    height: 10px;
 }
 .EmptySpace1 {
     position: absolute;
@@ -59,25 +105,6 @@
     display: flex;
     flex-direction: row;
     box-shadow: 27px 12px rgba(58, 58, 58, 0.577);
-}
-
-.shadow {
-    box-shadow: 3px 3px rgba(58, 58, 58, 0.577);
-}
-.border {
-    border: 4px solid black;
-}
-.radius {
-    border-radius: 5px;
-}
-.light {
-    border-radius: 100%;
-}
-.pause {
-    width: 28px;
-    height: 3px;
-    background-color: rgb(53, 53, 53);
-    border-radius: 10px;
 }
 
 .LeftHalf {

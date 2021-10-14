@@ -10,6 +10,12 @@ export default function Pokedex({ pokemon }) {
         <div className='PokedexPage'>
 
         <div className='TopBar'>
+            <div className='Camera'></div>
+            <div className='LightContainer'>
+                <div className='light border FirstLight'></div>
+                <div className='light border SecondLight'></div>
+                <div className='light border ThirdLight'></div>
+            </div>
             <div className='EmptySpace1'></div>
         </div>
         <div className='Pokedex'>
