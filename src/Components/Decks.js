@@ -29,12 +29,10 @@ export default function Decks() {
                     } else {
                         arr2.push(res.data)
                     }
+                    // console.log(res.data)
                 })
             }
-            arr1.forEach(pokemon => {
-                console.log(`${pokemon.name}`, pokemon.moves[0])
-                console.log(`${pokemon.name}`, pokemon.moves[3])
-            })
+
             setDeck1(makeBattlePokemon(arr1))
             setDeck2(makeBattlePokemon(arr2))
             setIsLoaded(true)
@@ -60,35 +58,3 @@ export default function Decks() {
 }
 
 
-
-
-// Player 1 State - object {}
-// Pokemon - array []
-// each_pokemon - object {}
-// name , hp/atk/def/spd , current_hp - str / int
-// battles_won
-
-
-// Render each pair that will battle in one component
-
-/* 
-const [ round ] = useState({
-    round1: {}, 
-    round2: {}, 
-    round3: {}, 
-    round4: {}, 
-    round5: {}, 
-    round6: {}, 
-    round7: {}
-})
-*/
-
-// round.map(battle => {return })
-// 
-
-// Each Player will have stats for wins and losses
-// Wins and losses 
-    // This object holds an array with the two pokemon objects which will be battling
-        // Each Pokemon will hold their own stats, which determines dmg and who attacks first
-        // Each Pokemon has their own remaining_hp state, which changes on each attack
-        // 

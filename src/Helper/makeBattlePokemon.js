@@ -1,5 +1,3 @@
-// import { capitalize } from "./capitalize.js"
-
 const makeBattlePokemon = (arr) => {
     let newArr = []
     for (let item of arr) {

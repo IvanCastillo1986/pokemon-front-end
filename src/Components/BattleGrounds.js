@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import BattleCard from './BattleCard'
-import { capitalize } from '../Helper/capitalize'
+import moves from '../Helper/moves'
 
 // Two Pokemon are battling each other side by side
     // When one pokemon has lost, flow goes to the next pair of pokemon to battle
@@ -15,6 +15,8 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
 
     const [pokemon1, setPokemon1] = useState(pokemonOne)
     const [pokemon2, setPokemon2] = useState(pokemonTwo)
+    console.log(moves)
+    
 
     const randomDamage = () => {
         let min = 7
