@@ -19,7 +19,7 @@ export default function Cards() {
             let moves1 = []
             let moves2 = []
 
-            for (let id = 1; id <= 151; id++) {
+            for (let id = 1; id <= 500; id++) {
                 await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
                 .then(response => {
                     array.push(response.data)
