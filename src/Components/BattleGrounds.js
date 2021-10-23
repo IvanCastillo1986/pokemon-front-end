@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import BattleCard from './BattleCard'
-import moves from '../Helper/moves'
 
 // Two Pokemon are battling each other side by side
     // When one pokemon has lost, flow goes to the next pair of pokemon to battle
@@ -15,7 +14,6 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
 
     const [pokemon1, setPokemon1] = useState(pokemonOne)
     const [pokemon2, setPokemon2] = useState(pokemonTwo)
-    console.log(moves)
     
 
     const randomDamage = () => {
@@ -33,7 +31,9 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let atkOutput = pokemon1.atk/2
         let defOutput = pokemon2.def/2
         setPokemon2(prevPokemon => {
-            return {...prevPokemon, remaining_hp: Math.round(pokemon2.remaining_hp - (atkOutput/defOutput) * randomDamage())}
+            return {...prevPokemon, 
+                remaining_hp: Math.round(pokemon2.remaining_hp - (atkOutput/defOutput) * randomDamage() - pokemon1.move1.damage)
+            }
         })
         console.log('Random Damage: ', randomDamage())
     }
@@ -41,7 +41,9 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let atkOutput = pokemon2.atk
         let defOutput = pokemon1.def
         setPokemon1(prevPokemon => {
-            return {...prevPokemon, remaining_hp: Math.round(pokemon1.remaining_hp - (atkOutput/defOutput) * randomDamage())}
+            return {...prevPokemon, 
+                remaining_hp: Math.round(pokemon1.remaining_hp - (atkOutput/defOutput) * randomDamage() - pokemon2.move1.damage)
+            }
         })
         console.log('Random Damage: ', randomDamage())
     }

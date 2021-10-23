@@ -8,8 +8,6 @@ import '../Pages/Cards.css'
 export default function Cards() {
 
     const [pokemon, setPokemon] = useState([])
-    const [moves1, setMoves1] = useState([])
-    const [moves2, setMoves2] = useState([])
     const [finishedCall, setFinishedCall] = useState(false)
 
     useEffect(() => {
@@ -30,10 +28,6 @@ export default function Cards() {
                 })
             }
             setPokemon(array)
-            setMoves1(printMoves(moves1))
-            console.log(printMoves(moves1))
-            setMoves2(printMoves(moves2))
-            console.log(printMoves(moves2))
             console.log("Just finished loop in useEffect")
             setFinishedCall(true)
         }

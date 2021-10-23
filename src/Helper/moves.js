@@ -1,96 +1,120 @@
 const moves = {
-    'razor-wind': {
+    "razor-wind": {
+        name: "razor-wind",
         damage: 15,
         pp: 5,
     },
-    'swords-dance': {
+    "swords-dance": {
+        name: "swords-dance",
         damage: 10,
         pp: 10,
     }, 
-    'mega-punch': {
+    "mega-punch": {
+        name: "mega-punch",
         damage: 20,
         pp: 3,
     }, 
-    'tackle': {
+    "tackle": {
+        name: "tackle",
         damage: 8,
         pp: 15,
     }, 
-    'string-shot': {
+    "string-shot": {
+        name: "string-shot",
         damage: 10,
         pp: 10,
     }, 
-    'poison-sting': {
+    "poison-sting": {
+        name: "poison-sting",
         damage: 10,
         pp: 10,
     }, 
-    'cut': {
+    "cut": {
+        name: "cut",
         damage: 15,
         pp: 5,
     }, 
-    'bind': {
+    "bind": {
+        name: "bind",
         damage: 15,
         pp: 5,
     }, 
-    'scratch': {
+    "scratch": {
+        name: "scratch",
         damage: 10,
         pp: 10,
     }, 
-    'pound': {
+    "pound": {
+        name: "pound",
         damage: 10,
         pp: 10,
     }, 
-    'double-slap': {
+    "double-slap": {
+        name: "double-slap",
         damage: 15,
         pp: 5,
     }, 
-    'headbutt': {
+    "headbutt": {
+        name: "headbutt",
         damage: 15,
         pp: 5,
     }, 
-    'pay-day': {
+    "pay-day": {
+        name: "pay-day",
         damage: 20,
         pp: 3,
     }, 
-    'karate-chop': {
+    "karate-chop": {
+        name: "karate-chop",
         damage: 15,
         pp: 5,
     }, 
-    'double-kick': {
+    "double-kick": {
+        name: "double-kick",
         damage: 15,
         pp: 5,
     }, 
-    'stomp': {
+    "stomp": {
+        name: "stomp",
         damage: 20,
         pp: 3,
     }, 
-    'take-down': {
+    "take-down": {
+        name: "take-down",
         damage: 20,
         pp: 3,
     }, 
-    'fire-punch': {
+    "fire-punch": {
+        name: "fire-punch",
         damage: 20,
         pp: 3,
     }, 
-    'vise-grip': {
+    "vise-grip": {
+        name: "vise-grip",
         damage: 20,
         pp: 3,
     }, 
-    'comet-punch': {
+    "comet-punch": {
+        name: "comet-punch",
         damage: 20,
         pp: 3,
     }, 
-    'horn-attack': {
+    "horn-attack": {
+        name: "horn-attack",
         damage: 15,
         pp: 5,
     }, 
-    'transform': {
+    "transform": {
+        name: "transform",
         damage: 30,
         pp: 10,
     }, 
-    'sand-attack': {
+    "sand-attack": {
+        name: "sand-attack",
         damage: 10,
         pp: 10,
     }
 }
 
-export default moves
+
+module.exports = { moves }
