@@ -77,15 +77,16 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon1} />
                     <span>Remaining HP: {pokemon1.remaining_hp}</span>
-                    <span>{capitalize(pokemon1.move1.name)}</span>
+                    <button>{capitalize(pokemon1.move1.name)} &nbsp; PP: {pokemon1.move1.remaining_pp}/{pokemon1.move1.pp}</button>
                 </div>
                 <h2>VS</h2>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon2} />
                     <span>Remaining HP: {pokemon2.remaining_hp}</span>
+                    <button>{capitalize(pokemon2.move1.name)} &nbsp; PP: {pokemon2.move1.remaining_pp}/{pokemon2.move1.pp}</button>
                 </div>
             </div>
-            <button onClick={handleClick}>Attack!</button>
+            {/* <button onClick={handleClick}>Attack!</button> */}
             <p>{/* 
             Player 1 attacks first!
             Player 1 uses __
@@ -98,8 +99,5 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
     )
 }
 
-// Player 1 attacks first!
-// Zapdos uses Razor-Wind
-// Poliwhirl loses * hp
-// Poiwhirl attacks!
-// Zapdos loses * hp
+// Each player has a button to choose a move
+    // 

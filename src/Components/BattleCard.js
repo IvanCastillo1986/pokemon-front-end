@@ -1,4 +1,5 @@
 import '../Pages/Cards.css'
+import { capitalize } from '../Helper/capitalize'
 
 
 
@@ -15,7 +16,7 @@ export default function Card({ pokemon }) {
                 <img className='Image' src={pokemon.image} alt={pokemon.name} />
             </div>
             <div>
-                <span className='Move'>{pokemon.move1.name}</span><br/>
+                <span className='Move'>{capitalize(pokemon.move1.name)}</span><br/>
                 {/* <span className='Move'>{pokemon.move2}</span> */}
             </div>
             <div>
