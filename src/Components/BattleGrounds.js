@@ -15,7 +15,11 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         ready: false,
         move: null
     })
-    const [narration, setNarration] = useState('')
+    const [narration, setNarration] = useState({
+        text1: ``,
+        text2: ``,
+        text3: ``,
+    })
     
     const randomDamage = () => {
         let min = 7
@@ -54,17 +58,25 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let pokeSpd2 = pokemon2.spd * randomSpeed()
         if (pokeSpd1 > pokeSpd2) {
             console.log('Pokemon 1 is faster', randomSpeed())
+            setNarration(prevNarration => {return { ...prevNarration, text1: `${capitalize(pokemon1.name)} attacks first!` }})
+            setNarration(prevNarration => {return { ...prevNarration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }})
+            // setNarration({ ...narration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }) // why doesn't this work? Why does it delete the rest of narration object?
             pokemon1Attack()
+            setNarration(prevNarration => {return { ...prevNarration, text3: `${capitalize(pokemon2.name)} uses ${capitalize(pokemon2.move1.name)}` }})
             pokemon2Attack()
             setPlayer1({ ready: false, move: null })
             setPlayer2({ ready: false, move: null })
         } else {
             console.log('pokemon2 is faster', randomSpeed())
             pokemon2Attack()
+            setNarration(prevNarration => {return { ...prevNarration, text1: `${capitalize(pokemon2.name)} attacks first!` }})
+            setNarration(prevNarration => {return { ...prevNarration, text2: `${capitalize(pokemon2.name)} uses ${capitalize(pokemon2.move1.name)}` }})
             pokemon1Attack()
+            setNarration(prevNarration => {return { ...prevNarration, text3: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }})
             setPlayer1({ ready: false, move: null })
             setPlayer2({ ready: false, move: null })
         }
+
     }
     const setMove1 = (move) => {
         setPlayer1({
@@ -88,7 +100,7 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
 
     return (
         <div className='BattleGrounds'>
-            <h2>Round {round + 1}</h2>
+            <h2>Round {round}</h2>
             <div className='CardsDiv'>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon1} />
@@ -102,14 +114,18 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                     <button onClick={() => setMove2(pokemon2.move1)}>{capitalize(pokemon2.move1.name)} &nbsp; PP: {pokemon2.move1.remaining_pp}/{pokemon2.move1.pp}</button>
                 </div>
             </div>
-            {/* <button onClick={handleClick}>Attack!</button> */}
-            <p>{/* 
-            Player 1 attacks first!
-            Player 1 uses __
-            Player 2 loses __ hp
-            Player 2 uses __
-            Player 1 loses __ hp
-            */}</p>
+            <div className='TextDiv'>
+                <span>{narration.text1}</span>
+                <span>{narration.text2}</span>
+                <span>{narration.text3}</span>
+                {/* 
+                Player 1 attacks first!
+                Player 1 uses __
+                Player 2 loses __ hp
+                Player 2 uses __
+                Player 1 loses __ hp
+                */}
+            </div>
             <hr />
         </div>
     )
@@ -117,8 +133,8 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
 
 // Each player has a button to choose a move
 // Both players choose a move
-    // This sets both players to be ready
     // setMove()
+    // This sets both players to be ready
 // When both players are ready, both moves are executed
     // useEffect()
         // executeAttacks()

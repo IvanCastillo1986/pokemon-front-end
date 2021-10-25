@@ -29,7 +29,6 @@ export default function Decks() {
                     } else {
                         arr2.push(res.data)
                     }
-                    // console.log(res.data)
                 })
             }
 
@@ -50,7 +49,7 @@ export default function Decks() {
             <h1>Battle!</h1>
             {
                 deck1.map((component, i) => {
-                    return <BattleGrounds key={i} round={i} pokemonOne={deck1[i]} pokemonTwo={deck2[i]} /> 
+                    return <BattleGrounds key={i} round={i + 1} pokemonOne={deck1[i]} pokemonTwo={deck2[i]} /> 
                 })
             }
         </div>
