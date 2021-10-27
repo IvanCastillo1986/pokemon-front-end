@@ -36,6 +36,14 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let atkOutput = pokemon1.atk/2
         let defOutput = pokemon2.def/2
         let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon1.move1.damage)
+        // Decrements PP
+        setPokemon1(prevPokemon => {
+            return { ...prevPokemon, move1: {...prevPokemon.move1, remaining_pp: pokemon1.move1.remaining_pp - 1} }
+        })
+        if (pokemon2.remaining_hp - totalDamage <= 0) {
+            setPokemon2({ ...pokemon2, remaining_hp: 0 })
+            return
+        }
         setPokemon2(prevPokemon => {
             return {...prevPokemon, 
                 remaining_hp: pokemon2.remaining_hp - totalDamage
@@ -46,6 +54,12 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let atkOutput = pokemon2.atk
         let defOutput = pokemon1.def
         let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon2.move1.damage)
+        // Decrements PP
+        setPokemon2({...pokemon2, move1: {...pokemon2.move1, remaining_pp: pokemon2.move1.remaining_pp - 1}})
+        if (pokemon1.remaining_hp - totalDamage <= 0) {
+            setPokemon1({ ...pokemon1, remaining_hp: 0 })
+            return
+        }
         setPokemon1(prevPokemon => {
             return {...prevPokemon, 
                 remaining_hp: pokemon1.remaining_hp - totalDamage
@@ -105,13 +119,19 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon1} />
                     <span>Remaining HP: {pokemon1.remaining_hp}</span>
-                    <button onClick={() => setMove1(pokemon1.move1)}>{capitalize(pokemon1.move1.name)} &nbsp; PP: {pokemon1.move1.remaining_pp}/{pokemon1.move1.pp}</button>
+                    <button onClick={() => setMove1(pokemon1.move1)}>
+                        {capitalize(pokemon1.move1.name)} &nbsp; 
+                        PP: {pokemon1.move1.remaining_pp}/{pokemon1.move1.pp}
+                    </button>
                 </div>
                 <h2>VS</h2>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon2} />
                     <span>Remaining HP: {pokemon2.remaining_hp}</span>
-                    <button onClick={() => setMove2(pokemon2.move1)}>{capitalize(pokemon2.move1.name)} &nbsp; PP: {pokemon2.move1.remaining_pp}/{pokemon2.move1.pp}</button>
+                    <button onClick={() => setMove2(pokemon2.move1)}>
+                        {capitalize(pokemon2.move1.name)} &nbsp; 
+                        PP: {pokemon2.move1.remaining_pp}/{pokemon2.move1.pp}
+                    </button>
                 </div>
             </div>
             <div className='TextDiv'>
