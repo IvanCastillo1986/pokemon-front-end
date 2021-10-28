@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import BattleCard from './BattleCard'
 import { capitalize } from '../Helper/capitalize'
+import { countSkill } from '../Helper/countSkill'
 
 
 export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
@@ -40,6 +41,7 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         setPokemon1(prevPokemon => {
             return { ...prevPokemon, move1: {...prevPokemon.move1, remaining_pp: pokemon1.move1.remaining_pp - 1} }
         })
+        // Stops HP at 0
         if (pokemon2.remaining_hp - totalDamage <= 0) {
             setPokemon2({ ...pokemon2, remaining_hp: 0 })
             return
@@ -56,6 +58,7 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon2.move1.damage)
         // Decrements PP
         setPokemon2({...pokemon2, move1: {...pokemon2.move1, remaining_pp: pokemon2.move1.remaining_pp - 1}})
+        // Stops HP at 0
         if (pokemon1.remaining_hp - totalDamage <= 0) {
             setPokemon1({ ...pokemon1, remaining_hp: 0 })
             return
