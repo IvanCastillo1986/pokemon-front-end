@@ -1,4 +1,5 @@
 const moves = require("./moves")
+const moves2 = require("./moves2")
 
 const makeBattlePokemon = (arr) => {
     let newArr = []
@@ -13,7 +14,7 @@ const makeBattlePokemon = (arr) => {
             spd: item.stats[5].base_stat,
             image: item.sprites.other.dream_world.front_default,
             move1: moves.moves[item.moves[0].move.name],
-            // move2: moves.moves[item.moves[3].move.name],
+            move2: item.moves[1] ? moves2.moves2[item.moves[1].move.name] : { name: "struggle", damage: 0, pp: 99, remaining_pp: 99 },
         }
         newArr.push(pokemon)
     }

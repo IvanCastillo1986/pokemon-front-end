@@ -23,6 +23,12 @@ const moves2 = {
         pp: 7,
         remaining_pp: 7,
     },
+    "gust": {
+        name: "gust",
+        damage: 15,
+        pp: 7,
+        remaining_pp: 7,
+    },
     "string-shot": {
         name: "string-shot",
         damage: 25,
@@ -34,12 +40,6 @@ const moves2 = {
         damage: 25,
         pp: 3,
         remaining_pp: 3,
-    },
-    "gust": {
-        name: "gust",
-        damage: 15,
-        pp: 7,
-        remaining_pp: 7,
     },
     "headbutt": {
         name: "headbutt",
@@ -155,16 +155,31 @@ const moves2 = {
         pp: 3,
         remaining_pp: 3,
     },
+    "whirlwind": {
+        name: "whirlwind",
+        damage: 15,
+        pp: 7,
+        remaining_pp: 7,
+    },
     "razor-wind": {
         name: "razor-wind",
         damage: 25,
         pp: 3,
         remaining_pp: 3,
     },
-    "whirlwind": {
-        name: "whirlwind",
-        damage: 15,
-        pp: 7,
-        remaining_pp: 7,
+    "struggle": {
+        name: "struggle",
+        damage: 0,
+        pp: 99,
+        remaining_pp: 99
     }
 }
+// console.log(moves2["gust"])
+// console.log(moves2["whirlwind"])
+// console.log(moves2["guillotine"])
+// console.log(moves2["slam"])
+// console.log(moves2["wing-attack"])
+
+module.exports = { moves2 }
+
+// gust, whirlwind, guillotine, slam, wing-attack come up undefined when calling makeBattlePokemon()

@@ -27,7 +27,7 @@ export default function Decks() {
                     if (i % 2 !== 0) {
                         arr1.push(capitalizeObject(res.data))
                     } else {
-                        arr2.push(res.data)
+                        arr2.push(capitalizeObject(res.data))
                     }
                 })
             }

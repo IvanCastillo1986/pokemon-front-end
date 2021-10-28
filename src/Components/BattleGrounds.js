@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import BattleCard from './BattleCard'
 import { capitalize } from '../Helper/capitalize'
-import { countSkill } from '../Helper/countSkill'
 
 
 export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
@@ -75,21 +74,21 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let pokeSpd2 = pokemon2.spd * randomSpeed()
         if (pokeSpd1 > pokeSpd2) {
             console.log('Pokemon 1 is faster', randomSpeed())
-            setNarration(prevNarration => {return { ...prevNarration, text1: `${capitalize(pokemon1.name)} attacks first!` }})
-            setNarration(prevNarration => {return { ...prevNarration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }})
-            // setNarration({ ...narration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }) // why doesn't this work? Why does it delete the rest of narration object?
             pokemon1Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text3: `${capitalize(pokemon2.name)} uses ${capitalize(pokemon2.move1.name)}` }})
+            setNarration(prevNarration => {return { ...prevNarration, text1: `${capitalize(pokemon1.name)} attacks first!` }})
+            setNarration(prevNarration => {return { ...prevNarration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(player1.move.name)}` }})
+            // setNarration({ ...narration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }) // why doesn't this work? Why does it delete the rest of narration object?
             pokemon2Attack()
+            setNarration(prevNarration => {return { ...prevNarration, text3: `${capitalize(pokemon2.name)} uses ${capitalize(player2.move.name)}` }})
             setPlayer1({ ready: false, move: null })
             setPlayer2({ ready: false, move: null })
         } else {
             console.log('pokemon2 is faster', randomSpeed())
             pokemon2Attack()
             setNarration(prevNarration => {return { ...prevNarration, text1: `${capitalize(pokemon2.name)} attacks first!` }})
-            setNarration(prevNarration => {return { ...prevNarration, text2: `${capitalize(pokemon2.name)} uses ${capitalize(pokemon2.move1.name)}` }})
+            setNarration(prevNarration => {return { ...prevNarration, text2: `${capitalize(pokemon2.name)} uses ${capitalize(player2.move.name)}` }})
             pokemon1Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text3: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }})
+            setNarration(prevNarration => {return { ...prevNarration, text3: `${capitalize(pokemon1.name)} uses ${capitalize(player2.move.name)}` }})
             setPlayer1({ ready: false, move: null })
             setPlayer2({ ready: false, move: null })
         }
@@ -126,6 +125,10 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                         {capitalize(pokemon1.move1.name)} &nbsp; 
                         PP: {pokemon1.move1.remaining_pp}/{pokemon1.move1.pp}
                     </button>
+                    <button onClick={() => setMove1(pokemon1.move2)}>
+                        {capitalize(pokemon1.move2.name)} &nbsp; 
+                        PP: {pokemon1.move2.remaining_pp}/{pokemon1.move2.pp}
+                    </button>
                 </div>
                 <h2>VS</h2>
                 <div className='PlayerDiv'>
@@ -134,6 +137,10 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                     <button onClick={() => setMove2(pokemon2.move1)}>
                         {capitalize(pokemon2.move1.name)} &nbsp; 
                         PP: {pokemon2.move1.remaining_pp}/{pokemon2.move1.pp}
+                    </button>
+                    <button onClick={() => setMove2(pokemon2.move2)}>
+                        {capitalize(pokemon2.move2.name)} &nbsp; 
+                        PP: {pokemon2.move2.remaining_pp}/{pokemon2.move2.pp}
                     </button>
                 </div>
             </div>
