@@ -9,11 +9,13 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
     const [pokemon2, setPokemon2] = useState(pokemonTwo)
     const [player1, setPlayer1] = useState({
         ready: false,
-        move: null
+        move: null,
+        moveSwitch: null,
     })
     const [player2, setPlayer2] = useState({
         ready: false,
-        move: null
+        move: null,
+        moveSwitch: null,
     })
     const [narration, setNarration] = useState({
         text1: ``,
@@ -32,13 +34,14 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         return (Math.random() * (max - min) + min)
     }
 
+
     const pokemon1Attack = () => {
         let atkOutput = pokemon1.atk/2
         let defOutput = pokemon2.def/2
         let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon1.move1.damage)
         // Decrements PP
         setPokemon1(prevPokemon => {
-            return { ...prevPokemon, move1: {...prevPokemon.move1, remaining_pp: pokemon1.move1.remaining_pp - 1} }
+            return { ...prevPokemon, [player1.moveSwitch]: {...prevPokemon.move1, remaining_pp: pokemon1[player1.moveSwitch].remaining_pp - 1} }
         })
         // Stops HP at 0
         if (pokemon2.remaining_hp - totalDamage <= 0) {
@@ -55,8 +58,12 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let atkOutput = pokemon2.atk
         let defOutput = pokemon1.def
         let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon2.move1.damage)
+        let currentMove = player2.moveSwitch
         // Decrements PP
-        setPokemon2({...pokemon2, move1: {...pokemon2.move1, remaining_pp: pokemon2.move1.remaining_pp - 1}})
+        // setPokemon2({...pokemon2, move1: {...pokemon2.move1, remaining_pp: pokemon2.move1.remaining_pp - 1}})
+        setPokemon2(prevPokemon => {
+            return {...prevPokemon, [currentMove]: {...pokemon2[currentMove], remaining_pp: pokemon2[currentMove].remaining_pp - 1}}
+        })
         // Stops HP at 0
         if (pokemon1.remaining_hp - totalDamage <= 0) {
             setPokemon1({ ...pokemon1, remaining_hp: 0 })
@@ -94,16 +101,18 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         }
 
     }
-    const setMove1 = (move) => {
+    const setMove1 = (move, currentMove) => {
         setPlayer1({
             ready: true,
-            move: move
+            move: move,
+            moveSwitch: currentMove
         })
     }
-    const setMove2 = (move) => {
+    const setMove2 = (move, currentMove) => {
         setPlayer2({
             ready: true,
-            move: move
+            move: move,
+            moveSwitch: currentMove
         })
     }
 
@@ -121,11 +130,11 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon1} />
                     <span>Remaining HP: {pokemon1.remaining_hp}</span>
-                    <button onClick={() => setMove1(pokemon1.move1)}>
+                    <button onClick={() => setMove1(pokemon1.move1, 'move1')}>
                         {capitalize(pokemon1.move1.name)} &nbsp; 
                         PP: {pokemon1.move1.remaining_pp}/{pokemon1.move1.pp}
                     </button>
-                    <button onClick={() => setMove1(pokemon1.move2)}>
+                    <button onClick={() => setMove1(pokemon1.move2, 'move2')}>
                         {capitalize(pokemon1.move2.name)} &nbsp; 
                         PP: {pokemon1.move2.remaining_pp}/{pokemon1.move2.pp}
                     </button>
@@ -134,11 +143,11 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon2} />
                     <span>Remaining HP: {pokemon2.remaining_hp}</span>
-                    <button onClick={() => setMove2(pokemon2.move1)}>
+                    <button onClick={() => setMove2(pokemon2.move1, 'move1')}>
                         {capitalize(pokemon2.move1.name)} &nbsp; 
                         PP: {pokemon2.move1.remaining_pp}/{pokemon2.move1.pp}
                     </button>
-                    <button onClick={() => setMove2(pokemon2.move2)}>
+                    <button onClick={() => setMove2(pokemon2.move2, 'move2')}>
                         {capitalize(pokemon2.move2.name)} &nbsp; 
                         PP: {pokemon2.move2.remaining_pp}/{pokemon2.move2.pp}
                     </button>
