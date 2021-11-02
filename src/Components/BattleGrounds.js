@@ -55,12 +55,11 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         })
     }
     const pokemon2Attack = () => {
-        let atkOutput = pokemon2.atk
-        let defOutput = pokemon1.def
+        let atkOutput = pokemon2.atk / 2
+        let defOutput = pokemon1.def / 2
         let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon2.move1.damage)
         let currentMove = player2.moveSwitch
         // Decrements PP
-        // setPokemon2({...pokemon2, move1: {...pokemon2.move1, remaining_pp: pokemon2.move1.remaining_pp - 1}})
         setPokemon2(prevPokemon => {
             return {...prevPokemon, [currentMove]: {...pokemon2[currentMove], remaining_pp: pokemon2[currentMove].remaining_pp - 1}}
         })
@@ -139,7 +138,11 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                         PP: {pokemon1.move2.remaining_pp}/{pokemon1.move2.pp}
                     </button>
                 </div>
-                <h2>VS</h2>
+                <div className='TextDiv'>
+                    <span>{narration.text1}</span>
+                    <span>{narration.text2}</span>
+                    <span>{narration.text3}</span>
+                </div>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon2} />
                     <span>Remaining HP: {pokemon2.remaining_hp}</span>
@@ -152,18 +155,6 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                         PP: {pokemon2.move2.remaining_pp}/{pokemon2.move2.pp}
                     </button>
                 </div>
-            </div>
-            <div className='TextDiv'>
-                <span>{narration.text1}</span>
-                <span>{narration.text2}</span>
-                <span>{narration.text3}</span>
-                {/* 
-                Player 1 attacks first!
-                Player 1 uses __
-                Player 2 loses __ hp
-                Player 2 uses __
-                Player 1 loses __ hp
-                */}
             </div>
             <hr />
         </div>
