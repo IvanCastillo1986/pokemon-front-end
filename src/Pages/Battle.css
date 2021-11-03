@@ -14,7 +14,7 @@ h2 {
 
 .BattleGrounds {
     text-align: center;
-    margin-bottom: 70px;
+    margin: 0 90px 70px 90px;
 }
 .CardsDiv {
     display: flex;
@@ -50,8 +50,9 @@ hr {
 .TextDiv {
     background-color: rgb(237, 228, 228);
     color: black;
+    font-family: 'PKMN RBYGSC';
     font-size: 18px;
-    width: 504px;
+    min-width: 504px;
     height: 201px;
     margin: auto auto auto auto;
     padding: 10px;
@@ -62,6 +63,7 @@ hr {
 }
 .TextDiv span {
     display: block;
+    margin: 10px 0 10px 0;
 }
 .TextDiv::before {
     content: '';

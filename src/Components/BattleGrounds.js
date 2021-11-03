@@ -81,20 +81,20 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         if (pokeSpd1 > pokeSpd2) {
             console.log('Pokemon 1 is faster', randomSpeed())
             pokemon1Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text1: `${capitalize(pokemon1.name)} attacks first!` }})
-            setNarration(prevNarration => {return { ...prevNarration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(player1.move.name)}` }})
+            setNarration(prevNarration => {return { ...prevNarration, text1: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; attacks &nbsp; first!</span> }})
+            setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player1.move.name.toUpperCase())}</span> }})
             // setNarration({ ...narration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }) // why doesn't this work? Why does it delete the rest of narration object?
             pokemon2Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text3: `${capitalize(pokemon2.name)} uses ${capitalize(player2.move.name)}` }})
+            setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
             setPlayer1({ ready: false, move: null })
             setPlayer2({ ready: false, move: null })
         } else {
             console.log('pokemon2 is faster', randomSpeed())
             pokemon2Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text1: `${capitalize(pokemon2.name)} attacks first!` }})
-            setNarration(prevNarration => {return { ...prevNarration, text2: `${capitalize(pokemon2.name)} uses ${capitalize(player2.move.name)}` }})
+            setNarration(prevNarration => {return { ...prevNarration, text1: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; attacks &nbsp; first!</span> }})
+            setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
             pokemon1Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text3: `${capitalize(pokemon1.name)} uses ${capitalize(player2.move.name)}` }})
+            setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
             setPlayer1({ ready: false, move: null })
             setPlayer2({ ready: false, move: null })
         }
@@ -139,9 +139,9 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                     </button>
                 </div>
                 <div className='TextDiv'>
-                    <span>{narration.text1}</span>
-                    <span>{narration.text2}</span>
-                    <span>{narration.text3}</span>
+                    {narration.text1}
+                    {narration.text2}
+                    {narration.text3}
                 </div>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon2} />
