@@ -7,20 +7,16 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
 
     const [pokemon1, setPokemon1] = useState(pokemonOne)
     const [pokemon2, setPokemon2] = useState(pokemonTwo)
+    
     const [player1, setPlayer1] = useState({
-        ready: false,
-        move: null,
-        moveSwitch: null,
+        ready: false, move: null, moveSwitch: null,
     })
     const [player2, setPlayer2] = useState({
-        ready: false,
-        move: null,
-        moveSwitch: null,
+        ready: false, move: null, moveSwitch: null,
     })
+
     const [narration, setNarration] = useState({
-        text1: ``,
-        text2: ``,
-        text3: ``,
+        text1: ``, text2: ``, text3: ``,
     })
     
     const randomDamage = () => {
@@ -33,73 +29,57 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let max = 1.4
         return (Math.random() * (max - min) + min)
     }
-
-
-    const pokemon1Attack = () => {
-        let atkOutput = pokemon1.atk/2
-        let defOutput = pokemon2.def/2
-        let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon1.move1.damage)
-        // Decrements PP
+    const decrementPP1 = (move) => {
         setPokemon1(prevPokemon => {
-            return { ...prevPokemon, [player1.moveSwitch]: {...prevPokemon.move1, remaining_pp: pokemon1[player1.moveSwitch].remaining_pp - 1} }
-        })
-        // Stops HP at 0
-        if (pokemon2.remaining_hp - totalDamage <= 0) {
-            setPokemon2({ ...pokemon2, remaining_hp: 0 })
-            return
-        }
-        setPokemon2(prevPokemon => {
-            return {...prevPokemon, 
-                remaining_hp: pokemon2.remaining_hp - totalDamage
-            }
+            return { ...prevPokemon, [move]: {...prevPokemon[move], remaining_pp: pokemon1[move].remaining_pp - 1} }
         })
     }
-    const pokemon2Attack = () => {
-        let atkOutput = pokemon2.atk / 2
-        let defOutput = pokemon1.def / 2
-        let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon2.move1.damage)
-        let currentMove = player2.moveSwitch
-        // Decrements PP
+    const decrementPP2 = (move) => {
         setPokemon2(prevPokemon => {
-            return {...prevPokemon, [currentMove]: {...pokemon2[currentMove], remaining_pp: pokemon2[currentMove].remaining_pp - 1}}
+            return { ...prevPokemon, [move]: {...prevPokemon[move], remaining_pp: pokemon2[move].remaining_pp - 1} }
         })
-        // Stops HP at 0
-        if (pokemon1.remaining_hp - totalDamage <= 0) {
-            setPokemon1({ ...pokemon1, remaining_hp: 0 })
-            return
+    }
+
+    const pokemonAttack = () => {
+        let fastPokemon = pokemon1
+        let slowPokemon = pokemon2
+        let player1Damage = Math.round(((fastPokemon.atk/2) / (slowPokemon.def/2)) * randomDamage() + fastPokemon[player1.moveSwitch].damage)
+        let player2Damage = Math.round(((slowPokemon.atk/2) / (fastPokemon.def/2)) * randomDamage() + slowPokemon[player2.moveSwitch].damage)
+        let p1Fast = true
+        
+        if ((fastPokemon * randomSpeed()) > (slowPokemon * randomSpeed())) {
+            setPokemon2(prevPokemon => {
+                return {...prevPokemon, remaining_hp: prevPokemon.remaining_hp - player1Damage}
+            })
+            decrementPP1(player1.moveSwitch)
+        } else {
+            p1Fast = false
+            fastPokemon = pokemon2;
+            slowPokemon = pokemon1;
+            setPokemon1(prevPokemon => {
+                return {...prevPokemon, remaining_hp: prevPokemon.remaining_hp - player2Damage}
+            })
+            decrementPP2(player2.moveSwitch)
         }
-        setPokemon1(prevPokemon => {
-            return {...prevPokemon, 
-                remaining_hp: pokemon1.remaining_hp - totalDamage
-            }
-        })
+        setNarration(prevNarration => {return { ...prevNarration, text1: <span>{capitalize(fastPokemon.name.toUpperCase())} &nbsp; attacks &nbsp; first!</span> }})
+        setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(fastPokemon.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player1.move.name.toUpperCase())}</span> }})
+
+        if (p1Fast) {
+            setPokemon1(prevPokemon => {
+                return {...prevPokemon, remaining_hp: prevPokemon.remaining_hp - player2Damage}
+            })
+            decrementPP2(player2.moveSwitch)
+        } else {
+            setPokemon2(prevPokemon => {
+                return {...prevPokemon, remaining_hp: prevPokemon.remaining_hp - player1Damage}
+            })
+            decrementPP1(player1.moveSwitch)
+        }
+        setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(slowPokemon.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
+        setPlayer1({ ready: false, move: null })
+        setPlayer2({ ready: false, move: null })
     }
     
-    const executeAttacks = () => {
-        let pokeSpd1 = pokemon1.spd * randomSpeed()
-        let pokeSpd2 = pokemon2.spd * randomSpeed()
-        if (pokeSpd1 > pokeSpd2) {
-            console.log('Pokemon 1 is faster', randomSpeed())
-            pokemon1Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text1: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; attacks &nbsp; first!</span> }})
-            setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player1.move.name.toUpperCase())}</span> }})
-            // setNarration({ ...narration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }) // why doesn't this work? Why does it delete the rest of narration object?
-            pokemon2Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
-            setPlayer1({ ready: false, move: null })
-            setPlayer2({ ready: false, move: null })
-        } else {
-            console.log('pokemon2 is faster', randomSpeed())
-            pokemon2Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text1: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; attacks &nbsp; first!</span> }})
-            setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
-            pokemon1Attack()
-            setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
-            setPlayer1({ ready: false, move: null })
-            setPlayer2({ ready: false, move: null })
-        }
-
-    }
     const setMove1 = (move, currentMove) => {
         setPlayer1({
             ready: true,
@@ -117,7 +97,8 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
 
     useEffect(() => {
         if (player1.ready && player2.ready) {
-            executeAttacks()
+            // executeAttacks()
+            pokemonAttack()
         }
     }, [player1, player2])
 
@@ -170,3 +151,75 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         // executeAttacks()
             // The fastest pokemon attacks first, and then the second Pokemon attacks
         // Both player objects are reset
+
+
+
+
+
+
+
+        // const pokemon1Attack = () => {
+        //     let currentMove = player1.moveSwitch
+        //     let atkOutput = pokemon1.atk/2
+        //     let defOutput = pokemon2.def/2
+        //     let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon1[currentMove].damage)
+        //     // Decrements PP
+        //     // Stops HP at 0
+        //     if (pokemon2.remaining_hp - totalDamage <= 0) {
+        //         decrementPP1(currentMove)
+        //         setPokemon2({ ...pokemon2, remaining_hp: 0 })
+        //         return
+        //     } else {
+        //         decrementPP1(currentMove)
+        //         setPokemon2(prevPokemon => {
+        //             return {...prevPokemon, 
+        //                 remaining_hp: pokemon2.remaining_hp - totalDamage
+        //             }
+        //         })
+        //     }
+        // }
+        // const pokemon2Attack = () => {
+        //     let currentMove = player2.moveSwitch
+        //     let atkOutput = pokemon2.atk / 2
+        //     let defOutput = pokemon1.def / 2
+        //     let totalDamage = Math.round((atkOutput/defOutput) * randomDamage() + pokemon2[currentMove].damage)
+        //     // Decrements PP
+        //     // Stops HP at 0
+        //     if (pokemon1.remaining_hp - totalDamage <= 0) {
+        //         decrementPP2(currentMove)
+        //         setPokemon1({ ...pokemon1, remaining_hp: 0 })
+        //         return
+        //     } else {
+        //         decrementPP2(currentMove)
+        //         setPokemon1(prevPokemon => {
+        //             return {...prevPokemon, 
+        //                 remaining_hp: pokemon1.remaining_hp - totalDamage
+        //             }
+        //         })
+        //     }
+        // }
+
+        // const executeAttacks = () => {
+        //     let pokeSpd1 = pokemon1.spd * randomSpeed()
+        //     let pokeSpd2 = pokemon2.spd * randomSpeed()
+        //     if (pokeSpd1 > pokeSpd2) {
+        //         console.log('Pokemon 1 is faster', randomSpeed())
+        //         pokemon1Attack()
+        //         setNarration(prevNarration => {return { ...prevNarration, text1: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; attacks &nbsp; first!</span> }})
+        //         setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player1.move.name.toUpperCase())}</span> }})
+        //         // setNarration({ ...narration, text2: `${capitalize(pokemon1.name)} uses ${capitalize(pokemon1.move1.name)}` }) // why doesn't this work? Why does it delete the rest of narration object?
+        //         pokemon2Attack()
+        //         setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
+        //         setPlayer1({ ready: false, move: null })
+        //         setPlayer2({ ready: false, move: null })
+        //     } else {
+        //         console.log('pokemon2 is faster', randomSpeed())
+        //         pokemon2Attack()
+        //         setNarration(prevNarration => {return { ...prevNarration, text1: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; attacks &nbsp; first!</span> }})
+        //         setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(pokemon2.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
+        //         pokemon1Attack()
+        //         setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(pokemon1.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
+        //         setPlayer1({ ready: false, move: null })
+        //         setPlayer2({ ready: false, move: null })
+        //     }
+        // }
