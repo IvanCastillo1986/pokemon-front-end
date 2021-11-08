@@ -7,6 +7,7 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
 
     const [pokemon1, setPokemon1] = useState(pokemonOne)
     const [pokemon2, setPokemon2] = useState(pokemonTwo)
+    const [winner, setWinner] = useState([])
     
     const [player1, setPlayer1] = useState({
         ready: false, move: null, moveSwitch: null,
@@ -16,7 +17,7 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
     })
 
     const [narration, setNarration] = useState({
-        text1: ``, text2: ``, text3: ``,
+        text1: ``, text2: ``, text3: ``, text4: ``
     })
     
     const randomDamage = () => {
@@ -40,31 +41,59 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         })
     }
 
+    // if pokemon.hp <= 0
+    const pokemonDies = (pokemon) => {
+
+        if (pokemon.name === pokemon1.name) {
+            setPokemon1(prevPokemon => {return {...prevPokemon, remaining_hp: 0}})
+        } else if (pokemon.name === pokemon2.name) {
+            setPokemon2(prevPokemon => {return {...prevPokemon, remaining_hp: 0}})
+        }
+        setNarration({...narration, text4: <span>{capitalize(pokemon.name).toUpperCase()} has fainted</span>})
+        // 'Pokemon has fainted'
+        // Pokemon can no longer attack
+        // New Pokemon is added to the bench (at top of Page)
+            // This doesn't need to show actual Pokemon, could be an element that holds the names of Pokemon who are still alive
+    }
+
     const pokemonAttack = () => {
         let fastPokemon = pokemon1
         let slowPokemon = pokemon2
+        let fastPlayer = player1
+        let slowPlayer = player2
         let player1Damage = Math.round(((fastPokemon.atk/2) / (slowPokemon.def/2)) * randomDamage() + fastPokemon[player1.moveSwitch].damage)
         let player2Damage = Math.round(((slowPokemon.atk/2) / (fastPokemon.def/2)) * randomDamage() + slowPokemon[player2.moveSwitch].damage)
-        let p1Fast = true
         
-        if ((fastPokemon * randomSpeed()) > (slowPokemon * randomSpeed())) {
+        if (pokemon1.remaining_hp <= player2Damage) {
+            pokemonDies(pokemon1)
+            return
+        } else if (pokemon2.remaining_hp <= player1Damage) {
+            pokemonDies(pokemon2)
+            return 
+        }
+
+        if ((fastPokemon.spd * randomSpeed()) > (slowPokemon.spd * randomSpeed())) {
             setPokemon2(prevPokemon => {
                 return {...prevPokemon, remaining_hp: prevPokemon.remaining_hp - player1Damage}
             })
             decrementPP1(player1.moveSwitch)
         } else {
-            p1Fast = false
+            fastPlayer = player2
+            slowPlayer = player1
             fastPokemon = pokemon2;
             slowPokemon = pokemon1;
             setPokemon1(prevPokemon => {
                 return {...prevPokemon, remaining_hp: prevPokemon.remaining_hp - player2Damage}
             })
             decrementPP2(player2.moveSwitch)
+            if (pokemon1.remaining_hp <= 0) {
+                pokemonDies(pokemon1)
+            }
         }
         setNarration(prevNarration => {return { ...prevNarration, text1: <span>{capitalize(fastPokemon.name.toUpperCase())} &nbsp; attacks &nbsp; first!</span> }})
-        setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(fastPokemon.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player1.move.name.toUpperCase())}</span> }})
+        setNarration(prevNarration => {return { ...prevNarration, text2: <span>{capitalize(fastPokemon.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(fastPlayer.move.name.toUpperCase())}</span> }})
 
-        if (p1Fast) {
+        if (fastPlayer === player1) {
             setPokemon1(prevPokemon => {
                 return {...prevPokemon, remaining_hp: prevPokemon.remaining_hp - player2Damage}
             })
@@ -75,9 +104,11 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
             })
             decrementPP1(player1.moveSwitch)
         }
-        setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(slowPokemon.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(player2.move.name.toUpperCase())}</span> }})
+        setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(slowPokemon.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(slowPlayer.move.name.toUpperCase())}</span> }})
         setPlayer1({ ready: false, move: null })
         setPlayer2({ ready: false, move: null })
+        
+
     }
     
     const setMove1 = (move, currentMove) => {
@@ -97,7 +128,6 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
 
     useEffect(() => {
         if (player1.ready && player2.ready) {
-            // executeAttacks()
             pokemonAttack()
         }
     }, [player1, player2])
@@ -123,6 +153,7 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
                     {narration.text1}
                     {narration.text2}
                     {narration.text3}
+                    {narration.text4}
                 </div>
                 <div className='PlayerDiv'>
                     <BattleCard pokemon={pokemon2} />

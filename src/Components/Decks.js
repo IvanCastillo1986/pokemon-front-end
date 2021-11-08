@@ -11,6 +11,7 @@ export default function Decks() {
     const [ deck1, setDeck1 ] = useState([])
     const [ deck2, setDeck2 ] = useState([])
     const [ isLoaded, setIsLoaded ] = useState(false)
+    const [ bench, setBench ] = useState()
     
     
     const randomNum = () => {
