@@ -15,6 +15,13 @@ const makeBattlePokemon = (arr) => {
             image: item.sprites.other.dream_world.front_default,
             move1: moves.moves[item.moves[0].move.name],
             move2: item.moves[1] ? moves2.moves2[item.moves[1].move.name] : { name: "struggle", damage: 0, pp: 99, remaining_pp: 99 },
+            // WHY ISN'T THIS METHOD WORKING IN REACT?
+            pokemonDies: function() {
+                return this.remaining_hp = 0
+            },
+            reduceHP: function() {
+                return this.remaining_hp = this.remaining_hp - 20
+            }
         }
         newArr.push(pokemon)
     }

@@ -54,6 +54,7 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         // Pokemon can no longer attack
         // New Pokemon is added to the bench (at top of Page)
             // This doesn't need to show actual Pokemon, could be an element that holds the names of Pokemon who are still alive
+            // This should be in parent component Decks
     }
 
     const pokemonAttack = () => {
@@ -65,11 +66,16 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         let player2Damage = Math.round(((slowPokemon.atk/2) / (fastPokemon.def/2)) * randomDamage() + slowPokemon[player2.moveSwitch].damage)
         
         if (pokemon1.remaining_hp <= player2Damage) {
-            pokemonDies(pokemon1)
-            return
+            // return pokemonDies(pokemon1)
+            // WHY ISN'T THIS METHOD WORKING IN REACT???
+            // setPokemon1(pokemon1.pokemonDies())
+            pokemon1.pokemonDies()
+            setPokemon1(pokemon1)
         } else if (pokemon2.remaining_hp <= player1Damage) {
-            pokemonDies(pokemon2)
-            return 
+            // return pokemonDies(pokemon2)
+            // WHY ISN'T THIS METHOD WORKING IN REACT???
+            // setPokemon2(pokemon2.pokemonDies())
+            pokemon2.pokemonDies()
         }
 
         if ((fastPokemon.spd * randomSpeed()) > (slowPokemon.spd * randomSpeed())) {
@@ -107,23 +113,13 @@ export default function BattleGrounds({ round, pokemonOne, pokemonTwo }) {
         setNarration(prevNarration => {return { ...prevNarration, text3: <span>{capitalize(slowPokemon.name.toUpperCase())} &nbsp; uses &nbsp; {capitalize(slowPlayer.move.name.toUpperCase())}</span> }})
         setPlayer1({ ready: false, move: null })
         setPlayer2({ ready: false, move: null })
-        
-
     }
     
     const setMove1 = (move, currentMove) => {
-        setPlayer1({
-            ready: true,
-            move: move,
-            moveSwitch: currentMove
-        })
+        setPlayer1({ ready: true, move: move, moveSwitch: currentMove })
     }
     const setMove2 = (move, currentMove) => {
-        setPlayer2({
-            ready: true,
-            move: move,
-            moveSwitch: currentMove
-        })
+        setPlayer2({ ready: true, move: move, moveSwitch: currentMove })
     }
 
     useEffect(() => {
