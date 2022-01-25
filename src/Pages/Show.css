@@ -175,10 +175,46 @@
     border-radius: 10px 10px 10px 30px;
     width: 74%;
     height: 55%;
-    display: flex;
-    justify-content: center;
     align-items: center;
     margin-right: 10px;
+}
+.plateTop {
+    height: 28px;
+    width: 40px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.screenLight {
+    background-color: red;
+    width: 4px;
+    height: 4px;
+    border: 3px solid black;
+    border-radius: 100%;
+}
+.plateBottom {
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+}
+.bottomLight {
+    height: 7px;
+    width: 7px;
+    margin: 10px 0 0 22px;
+}
+.plateSpeaker {
+    height: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding-top: 4px;
+    padding-right: 26px;
+}
+.speakerDiv {
+    background-color: black;
+    width: 30px;
+    height: 2px;
 }
 .Console .Screen {
     background: linear-gradient(135deg, 
@@ -190,6 +226,7 @@
     height: 72%;
     box-sizing: border-box;
     border-radius: 10px;
+    margin: auto;
 }
 
 .NESController {
@@ -347,10 +384,10 @@
 .BlackBox {
     background-color: rgb(53, 53, 53);
     width: 70%;
-    height: 16%;
+    height: 24%;
     box-sizing: border-box;
     border-radius: 4px;
-    margin-bottom: 11px;
+    margin-bottom: 16px;
 }
 .BlueBox {
     position: relative;

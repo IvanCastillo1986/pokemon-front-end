@@ -25,7 +25,20 @@ export default function Pokedex({ pokemon }) {
             <div className='LeftHalf'>
                 <div className='Console'>
                     <div className='ScreenPlate border shadow'>
+                        <div className='plateTop'>
+                            <div className='screenLight'></div>
+                            <div className='screenLight'></div>
+                        </div>
                         <div className='Screen border'></div>
+                        <div className='plateBottom'>
+                            <div className='screenLight bottomLight'></div>
+                            <div className='plateSpeaker'>
+                                <div className='speakerDiv' />
+                                <div className='speakerDiv' />
+                                <div className='speakerDiv' />
+                                <div className='speakerDiv' />
+                            </div>
+                        </div>
                     </div>
                     <div className='NESController'>
                         <div className='JoystickContainer'>
