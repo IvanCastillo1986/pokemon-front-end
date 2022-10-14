@@ -15,12 +15,22 @@ const countSkill = (arr) => {
     }
     return obj
 }
+console.log(countSkill([
+    "swords-dance",
+    "cut",
+    "fire-punch",
+    "ice-punch",
+    "string-shot",
+    "harden",
+    "gust",
+    "headbutt"
+]))
 
 const countValues = (obj) => {
     const newObj = {}
     for (let value of obj) {
         if (newObj[value]) {
-            
+            console.log('will use later')
         }
     }
 }

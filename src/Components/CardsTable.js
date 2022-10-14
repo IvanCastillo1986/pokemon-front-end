@@ -5,6 +5,7 @@ import { printMoves } from '../Helper/printMoves'
 import { countSkill } from '../Helper/countSkill'
 import '../Pages/Cards.css'
 
+console.log(countSkill)
 
 export default function Cards() {
 
