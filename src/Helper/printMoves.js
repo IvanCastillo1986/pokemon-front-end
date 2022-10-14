@@ -10,4 +10,6 @@ const printMoves = (arr) => {
     return newArr
 }
 
-module.exports = {printMoves}
+
+export { printMoves }
+// module.exports = {printMoves}

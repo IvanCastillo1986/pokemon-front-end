@@ -1,4 +1,4 @@
-const countSkill = (arr) => {
+export const countSkill = (arr) => {
     const obj = {count: 0}
     // takes in an array
     // iterates through array
@@ -36,5 +36,6 @@ const countValues = (obj) => {
 }
 
 
-
-module.exports = { countSkill }
+// This will break the build, because I was trying to mix Node.js style exports with ES6 exports (which is used by React)
+// This is a Node.js export
+// module.exports = { countSkill }

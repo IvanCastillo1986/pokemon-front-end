@@ -29,4 +29,5 @@ const capitalizeObject = (object) => {
 }
 
 
-module.exports = { capitalize, capitalizeObject }
+export { capitalize, capitalizeObject };
+// module.exports = { capitalize, capitalizeObject }

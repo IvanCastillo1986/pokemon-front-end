@@ -140,4 +140,5 @@ const moves = {
 }
 
 
-module.exports = { moves }
+export { moves }
+// module.exports = { moves }

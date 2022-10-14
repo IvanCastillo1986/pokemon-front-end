@@ -1,5 +1,8 @@
 const moves = require("./moves")
 const moves2 = require("./moves2")
+// import { moves } from "./moves.js"
+// import { moves2 } from "./moves2.js"
+
 
 const makeBattlePokemon = (arr) => {
     let newArr = []
@@ -29,4 +32,5 @@ const makeBattlePokemon = (arr) => {
 }
 
 
-module.exports = {makeBattlePokemon}
+export { makeBattlePokemon }
+// module.exports = {makeBattlePokemon}

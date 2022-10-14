@@ -180,6 +180,7 @@ const moves2 = {
 // console.log(moves2["slam"])
 // console.log(moves2["wing-attack"])
 
-module.exports = { moves2 }
+export { moves2 }
+// module.exports = { moves2 }
 
 // gust, whirlwind, guillotine, slam, wing-attack come up undefined when calling makeBattlePokemon()
