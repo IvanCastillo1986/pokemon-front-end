@@ -24,7 +24,8 @@ export default function App() {
 
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/cards/new" component={New} />
+        <Route exact path="/cards/new" component={New} /> {/* New card page not currently being used */}
+        <Route exact path="/pokedex" component={Show} />
         <Route path="/battle" component={Battle} />
         <Route exact path="/cards" component={CardsPage} />
         <Route exact path="/cards/:id" component={Show} />
