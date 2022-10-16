@@ -5,6 +5,7 @@ import axios from 'axios'
 export default function Pokedex({ pokemon }) {
 
     const [isOn, setIsOn] = useState(false)
+    console.log(pokemon)
 
     const togglePowerOn = () => {
         setIsOn(true)
