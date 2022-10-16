@@ -10,6 +10,7 @@
 .PokedexPage {
     display: flex;
     flex-direction: column;
+    margin-top: 50px;
 }
 
 .shadow {
@@ -444,21 +445,38 @@
 }
 .DoubleButtons {
     background: linear-gradient(
-        rgb(252, 252, 252), rgb(252, 252, 252) 8%, rgb(216, 216, 216) 12%
+        rgb(252, 252, 252), rgb(252, 252, 252) 6%, rgb(216, 216, 216) 10%
     );
     width: 70px;
     height: 25px;
     border-radius: 4px;
     position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font: bold 13px Arial, Helvetica, sans-serif;
 }
-.DoubleButtons::before {
+.DoubleButton1 {
+    border-radius: unset;
+}
+.DoubleButton2 {
+    border-radius: unset;
+}
+.DoubleButtons .ButtonSeparator {
+    width: 5.5px;
+    background: black;
+    border-radius: unset;
+    height: 28px;
+}
+/* .DoubleButton1::before {
     content: "";
     height: 28px;
     border-right: 4px solid black;
     position: absolute;
-    left: 33px;
+    right: -1px;
     bottom: -1px;
-}
+} */
+
 .BigYellow {
     background-color: yellow;
     width: 16px;

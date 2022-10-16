@@ -1,9 +1,19 @@
-import React from 'react'
-
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 
 export default function Pokedex({ pokemon }) {
 
+    const [isOn, setIsOn] = useState(false)
+
+    const togglePowerOn = () => {
+        setIsOn(true)
+        console.log('power is on')
+    }
+    const togglePowerOff = () => {
+        setIsOn(false)
+        console.log('power is off')
+    }
 
 
     return (
@@ -73,7 +83,11 @@ export default function Pokedex({ pokemon }) {
                     <span className='Button4 pause border'></span>
                 </div>
                 <div className='BoxLightContainer'>
-                    <div className='DoubleButtons border radius shadow'></div>
+                    <div className='DoubleButtons border radius shadow'>
+                        <div className='DoubleButtons DoubleButton1' onClick={togglePowerOn}>ON</div>
+                        <div className='DoubleButtons ButtonSeparator' />
+                        <div className='DoubleButtons DoubleButton2' onClick={togglePowerOff}>OFF</div>
+                    </div>
                     <div className='BigYellow light border'></div>
                 </div>
                 <div className='RectangleContainer'>

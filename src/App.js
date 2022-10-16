@@ -12,6 +12,7 @@ import Home from './Pages/Home'
 import FourOFour from './Pages/FourOFour'
 import Show from './Pages/Show'
 import New from './Pages/New'
+import Pokedex from './Components/Pokedex'
 import Battle from './Pages/Battle'
 
 
@@ -25,7 +26,7 @@ export default function App() {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/cards/new" component={New} /> {/* New card page not currently being used */}
-        <Route exact path="/pokedex" component={Show} />
+        <Route exact path="/pokedex" component={Pokedex} />
         <Route path="/battle" component={Battle} />
         <Route exact path="/cards" component={CardsPage} />
         <Route exact path="/cards/:id" component={Show} />

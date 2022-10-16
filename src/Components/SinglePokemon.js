@@ -24,8 +24,6 @@ export default function SinglePokemon() {
 
     return (
         <div className='SinglePokemon'>
-            <h2>{pokemon.name}</h2>
-            {/* <h2>Pokedex #{pokemon.id}</h2> */}
             {isReady ? <Pokedex pokemon={pokemon} /> : null}
         </div>
     )
