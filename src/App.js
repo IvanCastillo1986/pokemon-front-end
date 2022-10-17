@@ -49,10 +49,9 @@ export default function App() {
 
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
         <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
         <Route path="/battle" component={Battle} />
-        <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
-        <Route exact path="/cards/:id" render={() => <Show pokemon={pokemon} />} />
         <Route exact path="*" component={FourOFour} />
       </Switch>
     </div>

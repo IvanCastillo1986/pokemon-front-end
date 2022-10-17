@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+
+import './Pokedex.css'
 import axios from 'axios'
 
 
 export default function Pokedex({ pokemon }) {
+
+    const location = useLocation()
+
+    if (location.state) {
+        const searchInput = location.state.searchInput
+    }
+
 
     const [isOn, setIsOn] = useState(false)
     console.log(pokemon)

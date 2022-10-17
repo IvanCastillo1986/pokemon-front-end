@@ -66,7 +66,6 @@ export default function CardsTable({pokemon}) {
     
     return (
         <div className='CardsTable'>
-            {/* {loading ? <h1>Loading...</h1> : pokemonMap} */}
             {pokemonMap}
         </div>
     )

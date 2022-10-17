@@ -2,11 +2,13 @@ import React from 'react'
 import SinglePokemon from '../Components/SinglePokemon'
 import './Show.css'
 
-export default function Show() {
+
+// NOT CURRENTLY USING THIS COMPONENT OR SHOW. USING POKEDEX TO RENDER SINGLE POKEMON INSTEAD
+export default function Show({pokemon}) {
 
     return (
         <div className='Show'>
-            <SinglePokemon />
+            <SinglePokemon pokemon={pokemon} />
         </div>
     )
 }
