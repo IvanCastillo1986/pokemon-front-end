@@ -3,29 +3,65 @@ import { useLocation } from 'react-router-dom'
 
 import './Pokedex.css'
 import axios from 'axios'
+import { useLayoutEffect } from 'react'
 
 
 export default function Pokedex({ pokemon }) {
 
-    const location = useLocation()
-
-    if (location.state) {
-        const searchInput = location.state.searchInput
-    }
-
-
+    const [currentPokemon, setCurrentPokemon] = useState(pokemon[0])
+    const [divStyle, setDivStyle] = useState({})
     const [isOn, setIsOn] = useState(false)
-    console.log(pokemon)
+    
+    // console.log('currentPokemon', currentPokemon)
+    
+    // If we are rendering from a Pokemon
+    const location = useLocation()
+    // if location.state is defined, optional chaining
+    let searchInput = location.state?.searchInput
+
+    
+    useEffect(() => {
+
+        if (!pokemon.length == 0) {
+            setCurrentPokemon(pokemon[0])
+        }
+
+    }, [currentPokemon])
+
+    useLayoutEffect(() => {
+        if (!pokemon.length == 0) {
+
+            setDivStyle({
+                backgroundImage: `url(${currentPokemon?.sprites.other["official-artwork"].front_default})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                margin: 'auto',
+            })
+        }
+    }, [pokemon])
+
+    console.log('pokemon.length', pokemon.length)
 
     const togglePowerOn = () => {
         setIsOn(true)
         console.log('power is on')
+        if (pokemon.length) {
+            setDivStyle({
+                backgroundImage: `url(${currentPokemon?.sprites?.other["official-artwork"].front_default})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                margin: 'auto',
+            })
+        }
     }
     const togglePowerOff = () => {
         setIsOn(false)
         console.log('power is off')
     }
 
+    // if (!pokemon.length) return <h1>...Loading</h1>
 
     return (
         <div className='PokedexPage'>
@@ -50,7 +86,15 @@ export default function Pokedex({ pokemon }) {
                             <div className='screenLight'></div>
                             <div className='screenLight'></div>
                         </div>
-                        <div className='Screen border'></div>
+                        
+                        {/* This is the Pokedex screen */}
+                        { isOn
+                            ?
+                            pokemon.length ? <div className='onScreen border' style={divStyle}/> : <div className='onScreen border'>...Loading</div>
+                            :
+                            <div className='offScreen border'></div>
+                        }
+                        
                         <div className='plateBottom'>
                             <div className='screenLight bottomLight'></div>
                             <div className='plateSpeaker'>
