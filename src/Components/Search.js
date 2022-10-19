@@ -4,17 +4,17 @@ import { useHistory } from 'react-router-dom'
 
 export default function Search() {
 
-    const [idOrName, setIdOrName] = useState('')
+    const [idOrNameInput, setIdOrNameInput] = useState('')
     const history = useHistory()
 
     const handleChange = (e) => {
         const { value } = e.target
-        setIdOrName(value)
+        setIdOrNameInput(value)
     }
     const handleSubmit = (e) => {
         e.preventDefault()
         // history.push(`/cards/${id}`)
-        history.push(`/pokedex`, { searchInput: idOrName })
+        history.push(`/pokedex`, { searchInput: idOrNameInput })
     }
 
 
@@ -22,7 +22,7 @@ export default function Search() {
         <div className='Search'>
             <form onSubmit={handleSubmit} action="">
                 <label htmlFor="search">Search for pokemon by name or Pokedex #: </label>
-                <input onChange={handleChange} type="text" name="" id="search" value={idOrName} />
+                <input onChange={handleChange} type="text" name="" id="search" value={idOrNameInput} />
                 <input type="submit" value="Submit" />
             </form>
         </div>

@@ -208,6 +208,8 @@
     width: 30px;
     height: 2px;
 }
+
+/* Left screen Pokemon image */
 .Console .offScreen {
     background: linear-gradient(135deg, 
     rgb(46, 46, 46) 36%, rgb(75, 75, 75) 36%, 
@@ -227,6 +229,7 @@
     box-sizing: border-box;
     border-radius: 10px;
     margin: auto;
+    padding: 10px;
 }
 
 .NESController {
@@ -381,14 +384,19 @@
     height: 37px;
     width: 100%;
 }
+
+/* Right screen data output */
 .BlackBox {
     background-color: rgb(53, 53, 53);
+    color: white;
     width: 70%;
     height: 24%;
     box-sizing: border-box;
     border-radius: 4px;
     margin-bottom: 16px;
+    padding: 0 10px;
 }
+
 .BlueBox {
     position: relative;
     background-color: rgb(52, 167, 255);
