@@ -10,7 +10,6 @@ export default function Pokedex({ pokemon }) {
     const [currentPokemon, setCurrentPokemon] = useState(pokemon[0])
     const [divStyle, setDivStyle] = useState({})
     const [isOn, setIsOn] = useState(false)
-    const [searchInput, setSearchInput] = useState('')
     const [inputError, setInputError] = useState('')
     
     // If we are rendering from a Pokemon
@@ -38,9 +37,10 @@ export default function Pokedex({ pokemon }) {
         // If pokemon[] does not contain a pokemon matching input name or id
         if (location.state) {
             setIsOn(true)
-            if (typeof location.state.searchInput == 'string') {
+            const { searchInput } = location.state
+            if (isNaN(Number(searchInput))) {
                 console.log('this is a string')
-                let findPokemon = pokemon.find(mon => mon.name.toLowerCase() == location.state?.searchInput.toLowerCase())
+                let findPokemon = pokemon.find(mon => mon.name.toLowerCase() == searchInput.toLowerCase())
                 if (findPokemon) {
                     setCurrentPokemon(findPokemon)
                 } else {
@@ -48,8 +48,13 @@ export default function Pokedex({ pokemon }) {
                 }
             }
             // HANDLE ID SEARCHINPUT
-            if (typeof location.state.searchInput == 'number') {
+            if (!isNaN(searchInput)) {
                 console.log('this is a number')
+                if (searchInput <= 151) {
+                    setCurrentPokemon(pokemon[searchInput - 1])
+                } else {
+                    setInputError('Sorry, the Pokemon id needs to be one of first 151 Pokemon.')
+                }
             }
         }
 
