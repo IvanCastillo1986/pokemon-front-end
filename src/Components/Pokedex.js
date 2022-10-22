@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import './Pokedex.css'
@@ -11,18 +11,24 @@ export default function Pokedex({ pokemon }) {
     const [divStyle, setDivStyle] = useState({})
     const [isOn, setIsOn] = useState(false)
     const [inputError, setInputError] = useState('')
+    const [blackBoxY, setBlackBoxY] = useState(0)
     
-    // If we are rendering from a Pokemon
+    // If we are pulling from SearchInput
     const location = useLocation()
-    // if location.state is defined, optional chaining
 
-    
+    const blackBoxRef = useRef(null)
+
     useEffect(() => {
-        
+                
         // If we have pokemon[] ready from API call, sets currentPokemon
         if (!pokemon.length == 0) {
             setCurrentPokemon(pokemon[0])
         }
+
+    }, [pokemon])
+    
+    useEffect(() => {
+
         // If we have a currentPokemon, sets screen to white when on, with image of current pokemon
         if (currentPokemon) {
             
@@ -34,12 +40,12 @@ export default function Pokedex({ pokemon }) {
                 margin: 'auto',
             })
         }
-        // If pokemon[] does not contain a pokemon matching input name or id
+        // Sets currentPokemon to render, based on input from CardsPage Searchbar
         if (location.state) {
             setIsOn(true)
             const { searchInput } = location.state
+
             if (isNaN(Number(searchInput))) {
-                console.log('this is a string')
                 let findPokemon = pokemon.find(mon => mon.name.toLowerCase() == searchInput.toLowerCase())
                 if (findPokemon) {
                     setCurrentPokemon(findPokemon)
@@ -47,9 +53,8 @@ export default function Pokedex({ pokemon }) {
                     setInputError('Sorry, could not find that Pokemon in database. Choose from one of first 151 Pokemon.')
                 }
             }
-            // HANDLE ID SEARCHINPUT
+
             if (!isNaN(searchInput)) {
-                console.log('this is a number')
                 if (searchInput <= 151) {
                     setCurrentPokemon(pokemon[searchInput - 1])
                 } else {
@@ -79,7 +84,38 @@ export default function Pokedex({ pokemon }) {
         console.log('power is off')
     }
 
-    // if (!pokemon.length) return <h1>...Loading</h1>
+    const dPadUp = () => {
+        console.log('clicking up')
+
+        if (blackBoxY > 0) {
+            setBlackBoxY(blackBoxY - 10)
+            blackBoxRef.current.scrollTo(0, blackBoxY)
+        }
+    }
+    const dPadDown = () => {
+        let blackBox = blackBoxRef.current
+        console.log('clicking down')
+
+        if (blackBoxY < blackBox.scrollHeight - blackBox.clientHeight) {
+            setBlackBoxY(prev => prev + 10)
+            blackBox.scrollTo(0, blackBoxY)
+        }
+    }
+    // scrollHeight is 191px (the height of the element's content, including content not visible because of overflow)
+    // clientHeight is 90
+    // border is 8px
+    // offSet height is 98px
+
+    const dPadRight = () => {
+        console.log('clicking right')
+        // we are setting currentPokemon using the same id, because we're retrieving the pokemon[index], and array[idx] starts at 0
+        setCurrentPokemon(prev => pokemon[prev.id])
+    }
+    const dPadLeft = () => {
+        console.log('clicking left')
+        setCurrentPokemon(() => pokemon[currentPokemon.id - 2])
+    }
+
 
     return (
         <div className='PokedexPage'>
@@ -146,10 +182,10 @@ export default function Pokedex({ pokemon }) {
                         <div className='DpadContainer'>
                             <div className='Dpad center'>
                                 <div className='innerCircle'></div>
-                                <div className='Dpad top'></div>
-                                <div className='Dpad right'></div>
-                                <div className='Dpad bottom'></div>
-                                <div className='Dpad left'></div>
+                                <div className='Dpad top' onClick={() => dPadUp()} />
+                                <div className='Dpad right' onClick={() => dPadRight()} />
+                                <div className='Dpad bottom' onClick={() => dPadDown()} />
+                                <div className='Dpad left' onClick={() => dPadLeft()} />
                             </div>
                         </div>
                     </div>
@@ -168,14 +204,18 @@ export default function Pokedex({ pokemon }) {
                     ?
                     <div className='BlackBox border'>...awaiting valid Pokemon Entry</div>
                     :
-                    <div className='BlackBox border'>
+                    <div className='BlackBox border' ref={blackBoxRef} >
                         <h3>{currentPokemon && capitalize(currentPokemon.name)}</h3>
+                        <p>ID# {currentPokemon.id}</p>
+                        <p>Height: {currentPokemon.height}</p>
+                        <p>Weight: {currentPokemon.weight}</p>
                         {/* Add rest of info:  types(for loop through types), weight, id#, base stats, etc. */}
                         {currentPokemon.types.map((obj, i) => {
                             return (
                                 <p key={i}>Type {i + 1}: {obj.type.name}</p>
                             )
                         })}
+                        
                     </div>
                 :
                     <div className='BlackBox border'/>

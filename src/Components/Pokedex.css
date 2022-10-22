@@ -395,6 +395,7 @@
     border-radius: 4px;
     margin-bottom: 16px;
     padding: 0 10px;
+    overflow: hidden;
 }
 
 .BlueBox {
