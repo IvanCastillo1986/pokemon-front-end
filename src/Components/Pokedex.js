@@ -63,7 +63,7 @@ export default function Pokedex({ pokemon }) {
             }
         }
 
-    }, [pokemon, currentPokemon])
+    }, [currentPokemon])
 
 
     const togglePowerOn = () => {
@@ -88,7 +88,7 @@ export default function Pokedex({ pokemon }) {
         console.log('clicking up')
 
         if (blackBoxY > 0) {
-            setBlackBoxY(blackBoxY - 10)
+            setBlackBoxY(blackBoxY - 15)
             blackBoxRef.current.scrollTo(0, blackBoxY)
         }
     }
@@ -97,14 +97,14 @@ export default function Pokedex({ pokemon }) {
         console.log('clicking down')
 
         if (blackBoxY < blackBox.scrollHeight - blackBox.clientHeight) {
-            setBlackBoxY(prev => prev + 10)
+            setBlackBoxY(prev => prev + 15)
             blackBox.scrollTo(0, blackBoxY)
         }
     }
     // scrollHeight is 191px (the height of the element's content, including content not visible because of overflow)
     // clientHeight is 90
     // border is 8px
-    // offSet height is 98px
+    // offSet height is 98px (because it's the clientHeight + border)
 
     const dPadRight = () => {
         console.log('clicking right')
@@ -121,9 +121,10 @@ export default function Pokedex({ pokemon }) {
         <div className='PokedexPage'>
 
         <div className='TopBar'>
-            <div className='Camera border light'>
-                <div className='Glare1'></div>
-                <div className='Glare2'></div>
+            <div className={isOn ? 'CameraOn light' : 'Camera border light'}
+            >
+                {!isOn && <div className='Glare1'></div>}
+                {!isOn && <div className='Glare2'></div>}
             </div>
             <div className='LightContainer'>
                 <div className='light FirstLight'></div>
@@ -179,6 +180,7 @@ export default function Pokedex({ pokemon }) {
                             </div>
                             <div className='GreenSquare border'></div>
                         </div>
+
                         <div className='DpadContainer'>
                             <div className='Dpad center'>
                                 <div className='innerCircle'></div>
@@ -188,6 +190,7 @@ export default function Pokedex({ pokemon }) {
                                 <div className='Dpad left' onClick={() => dPadLeft()} />
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <div className='Separator'></div>
@@ -227,11 +230,14 @@ export default function Pokedex({ pokemon }) {
                     <span className='Button4 pause border'></span>
                 </div>
                 <div className='BoxLightContainer'>
+                    
+                    {/* The ON and OFF buttons */}
                     <div className='DoubleButtons border radius shadow'>
-                        <div className='DoubleButtons DoubleButton1' onClick={togglePowerOn}>ON</div>
+                        <div className='DoubleButtons OnButton' onClick={togglePowerOn} style={isOn ? {background: 'gray'} : {}}>ON</div>
                         <div className='DoubleButtons ButtonSeparator' />
-                        <div className='DoubleButtons DoubleButton2' onClick={togglePowerOff}>OFF</div>
+                        <div className='DoubleButtons OffButton' onClick={togglePowerOff}>OFF</div>
                     </div>
+
                     <div className='BigYellow light border'></div>
                 </div>
                 <div className='RectangleContainer'>

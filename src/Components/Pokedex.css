@@ -57,6 +57,28 @@
     z-index: -1;
     box-shadow: inset -3px -3px rgb(150, 150, 150), 4px 4px rgb(162, 22, 22);
 }
+.CameraOn {
+    width: 48px;
+    height: 48px;
+    background: radial-gradient(white, rgb(191, 240, 255), rgb(101, 234, 255));
+    position: absolute;
+    top: 26px;
+    left: 26px;
+    /* inset, offset-X, offset-Y, blur-radius, spread-radius, color */
+    box-shadow: 0 0 20px 10px rgb(155, 238, 255), 0 0 35px 30px #aeeffe;
+}
+.CameraOn::before {
+    position: absolute;
+    content: '';
+    background-color: rgb(89, 184, 168);
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgb(62, 58, 58);
+    border-radius: 100%;
+    top: -9px;
+    left: -9px;
+    z-index: -1;
+}
 .Glare1 {
     position: absolute;
     background-color: rgb(180, 244, 255);
@@ -280,6 +302,9 @@
     border-radius: 6px;
     box-sizing: border-box;
 }
+
+
+/* Dpad buttons */
 .DpadContainer {
     display: flex;
     justify-content: center;
@@ -322,6 +347,9 @@
     border-right: 3px solid black;
     border-radius: 3px 3px 0 0;
 }
+.top:hover {
+    background-color: rgb(39, 31, 31);
+}
 .right {
     width: 26px;
     height: 30px;
@@ -334,6 +362,9 @@
     border-bottom: 3px solid black;
     border-radius: 0 3px 3px 0;
 }
+.right:hover {
+    background-color: rgb(39, 31, 31);
+}
 .bottom {
     width: 30px;
     height: 26px;
@@ -344,6 +375,9 @@
     border-bottom: 3px solid black;
     border-left: 3px solid black;
     border-radius: 0 0 3px 3px;
+}
+.bottom:hover {
+    background-color: rgb(39, 31, 31);
 }
 .left {
     width: 26px;
@@ -357,6 +391,10 @@
     border-left: 3px solid black;
     border-radius: 3px 0 0 3px;
 }
+.left:hover {
+    background-color: rgb(39, 31, 31);
+}
+
 
 .Separator {
     background-color: red;
@@ -385,6 +423,7 @@
     width: 100%;
 }
 
+
 /* Right screen data output */
 .BlackBox {
     background-color: rgb(53, 53, 53);
@@ -397,6 +436,7 @@
     padding: 0 10px;
     overflow: hidden;
 }
+
 
 .BlueBox {
     position: relative;
@@ -451,10 +491,10 @@
     display: flex;
     justify-content: space-between;
 }
+
+
+/* On and Off buttons */
 .DoubleButtons {
-    background: linear-gradient(
-        rgb(252, 252, 252), rgb(252, 252, 252) 6%, rgb(216, 216, 216) 10%
-    );
     width: 70px;
     height: 25px;
     border-radius: 4px;
@@ -464,18 +504,33 @@
     align-items: center;
     font: bold 13px Arial, Helvetica, sans-serif;
 }
-.DoubleButton1 {
+.OnButton {
+    background: linear-gradient(
+        rgb(252, 252, 252), rgb(252, 252, 252) 6%, rgb(216, 216, 216) 10%
+    );
     border-radius: unset;
 }
-.DoubleButton2 {
+.OnButton:hover {
+    background: rgb(174, 174, 174);
+
+    /* ADD NEW MOUSE CURSOR */
+}
+.OffButton {
+    background: linear-gradient(
+        rgb(252, 252, 252), rgb(252, 252, 252) 6%, rgb(216, 216, 216) 10%
+    );
     border-radius: unset;
 }
-.DoubleButtons .ButtonSeparator {
+.OffButton:hover {
+    background: rgb(174, 174, 174);
+}
+.ButtonSeparator {
     width: 5.5px;
     background: black;
     border-radius: unset;
     height: 28px;
 }
+
 
 .BigYellow {
     background-color: yellow;
