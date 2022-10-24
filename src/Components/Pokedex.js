@@ -109,11 +109,19 @@ export default function Pokedex({ pokemon }) {
     const dPadRight = () => {
         console.log('clicking right')
         // we are setting currentPokemon using the same id, because we're retrieving the pokemon[index], and array[idx] starts at 0
-        setCurrentPokemon(prev => pokemon[prev.id])
+        if (currentPokemon.id == 151) {
+            setCurrentPokemon(() => pokemon[0])
+        } else {
+            setCurrentPokemon(prev => pokemon[prev.id])
+        }
     }
     const dPadLeft = () => {
         console.log('clicking left')
-        setCurrentPokemon(() => pokemon[currentPokemon.id - 2])
+        if (currentPokemon.id == 1) {
+            setCurrentPokemon(() => pokemon[150])
+        } else {
+            setCurrentPokemon(() => pokemon[currentPokemon.id - 2])
+        }
     }
 
 
