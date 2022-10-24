@@ -55,7 +55,7 @@ export default function Pokedex({ pokemon }) {
             }
 
             if (!isNaN(searchInput)) {
-                if (searchInput <= 151) {
+                if (searchInput <= 151 && searchInput >= 1) {
                     setCurrentPokemon(pokemon[searchInput - 1])
                 } else {
                     setInputError('Sorry, the Pokemon id needs to be one of first 151 Pokemon.')
@@ -210,8 +210,8 @@ export default function Pokedex({ pokemon }) {
                     <div className='BlackBox border' ref={blackBoxRef} >
                         <h3>{currentPokemon && capitalize(currentPokemon.name)}</h3>
                         <p>ID# {currentPokemon.id}</p>
-                        <p>Height: {currentPokemon.height}</p>
-                        <p>Weight: {currentPokemon.weight}</p>
+                        <p>Height: {currentPokemon.height} inches</p>
+                        <p>Weight: {currentPokemon.weight} lbs.</p>
                         {/* Add rest of info:  types(for loop through types), weight, id#, base stats, etc. */}
                         {currentPokemon.types.map((obj, i) => {
                             return (

@@ -1,8 +1,0 @@
-.SinglePokemon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.SinglePokemon h2 {
-    text-transform: capitalize;
-}

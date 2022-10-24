@@ -4,15 +4,14 @@ import { Switch, Route } from 'react-router-dom'
 import './App.css'
 
 // Components
-import NavBar from './Navbar'
+import NavBar from './Layout/Navbar'
 import CardsPage from './Pages/CardsPage'
 
 // Pages
 import Home from './Pages/Home'
 import FourOFour from './Pages/FourOFour'
-import Show from './Pages/Show'
 import Pokedex from './Components/Pokedex'
-import Battle from './Pages/Battle'
+import Play from './Pages/Play'
 
 import axios from 'axios'
 
@@ -51,7 +50,7 @@ export default function App() {
         <Route exact path="/" component={Home} />
         <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
         <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
-        <Route path="/battle" component={Battle} />
+        <Route path="/play" render={() => <Play pokemon={pokemon} />} />
         <Route exact path="*" component={FourOFour} />
       </Switch>
     </div>

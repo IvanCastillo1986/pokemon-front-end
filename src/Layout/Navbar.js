@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import pokeball from './Images/pokeball.png'
+import pokeball from '../Images/pokeball.png'
 
 export default function Navbar() {
 
@@ -10,7 +10,7 @@ export default function Navbar() {
             <Link to="/">Home</Link>
             <Link to="/cards">Cards</Link>
             <Link to="/pokedex">Pokedex</Link>
-            <Link to="/battle">Battle</Link>
+            <Link to="/play">Play</Link>
         </div>
     )
 }
