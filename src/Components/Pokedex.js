@@ -192,10 +192,10 @@ export default function Pokedex({ pokemon }) {
                         <div className='DpadContainer'>
                             <div className='Dpad center'>
                                 <div className='innerCircle'></div>
-                                <div className='Dpad top' onClick={() => dPadUp()} />
-                                <div className='Dpad right' onClick={() => dPadRight()} />
-                                <div className='Dpad bottom' onClick={() => dPadDown()} />
-                                <div className='Dpad left' onClick={() => dPadLeft()} />
+                                <div className='Dpad top' onClick={() => {isOn && dPadUp()}} />
+                                <div className='Dpad right' onClick={() => {isOn && dPadRight()}} />
+                                <div className='Dpad bottom' onClick={() => {isOn && dPadDown()}} />
+                                <div className='Dpad left' onClick={() => {isOn && dPadLeft()}} />
                             </div>
                         </div>
 
