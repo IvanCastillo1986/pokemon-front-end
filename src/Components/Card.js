@@ -2,8 +2,6 @@ import React from 'react'
 
 export default function Card({ pokemon }) {
 
-
-
     return (
         <div className='Card'>
             <div className='Name'>{pokemon.name}</div>
@@ -14,14 +12,7 @@ export default function Card({ pokemon }) {
                 <img className='Image' src={pokemon.sprites.other.home.front_default} alt={pokemon.name} />
             </div>
             <div>
-                <span className='Ability'>
-                    { pokemon.abilities[1]
-                    ?
-                        pokemon.abilities[1].ability.name
-                    :
-                        pokemon.abilities[0].ability.name
-                    }
-                </span>
+                <span className='Ability'>{pokemon.twoMoves[1].move.name}</span>
             </div>
             <div>
                 <span className='Atk'>Atk: {pokemon.stats[1].base_stat}</span> <span className='Def'>Def: {pokemon.stats[2].base_stat}</span>

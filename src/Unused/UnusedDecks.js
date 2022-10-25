@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import BattleGrounds from './BattleGrounds'
+import BattleGrounds from '../Components/BattleGrounds'
 import { convertToBattlePokemon } from '../Helper/convertToBattlePokemon'
 import { capitalizeObject } from '../Helper/capitalize'
 
 
-
-export default function Decks() {
+export default function UnusedDecks() {
 
     const [ deck1, setDeck1 ] = useState([])
     const [ deck2, setDeck2 ] = useState([])
