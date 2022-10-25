@@ -38,7 +38,35 @@ export default function App() {
     getPokemon()
 
   }, [])
+  console.log(pokemon)
 
+  // Use these calls to get info on pokemon evolutions
+  useEffect(() => {
+      // axios.get(`https://pokeapi.co/api/v2/evolution-chain/2/`)
+      // .then(res => {
+      //   console.log(res.data)
+      // })
+
+      axios.get(`https://pokeapi.co/api/v2/pokemon-species/1/`)
+      .then(res => {
+        console.log(res.data)
+      })
+  }, [])
+
+  function findFirstTwoLearnedMoves(pokemon) {
+    const pokemoves = []
+    for (const pokemove of pokemon.moves) {
+        if (pokemove.version_group_details[0].level_learned_at > 1) {
+            pokemoves.push(pokemove)
+            console.log(pokemove.move.name)
+            console.log(pokemove.version_group_details[0].level_learned_at)
+        }
+        if (pokemoves.length == 2) break
+    }
+    return pokemoves
+  }
+  // findFirstTwoLearnedMoves(pokemon[2])
+  // console.log(findFirstTwoLearnedMoves(pokemon[2]))
 
 
 

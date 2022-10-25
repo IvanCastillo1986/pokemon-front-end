@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import BattleGrounds from './BattleGrounds'
-import { makeBattlePokemon } from '../Helper/makeBattlePokemon'
+import { convertToBattlePokemon } from '../Helper/convertToBattlePokemon'
 import { capitalizeObject } from '../Helper/capitalize'
 
 
@@ -33,8 +33,8 @@ export default function Decks() {
                 })
             }
 
-            setDeck1(makeBattlePokemon(arr1))
-            setDeck2(makeBattlePokemon(arr2))
+            setDeck1(convertToBattlePokemon(arr1))
+            setDeck2(convertToBattlePokemon(arr2))
             setIsLoaded(true)
         }
         getDeck()
