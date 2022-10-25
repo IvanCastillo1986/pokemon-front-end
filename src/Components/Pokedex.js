@@ -19,9 +19,8 @@ export default function Pokedex({ pokemon }) {
     const blackBoxRef = useRef(null)
 
     useEffect(() => {
-                
         // If we have pokemon[] ready from API call, sets currentPokemon
-        if (!pokemon.length === 0) {
+        if (pokemon.length) {
             setCurrentPokemon(pokemon[0])
         }
 
@@ -87,18 +86,22 @@ export default function Pokedex({ pokemon }) {
     const dPadUp = () => {
         console.log('clicking up')
 
-        if (blackBoxY > 0) {
-            setBlackBoxY(blackBoxY - 15)
-            blackBoxRef.current.scrollTo(0, blackBoxY)
+        if (currentPokemon) { // Assures no bug if pressed during ...Loading
+            if (blackBoxY > 0) {
+                setBlackBoxY(blackBoxY - 15)
+                blackBoxRef.current.scrollTo(0, blackBoxY)
+            }
         }
     }
     const dPadDown = () => {
         let blackBox = blackBoxRef.current
         console.log('clicking down')
 
-        if (blackBoxY < blackBox.scrollHeight - blackBox.clientHeight) {
-            setBlackBoxY(prev => prev + 15)
-            blackBox.scrollTo(0, blackBoxY)
+        if (currentPokemon) { // Assures no bug if pressed during ...Loading
+            if (blackBoxY < blackBox.scrollHeight - blackBox.clientHeight) {
+                setBlackBoxY(prev => prev + 15)
+                blackBox.scrollTo(0, blackBoxY)
+            }
         }
     }
     // scrollHeight is 191px (the height of the element's content, including content not visible because of overflow)
@@ -109,18 +112,23 @@ export default function Pokedex({ pokemon }) {
     const dPadRight = () => {
         console.log('clicking right')
         // we are setting currentPokemon using the same id, because we're retrieving the pokemon[index], and array[idx] starts at 0
-        if (currentPokemon.id === 151) {
-            setCurrentPokemon(() => pokemon[0])
-        } else {
-            setCurrentPokemon(prev => pokemon[prev.id])
+        if (currentPokemon) { // Assures no bug if pressed during ...Loading
+            if (currentPokemon.id === 151) {
+                setCurrentPokemon(() => pokemon[0])
+            } else {
+                setCurrentPokemon(prev => pokemon[prev.id])
+            }
         }
     }
     const dPadLeft = () => {
         console.log('clicking left')
-        if (currentPokemon.id === 1) {
-            setCurrentPokemon(() => pokemon[150])
-        } else {
-            setCurrentPokemon(() => pokemon[currentPokemon.id - 2])
+
+        if (currentPokemon) {
+            if (currentPokemon.id === 1) {
+                setCurrentPokemon(() => pokemon[150])
+            } else {
+                setCurrentPokemon(() => pokemon[currentPokemon.id - 2])
+            }
         }
     }
 
@@ -223,12 +231,12 @@ export default function Pokedex({ pokemon }) {
                         {/* Add rest of info:  types(for loop through types), weight, id#, base stats, etc. */}
                         {currentPokemon.types.map((obj, i) => {
                             return (
-                                <p key={i}>Type {i + 1}: {obj.type.name}</p>
+                                <p key={i}>Type {i + 1}: {capitalize(obj.type.name)}</p>
                             )
                         })}
                         {currentPokemon.twoMoves.map((obj, i) => {
                             return (
-                                <p key={i}>Move {i+1}: {obj.move.name}</p>
+                                <p key={i}>Move {i + 1}: {capitalize(obj.move.name)}</p>
                             )
                         })}
                         
