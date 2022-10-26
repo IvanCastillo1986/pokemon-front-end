@@ -1,9 +1,12 @@
 import React from 'react'
 
+import Deck from '../Components/Deck'
+
 import './Play.css'
 
 
 export default function Play({ pokemon }) {
+
 
     return (
         <div className='Play'>
@@ -23,7 +26,7 @@ export default function Play({ pokemon }) {
 
             */}
 
-            {/* <Decks pokemon={pokemon} /> */}
+            <Deck pokemon={pokemon} />
 
             {/* 
             <Arena />

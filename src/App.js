@@ -14,7 +14,7 @@ import Play from './Pages/Play'
 import FourOFour from './Pages/FourOFour'
 
 import axios from 'axios'
-import { convertToBattlePokemon, findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
+import { findFirstTwoLearnedMoves, convertToBattlePokemon } from './Helper/convertToBattlePokemon'
 
 
 export default function App() {
@@ -38,8 +38,6 @@ export default function App() {
           const twoMoves = findFirstTwoLearnedMoves(pokemon)
           pokemon.twoMoves = twoMoves
 
-          console.log(pokemon.name, pokemon.twoMoves)
-
           pokemonArr.push(pokemon)
         })
       }
@@ -48,20 +46,6 @@ export default function App() {
 
   }, []);
 
-  console.log(pokemon)
-
-  // useEffect(() => {
-  //   if (pokemon[25]) {
-  //     const raichu = pokemon[25]
-  //     for (let move of raichu.moves) {
-  //       console.log(move.move.name, move.version_group_details[0].level_learned_at)
-  //     }
-  //   }
-  //   // console.log(pokemon[25])
-  // }, [pokemon])
-
-
-
 
   return (
     <div className='App'>
@@ -69,7 +53,7 @@ export default function App() {
 
       <Switch>
         <Route exact path="/" component={Home} />
-        {pokemon && <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />}
+        <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
         <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
         <Route path="/play" render={() => <Play pokemon={pokemon} />} />
         <Route exact path="*" component={FourOFour} />
