@@ -124,11 +124,18 @@ export default function Deck({ pokemon }) {
                 You two will be best of friends!</p>
                 <BattleCard key={pokemon.id} pokemon={starterPokemon} />
                 <p>And these are the rest of your new Pokemon</p>
+                <div className='RandomDeck'>
+                    {yourDeck.map(pokemon => {
+                        return (
+                            <BattleCard className='Card' key={pokemon.id} pokemon={pokemon} />
+                            )
+                        })}
+                </div>
                 </>
             }
 
             {/* Stop this from rendering duplicate pokemon */}
-            <div>
+            {/* <div>
                 {Object.keys(starterPokemon).length > 0 ? 
                 yourDeck.map(pokemon => {
                     return (
@@ -137,7 +144,7 @@ export default function Deck({ pokemon }) {
                     })
                     : null
                 }
-            </div>
+            </div> */}
         </div>
     )
 }
