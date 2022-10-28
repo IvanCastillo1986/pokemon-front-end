@@ -10,8 +10,6 @@ export default function Play({ pokemon }) {
 
     return (
         <div className='Play'>
-            <h1>Let's Play!</h1>
-
 
             {/* 
             <Decks /> component:
@@ -23,6 +21,14 @@ export default function Play({ pokemon }) {
             Each of the Pokemon's 2 abilities will be randomly chosen from their array of moves.
             Create a function that applies the power, speed (quick attack) and accuracy to each
             Pokemon's moves.
+
+            Player:
+            "Hey! Welcome to Pokemon Play!"
+            "Click the button below to choose a random deck"
+            [1,2,3,4,5,6,7]
+            "Great! These are your new Pokemon."
+            "They're all basic Pokemon, so you'll need to level them up before you can evolve them."
+            "I know! Let's take them out to the arena and get some training in."
 
             */}
 

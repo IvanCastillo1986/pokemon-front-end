@@ -2,15 +2,40 @@
     width: 100%;
     text-align: center;
 }
+.Play h1 {
+    margin: 60px;
+}
 
-.Decks {
+.Deck {
     display: flex;
     flex-direction: column;
 }
 
-h2 {
-    text-align: center;
+.Buttons {
+    display: flex;
+    margin: 20px auto;
+    width: 30%;
+    justify-content: space-around;
 }
+.Deck .Grass-btn {
+    background-color: rgb(0, 158, 0);
+    border-color: rgb(8, 94, 8);
+}
+.Deck .Grass-btn:hover {
+    background-color: green;
+}
+.Deck .Fire-btn {
+    background-color: rgb(255, 81, 0);
+    border-color: rgb(193, 0, 0);
+}
+.Deck .Fire-btn:hover {
+    background-color: red;
+}
+.Deck .Water-btn:hover {
+    background-color: rgb(65, 93, 255);
+}
+
+
 
 .BattleGrounds {
     text-align: center;
