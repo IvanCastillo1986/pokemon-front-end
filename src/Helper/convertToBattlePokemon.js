@@ -20,7 +20,7 @@ const convertToBattlePokemon = (pokemonArr) => {
             atk: mon.stats[1].base_stat,
             def: mon.stats[2].base_stat,
             spd: mon.stats[5].base_stat,
-            image: mon.sprites.other.dream_world.front_default,
+            image: mon.sprites.other["official-artwork"].front_default,
             move1: mon.twoMoves[0],
             move2: mon.twoMoves[1] || { name: "struggle", damage: 0, pp: 99, remaining_pp: 99 },
             // WHY ISN'T THIS METHOD WORKING IN REACT?

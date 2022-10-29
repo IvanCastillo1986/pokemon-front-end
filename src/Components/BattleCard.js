@@ -7,7 +7,7 @@ export default function Card({ pokemon }) {
 
 
     return (
-        <div className='Card'>
+        <div className='BattleCard'>
             <div className='Name'>{pokemon.name}</div>
             <div className='Row1'>
                 <span className='HP'>{pokemon.hp}HP</span> <span className='Type'>{pokemon.type}</span>
@@ -15,7 +15,7 @@ export default function Card({ pokemon }) {
             <div className='Row2'>
                 <img className='Image' src={pokemon.image} alt={pokemon.name} />
             </div>
-            <div>
+            <div className='Moves'>
                 <span className='Move'>{capitalize(pokemon.move1.move.name)}</span><br/>
                 <span className='Move'>{capitalize(pokemon.move2.move.name)}</span>
             </div>

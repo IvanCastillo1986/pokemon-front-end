@@ -4,6 +4,8 @@ import { convertToBattlePokemon } from '../Helper/convertToBattlePokemon'
 
 import BattleCard from './BattleCard'
 
+import './BattleCard.css'
+
 
 export default function Deck({ pokemon }) {
     
@@ -11,7 +13,6 @@ export default function Deck({ pokemon }) {
     const [battlePokemon, setBattlePokemon] = useState([])
     const [yourDeck, setYourDeck] = useState([])
     const [starterPokemon, setStarterPokemon] = useState({})
-    // const [isLoading, setIsLoading] = useState(true)
     const isMounted = useRef(false)
 
     const basicPokemonIds = [10,13,16,19,21,23,25,27,29,32,35,37,39,41,43,46,48,50,52,54,56,58,
@@ -57,13 +58,24 @@ export default function Deck({ pokemon }) {
     }, [basicPokemon])
 
     useEffect(() => {
-        // Choose 7 random cards from the battlePokemon
-        // on each of 7 iterations, choose a random number between 0 and battlePokemon.length
+        // Choose 4 random cards from battlePokemon[]
+        // on each of 4 iterations, choose a random number between 0 and battlePokemon.length
         if (battlePokemon.length) {
+
             let deckArr = []
-            for (let i = 0; i < 7; i++) {
-                // add each card to yourDeck
-                deckArr.push(battlePokemon[Math.floor(Math.random() * (battlePokemon.length))])
+            let usedIdx = new Set()
+
+            for (let i = 0; i < 4; i++) {
+                // convert to battle pokemon, add each card to yourDeck (without duplicates)
+                let randomNum = Math.floor(Math.random() * (battlePokemon.length))
+
+                if (usedIdx.has(randomNum)) {
+                    i--
+                }
+                else {
+                    deckArr.push(battlePokemon[randomNum])
+                    usedIdx.add(randomNum)
+                }
             }
             setYourDeck(deckArr)
         }
@@ -101,16 +113,17 @@ export default function Deck({ pokemon }) {
     //         "They're all basic Pokemon, so you'll need to level them up before you can evolve them."
     //         "I know! Let's take them out to the arena and get some training in."
 
-    // if (isLoading) return <h1>...Loading</h1>
 
     return (
+        pokemon.length ?
+
         <div className='Deck'>
             <h1>Hey, welcome to Pokemon Play!</h1>
-            <p>Click a button below to choose your first Pokemon.<br />
-            Your comrade through thick and thin.</p>
             {Object.keys(starterPokemon).length === 0 
             ?
                 <>
+                <p>Click a button below to choose your first Pokemon.<br />
+                Your comrade through thick and thin.</p>
                 <p>Which type is your favorite?</p>
                 <div className='Buttons'>
                     <button className='Grass-btn' onClick={handleClick}>Grass</button>
@@ -120,31 +133,26 @@ export default function Deck({ pokemon }) {
                 </>
             :
                 <>
-                <p>Congrats! Your new starter Pokemon is {starterPokemon.name}.<br />
+                <p>Congrats! Your new starter Pokemon is {capitalize(starterPokemon.name)}.<br />
                 You two will be best of friends!</p>
                 <BattleCard key={pokemon.id} pokemon={starterPokemon} />
-                <p>And these are the rest of your new Pokemon</p>
+                <p>And this is the rest of your deck</p>
                 <div className='RandomDeck'>
-                    {yourDeck.map(pokemon => {
+                    {yourDeck.map((pokemon, i) => {
                         return (
-                            <BattleCard className='Card' key={pokemon.id} pokemon={pokemon} />
+                            <BattleCard className='BattleCard' key={i} pokemon={pokemon} />
                             )
                         })}
                 </div>
                 </>
             }
+        </div>
 
-            {/* Stop this from rendering duplicate pokemon */}
-            {/* <div>
-                {Object.keys(starterPokemon).length > 0 ? 
-                yourDeck.map(pokemon => {
-                    return (
-                        <BattleCard key={pokemon.id} pokemon={pokemon} />
-                        )
-                    })
-                    : null
-                }
-            </div> */}
+        : 
+        <div>
+            <h1>Hey, welcome to Pokemon Play!</h1>
+            <p>Please wait while the page loads.<br />
+            We promise, it's worth it!</p>
         </div>
     )
 }
