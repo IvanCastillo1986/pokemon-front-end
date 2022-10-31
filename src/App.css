@@ -33,6 +33,10 @@ h1 {
   margin: 80px;
 }
 
+p {
+  font-size: 1.2em;
+}
+
 button {
   background-color: #3d7dca;
   color: white;

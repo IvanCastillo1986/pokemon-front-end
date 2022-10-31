@@ -8,11 +8,16 @@ import './Play.css'
 
 export default function Play({ pokemon }) {
 
+    const [yourDeck, setYourDeck] = useState([])
+    const [aiDeck, setAiDeck] = useState([])
+    const [starterPokemon, setStarterPokemon] = useState({})
     const [currentComponent, setCurrentComponent] = useState('deck')
 
     const handleCurrentComponent = (str) => {
         setCurrentComponent(str)
     }
+
+    console.log(aiDeck)
 
 
     return (
@@ -41,7 +46,13 @@ export default function Play({ pokemon }) {
 
             {
                 currentComponent === 'deck' &&
-                <Deck pokemon={pokemon} handleCurrentComponent={handleCurrentComponent} />
+                <Deck 
+                    pokemon={pokemon} 
+                    handleCurrentComponent={handleCurrentComponent} 
+                    setStarterPokemon={setStarterPokemon} starterPokemon={starterPokemon}
+                    setYourDeck={setYourDeck} yourDeck={yourDeck}
+                    setAiDeck={setAiDeck}
+                />
             }
 
             {/* 
@@ -53,7 +64,12 @@ export default function Play({ pokemon }) {
             */}
             {
                 currentComponent === 'arena' &&
-                <Arena />
+                <Arena 
+                    starterPokemon={starterPokemon}
+                    // is this statement in props declaration safe to do?
+                    yourDeck={[starterPokemon].concat(yourDeck)}
+                    aiDeck={aiDeck}
+                />
             }
         </div>
     )
