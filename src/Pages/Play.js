@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import Deck from '../Components/Deck'
+import Arena from '../Components/Arena'
 
 import './Play.css'
 
 
 export default function Play({ pokemon }) {
+
+    const [currentComponent, setCurrentComponent] = useState('deck')
+
+    const handleCurrentComponent = (str) => {
+        setCurrentComponent(str)
+    }
 
 
     return (
@@ -32,7 +39,10 @@ export default function Play({ pokemon }) {
 
             */}
 
-            <Deck pokemon={pokemon} />
+            {
+                currentComponent === 'deck' &&
+                <Deck pokemon={pokemon} handleCurrentComponent={handleCurrentComponent} />
+            }
 
             {/* 
             <Arena />
@@ -41,6 +51,10 @@ export default function Play({ pokemon }) {
             You can switch Pokemon out whenever you want, but then the Pokemon that has just
             been switched in will recieve the damage from the opponent's selected move.
             */}
+            {
+                currentComponent === 'arena' &&
+                <Arena />
+            }
         </div>
     )
 }

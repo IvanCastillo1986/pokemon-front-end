@@ -32,3 +32,19 @@
 h1 {
   margin: 80px;
 }
+
+button {
+  background-color: #3d7dca;
+  color: white;
+  width: fit-content;
+  font: 19px monospace;
+  margin: auto;
+  padding: 0 10px;
+  font-weight: bold;
+  height: 40px;
+  border: 3px solid #3B4CCA;
+  border-radius: 5px;
+}
+button:hover {
+  background-color: rgb(65, 93, 255);
+}

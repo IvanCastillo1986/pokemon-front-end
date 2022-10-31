@@ -1,7 +1,8 @@
 .Play {
-    width: 100%;
+    width: 9 0%;
     text-align: center;
 }
+
 .Play h1 {
     margin: 60px;
 }
@@ -9,13 +10,14 @@
 .Deck {
     display: flex;
     flex-direction: column;
+    margin-bottom: 60px;
 }
 
 .Buttons {
     display: flex;
     margin: 20px auto;
-    width: 30%;
-    justify-content: space-around;
+    width: 50%;
+    justify-content: space-between;
 }
 .Deck .Grass-btn {
     background-color: rgb(0, 158, 0);
@@ -31,11 +33,16 @@
 .Deck .Fire-btn:hover {
     background-color: red;
 }
-.Deck .Water-btn:hover {
-    background-color: rgb(65, 93, 255);
-}
-.RandomDeck .Card {
+
+.RandomDeck .BattleCard {
     margin: 10px;
+}
+
+.ArenaPrompt {
+    line-height: 1.6;
+}
+button:last-of-type {
+    margin: 40px auto;
 }
 
 
@@ -62,15 +69,7 @@
     font-size: 20px;
     font-weight: bold;
 }
-button {
-    background-color: #3d7dca;
-    color: white;
-    font: 19px monospace;
-    font-weight: bold;
-    height: 40px;
-    border: 3px solid #3B4CCA;
-    border-radius: 5px;
-}
+
 hr {
     background-color: red;
     margin-top: 40px;

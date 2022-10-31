@@ -14,7 +14,7 @@ import Play from './Pages/Play'
 import FourOFour from './Pages/FourOFour'
 
 import axios from 'axios'
-import { findFirstTwoLearnedMoves, convertToBattlePokemon } from './Helper/convertToBattlePokemon'
+import { findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
 
 
 export default function App() {

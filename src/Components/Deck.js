@@ -7,7 +7,7 @@ import BattleCard from './BattleCard'
 import './BattleCard.css'
 
 
-export default function Deck({ pokemon }) {
+export default function Deck({ pokemon, handleCurrentComponent }) {
     
     const [basicPokemon, setBasicPokemon] = useState([])
     const [battlePokemon, setBattlePokemon] = useState([])
@@ -36,36 +36,45 @@ export default function Deck({ pokemon }) {
         // Since we now have the basicPokemon data ready, our second useEffect callback will run and convertToBattlePokemon will not 
         // cause error because we now have data.
         // Also, refs do not use state, so it doesn't trigger re-renders. Refs also persist across renders.
+        console.log('useEffect #1')
 
-        if (isMounted.current) {
+        // if (isMounted.current) {
+        if (pokemon.length) {
+
             let pokeArr = []
             
             for (const id of basicPokemonIds) {
                 pokeArr.push(pokemon[id - 1])
             }
-            setBasicPokemon(pokeArr)    
-            // setIsLoading(false)
-        } else {
-            isMounted.current = true
+            setBasicPokemon(pokeArr)
         }
+        // } else {
+        //     isMounted.current = true
+        // }
         
     }, [pokemon])
 
     useEffect(() => {
         // This will not cause an error on the first useEffect call when component mounts because the array is empty, instead of undefined
-        setBattlePokemon(convertToBattlePokemon(basicPokemon))
+        console.log('useEffect #2')
+        console.log(basicPokemon)
+        if (basicPokemon.length) {
+            setBattlePokemon(convertToBattlePokemon(basicPokemon))
+        }
         
     }, [basicPokemon])
 
     useEffect(() => {
+        console.log('useEffect #3')
         // Choose 4 random cards from battlePokemon[]
         // on each of 4 iterations, choose a random number between 0 and battlePokemon.length
         if (battlePokemon.length) {
+            console.log(battlePokemon)
 
             let deckArr = []
             let usedIdx = new Set()
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 // convert to battle pokemon, add each card to yourDeck (without duplicates)
                 let randomNum = Math.floor(Math.random() * (battlePokemon.length))
 
@@ -83,6 +92,8 @@ export default function Deck({ pokemon }) {
 
     // This let's the player choose their starter Pokemon
     const handleClick = (e) => {
+
+        console.log('click starter')
         let starterPokemonArr = convertToBattlePokemon(pokemon.filter(mon => 
             mon.name === 'bulbasaur' || mon.name === 'charmander' || mon.name === 'squirtle'
         ))
@@ -136,7 +147,7 @@ export default function Deck({ pokemon }) {
                 <p>Congrats! Your new starter Pokemon is {capitalize(starterPokemon.name)}.<br />
                 You two will be best of friends!</p>
                 <BattleCard key={pokemon.id} pokemon={starterPokemon} />
-                <p>And this is the rest of your deck</p>
+                <p>And this is the rest of your deck:</p>
                 <div className='RandomDeck'>
                     {yourDeck.map((pokemon, i) => {
                         return (
@@ -144,6 +155,14 @@ export default function Deck({ pokemon }) {
                             )
                         })}
                 </div>
+                <p  className='ArenaPrompt'>These are all basic-level Pokemon. This means that they have not evolved yet.<br />
+                You will need to evolve them through experience and levels. <br />
+                Some are able to evolve, which means they are relatively weak, but have the ability to become very strong.<br />
+                Some Pokemon can not evolve, but these Pokemon are stronger than most other basic-level Pokemon who can evolve.<br/>
+                However, these Pokemon are not as strong as many level 1 or level 2 Pokemon who have already evolved.</p>
+                <p>Click the button below when you're ready to enter the Arena and test out your deck!</p>
+                {/* Link this button to the Arena with deck props, and remove the Deck component */}
+                <button onClick={() => handleCurrentComponent('arena')}>Go to Arena</button>
                 </>
             }
         </div>
