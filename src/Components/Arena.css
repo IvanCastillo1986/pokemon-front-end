@@ -1,0 +1,51 @@
+.Arena {
+    width: 100%;
+    color: #081820;
+    margin: 60px auto 40px;
+}
+.Arena .buttonDiv {
+    display: flex;
+    width: 80%;
+    margin: auto;
+}
+.Arena button {
+    background-color: #346856;
+    color: #e0f8d0;
+    border-color: #081820;
+}
+.Arena button:hover {
+    background-color: #081820;
+}
+
+.playerDiv {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.Bench {
+    margin: 30px auto;
+    width: 90%;
+    background-color: #346856;
+    height: 300px;
+    border: 3px solid #081820;
+    border-radius: 10px;
+}
+
+.Table {
+    margin: auto;
+    width: 90%;
+    background-color: #346856;
+    height: 300px;
+    display: flex;
+    border: 3px solid #081820;
+    border-radius: 10px;
+}
+
+.Player1Table {
+    display: flex;
+    flex-direction: column;   
+}
+.Player2Table {
+    display: flex;
+    flex-direction: column;   
+}

@@ -40,7 +40,9 @@ p {
 button {
   background-color: #3d7dca;
   color: white;
-  width: fit-content;
+  /* width: fit-content; */
+  display: inline-block;
+  white-space: nowrap;
   font: 19px monospace;
   margin: auto;
   padding: 0 10px;

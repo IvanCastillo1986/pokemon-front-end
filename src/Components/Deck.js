@@ -7,6 +7,7 @@ import BattleCard from './BattleCard'
 import './BattleCard.css'
 
 
+// This component let's player choose their starter Pokemon, and randomly chooses player and AI decks
 export default function Deck(
     { pokemon, handleCurrentComponent, setStarterPokemon, starterPokemon, setYourDeck, yourDeck, setAiDeck }
 ) {
