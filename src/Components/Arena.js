@@ -22,8 +22,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
     <Table>
     */}
 
-    // const [myDeck, setMyDeck] = useState(yourDeck)
-    // const [aiDeck, setEnemyDeck] = useState(opponentDeck)
+
     const [myPokemon, setMyPokemon] = useState({})
     const [myBench, setMyBench] = useState([])
     const [enemyPokemon, setEnemyPokemon] = useState({})
@@ -82,8 +81,8 @@ export default function Arena({ yourDeck, opponentDeck }) {
                     <h2>Player 2</h2>
                 </div>
 
-                <Bench />
-                <Table  />
+                <Table myPokemon={myPokemon} enemyPokemon={enemyPokemon} />
+                <Bench myBench={myBench} enemyBench={enemyBench} />
             </div>
             }
             
