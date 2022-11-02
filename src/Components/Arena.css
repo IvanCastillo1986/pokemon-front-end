@@ -22,15 +22,6 @@
     justify-content: space-evenly;
 }
 
-.Bench {
-    margin: 30px auto;
-    width: 95%;
-    background-color: #346856;
-    height: 300px;
-    border: 3px solid #081820;
-    border-radius: 10px;
-}
-
 .Table {
     margin: auto;
     width: 95%;
@@ -56,9 +47,9 @@
     color: black;
     font-family: 'PKMN RBYGSC';
     font-size: 18px;
-    min-width: 504px;
+    min-width: 30%;
     height: 201px;
-    margin: auto auto auto auto;
+    margin: auto 0;
     padding: 10px;
     border: 3px solid black;
     border-top: 5px solid black;
@@ -68,4 +59,14 @@
 .Table .screen span {
     display: block;
     margin: 10px 0 10px 0;
+}
+
+
+.Bench {
+    margin: 30px auto;
+    width: 95%;
+    background-color: #346856;
+    height: 300px;
+    border: 3px solid #081820;
+    border-radius: 10px;
 }

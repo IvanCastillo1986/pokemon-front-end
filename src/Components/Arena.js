@@ -39,8 +39,8 @@ export default function Arena({ yourDeck, opponentDeck }) {
     }, [])
 
     function handleInitialClick(e) {
-        const myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.innerText.toLowerCase())
-        // in order to find idx, I have to use myCurrentPokemon's id, and use it to find it's id in 
+        const myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.innerText.split(' ').join('-').toLowerCase())
+        
         const idx = yourDeck.findIndex(mon => mon.name === myCurrentPokemon.name)
         yourDeck.splice(idx, 1)
         console.log(idx)
