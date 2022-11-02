@@ -43,7 +43,6 @@ export default function Arena({ yourDeck, opponentDeck }) {
         
         const idx = yourDeck.findIndex(mon => mon.name === myCurrentPokemon.name)
         yourDeck.splice(idx, 1)
-        console.log(idx)
         
         setMyPokemon(myCurrentPokemon)
         setMyBench(yourDeck)
@@ -82,7 +81,8 @@ export default function Arena({ yourDeck, opponentDeck }) {
                 </div>
 
                 <Table myPokemon={myPokemon} enemyPokemon={enemyPokemon} />
-                <Bench myBench={myBench} enemyBench={enemyBench} />
+
+                <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />
             </div>
             }
             
