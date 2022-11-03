@@ -3,3 +3,22 @@ body {
     font-family: monospace;
     margin: 0;
 }
+
+@font-face {
+    font-family: "PKMN-RBYGSC";
+    src: local("PKMN-RBYGSC"),
+        url("./Fonts/PKMN-RBYGSC.ttf"),
+        format("truetype");
+}
+@font-face {
+    font-family: "pokemon-hollow";
+    src: local("pokemon-hollow"),
+        url("./Fonts/pokemon-hollow.ttf"),
+        format("truetype");
+}
+@font-face {
+    font-family: "pokemon-solid";
+    src: local("pokemon-solid"),
+        url("./Fonts/pokemon-solid.ttf"),
+        format("truetype");
+}

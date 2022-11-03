@@ -41,7 +41,7 @@
 .ArenaPrompt {
     line-height: 1.6;
 }
-button:last-of-type {
+.ArenaPromptBtn {
     margin: 40px auto;
 }
 

@@ -36,30 +36,83 @@
     display: flex;
     flex-direction: column;   
 }
+.moveDiv {
+    display: flex;
+    flex-direction: column;
+}
+.moveDiv button {
+    margin-bottom: 15px;;
+}
+
 
 .Player2Table {
     display: flex;
     flex-direction: column;
 }
 
+
 .Table .screen {
     background-color: rgb(237, 228, 228);
     color: black;
     font-family: 'PKMN RBYGSC';
     font-size: 18px;
-    min-width: 30%;
-    height: 201px;
+    min-width: 40%;
+    height: 200px;
     margin: auto 0;
     padding: 10px;
     border: 3px solid black;
     border-top: 5px solid black;
     border-radius: 10px;
-    position: relative;
+
 }
-.Table .screen span {
-    display: block;
-    margin: 10px 0 10px 0;
+
+.mainTable {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    font-size: 24px;
+    padding: auto;
 }
+
+.screen .fight {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    margin: auto;
+}
+.screen .switch {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    margin: auto;
+}
+.screen .item {
+    grid-column: 1/2;
+    grid-row: 2/3;
+    margin: auto;
+}
+.screen .defend {
+    grid-column: 2/3;
+    grid-row: 2/3;
+    margin: auto;
+}
+
+
+
+/* .Table .screen::before {
+    content: '';
+    background-color: rgb(237, 228, 228);
+    width: 544px;
+    height: 240px;
+    position: absolute;
+    border: 3px solid black;
+    border-bottom: 5px solid black;
+    border-radius: 10px;
+    box-sizing: border-box;
+    top: -9.5px;
+    left: -10px;
+    z-index: -9999;
+} */
+
 
 
 .Bench {
@@ -70,7 +123,6 @@
     border-radius: 10px;
     display: flex;
     justify-content: space-around;
-    /* padding: 0 20px; */
 }
 .player1Bench {
     display: flex;

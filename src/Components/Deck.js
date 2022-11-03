@@ -152,7 +152,9 @@ export default function Deck(
                 However, these Pokemon are not as strong as many level 1 or level 2 Pokemon who have already evolved.</p>
                 <p>Click the button below when you're ready to enter the Arena and test out your deck!</p>
                 {/* Link this button to the Arena with deck props, and unmount the Deck component */}
-                <button onClick={() => handleCurrentComponent('arena')}>Go to Arena</button>
+                <button className='ArenaPromptBtn' onClick={() => handleCurrentComponent('arena')}>
+                    Go to Arena
+                </button>
                 </>
             }
         </div>

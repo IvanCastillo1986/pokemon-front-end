@@ -12,16 +12,14 @@ export default function Bench({ myBenchProp, enemyBenchProp }) {
 
 
     return (
-        <>
         <div className='Bench'>
             <div className='player1Bench'>
                 {myBench.map((pokemon, i) => {
-                    return (<>
-                        <p key={i}>{capitalize(pokemon.name)}: {pokemon.hp} HP</p>
-                        </>)
+                    return <p key={i}>{capitalize(pokemon.name)}: {pokemon.hp} HP</p>
                 })}
             </div>
-                <h2>Bench</h2>
+            
+            <h2>Bench</h2>
             
             <div className='player2Bench'>
                 {enemyBench.map((pokemon, i) => {
@@ -31,6 +29,5 @@ export default function Bench({ myBenchProp, enemyBenchProp }) {
                 })}
             </div>
         </div>
-        </>
     )
 }

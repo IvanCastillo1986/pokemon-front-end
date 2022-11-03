@@ -5,25 +5,6 @@
   margin-bottom: 30px;
 }
 
-.NavBar {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #3B4CCA;
-  height: 150px;
-  width: 90%;
-  border: 18px solid  #3d7dca;
-  border-radius: 8px;
-  padding: 15px;
-  margin: 20px 0 0 0;
-}
-.NavBar a {
-  color: white;
-  font-size: 30px;
-  text-decoration: none;
-  margin: 30px;
-}
-
 .center {
   display: block;
   margin: auto;
