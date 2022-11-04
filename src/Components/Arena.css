@@ -55,7 +55,7 @@
     background-color: rgb(237, 228, 228);
     color: black;
     font-family: 'PKMN RBYGSC';
-    font-size: 18px;
+    font-size: 24px;
     min-width: 40%;
     height: 200px;
     margin: auto 0;
@@ -63,7 +63,6 @@
     border: 3px solid black;
     border-top: 5px solid black;
     border-radius: 10px;
-
 }
 
 .mainTable {
@@ -71,29 +70,45 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    font-size: 24px;
     padding: auto;
 }
-
+.mainTable > span {
+    margin: auto;
+}
+.mainTable > span:hover {
+    cursor: pointer;
+}
 .screen .fight {
     grid-column: 1/2;
     grid-row: 1/2;
-    margin: auto;
 }
 .screen .switch {
     grid-column: 2/3;
     grid-row: 1/2;
-    margin: auto;
 }
 .screen .item {
     grid-column: 1/2;
     grid-row: 2/3;
-    margin: auto;
 }
 .screen .defend {
     grid-column: 2/3;
     grid-row: 2/3;
-    margin: auto;
+}
+
+.fightMenu {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-left: 10px;
+}
+.fightMenu > span {
+    cursor: pointer;
+}
+/* selects all spans except the back button */
+.fightMenu span:not(:last-child) {
+    text-transform: uppercase;
 }
 
 

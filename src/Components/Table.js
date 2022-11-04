@@ -22,6 +22,35 @@ export default function Table({ myPokemon, enemyPokemon }) {
     */}
 
     const [mainTableOn, setMainTableOn] = useState(true)
+    const [fightMenuOn, setFightMenuOn] = useState(false)
+    const [switchMenuOn, setSwitchMenuOn] = useState(false)
+    const [itemMenuOn, setItemMenuOn] = useState(false)
+    const [defendMenuOn, setDefendMenuOn] = useState(false)
+
+    const fightClick = () => {
+        setMainTableOn(false)
+        setFightMenuOn(true)
+    }
+    const switchClick = () => {
+        setMainTableOn(false)
+        setSwitchMenuOn(true)
+    }
+    const itemClick = () => {
+        setMainTableOn(false)
+        setItemMenuOn(true)
+    }
+    const defendClick = () => {
+        setMainTableOn(false)
+        setDefendMenuOn(true)
+    }
+    const backClick = () => {
+        setFightMenuOn(false)
+        setSwitchMenuOn(false)
+        setItemMenuOn(false)
+        setDefendMenuOn(false)
+        setMainTableOn(true)
+    }
+
     
 
 
@@ -34,10 +63,17 @@ export default function Table({ myPokemon, enemyPokemon }) {
             <div className='screen'>
                 {mainTableOn &&
                 <div className='mainTable'>
-                    <span className='fight'>FIGHT</span>
+                    <span className='fight' onClick={fightClick}>FIGHT</span>
                     <span className='switch'>SWITCH</span>
                     <span className='item'>ITEM</span>
                     <span className='defend'>DEFEND</span>
+                </div>
+                }
+                {fightMenuOn &&
+                <div className='fightMenu'>
+                    <span>{capitalize(myPokemon.move1.move.name)}</span>
+                    <span>{capitalize(myPokemon.move2.move.name)}</span>
+                    <span onClick={backClick}>Back</span>
                 </div>
                 }
             </div>
