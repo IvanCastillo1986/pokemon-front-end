@@ -15,10 +15,18 @@ export default function Table({ myPokemon, enemyPokemon }) {
     const [script, setScript] = useState("")
 
     {/* 
+
+        Calculate move damage.
+        (((.4 * Level + 2) * Atk * MovePower) / EnemyDefense) * Multipliers
+        let firstDmg = (2.4 * atk * 5) / def
+
+        Add weaknesses. STAB is 1.5x dmg
+
         For now, all attacks will have the same power, so dmg comes from Pokemon stats only.
         No exp or leveling system yet.
 
         Battle Sequence:
+        Build a back-end to add move details
         PP will be very limited (2PP for good moves)
         During each turn (like TCG), you can choose between a few different options to replenish what you've lost.
         Either replenish PP, use a potion, increase dmg for next move, etc.
@@ -27,54 +35,51 @@ export default function Table({ myPokemon, enemyPokemon }) {
     */}
 
     function combat (you, enemy, move) {
-        // decide who attacks first
-        let firstPkm = you
-        let secondPkm = enemy
+        // Keeping code dryer since we'll only use upperCased names in script
+        you.name = capitalize(you.name).toUpperCase()
+        enemy.name = capitalize(enemy.name).toUpperCase()
+
+        let firstPkm, secondPkm
+
+        setMenuType('script')
         
-        // process damage
-        let firstDmg = 5 + (firstPkm.atk - secondPkm.def / 2)
-        let secondDmg = 5 + (secondPkm.atk - firstPkm.def / 2)
-        
+        let moveIdx = Math.floor(Math.random() * 2)
+        console.log(moveIdx)
+        // assign who attacks first, assign moves to each pkm
         if (enemy.spd > you.spd) {
-            // console.log('you go second')
             firstPkm = enemy; secondPkm = you;
+            firstPkm.cMove = moveIdx === 0 ? enemy.move1.move.name : enemy.move2.move.name
+            secondPkm.cMove = move
 
-            setMenuType('script')
             setScript('Enemy attacks first')
-
-            // Because the setTimeout is nested, we don't have to set different delays. So now it runs the nested 2 sec, and runs another 2 sec
-            setTimeout(() => {
-                setScript('Enemy does ' + firstDmg + ' damage')
-                setTimeout(() => {
-                    // console.log('setTimeout expired')
-                    setMenuType('main')
-                    setScript('')
-                }, 2000)
-            }, 2000)
-            
         } else {
-            // console.log('you go first')
-            
-            setMenuType('script')
+            firstPkm = you; secondPkm = enemy;
+            firstPkm.cMove = move
+            secondPkm.cMove = moveIdx === 0 ? enemy.move1.move.name : enemy.move2.move.name
+
             setScript('You attack first')
-            
-            setTimeout(() => {
-                setScript('You do ' + firstDmg + ' damage')
-                setTimeout(() => {
-                    // console.log('setTimeout expired')
-                    setMenuType('main')
-                    setScript('')
-                }, 2000)
-            }, 2000)
         }
 
-        // subtract damage from remaining hp
-        secondPkm.remaining_hp -= firstDmg
-        firstPkm.remaining_hp -= secondDmg
+        // calculate damage
+        let firstDmg = Math.round((3 * firstPkm.atk * 5) / secondPkm.def)
+        let secondDmg = Math.round((3 * secondPkm.atk * 5) / firstPkm.def)
+
+        setTimeout(() => setScript(`${firstPkm.name} used ${capitalize(firstPkm.cMove).toUpperCase()}!`), 2000)
+        setTimeout(() => {
+            setScript(`${firstPkm.name} does ${firstDmg} damage!`)
+            // subtract damage from remaining hp
+            secondPkm.remaining_hp -= firstDmg
+        }, 4000) 
+        setTimeout(() => setScript(`${secondPkm.name} used ${capitalize(secondPkm.cMove.toUpperCase())}!`), 6000)
+        setTimeout(() => {
+            setScript(`${secondPkm.name} does ${secondDmg} damage!`)
+            firstPkm.remaining_hp -= secondDmg
+        }, 8000)
+        setTimeout(() => {
+            setMenuType('main')
+            setScript('')
+        }, 10000)
         
-        // display attacks - remaining hp
-        console.log(firstPkm)
-        console.log(secondPkm)
     }
 
 
@@ -125,8 +130,13 @@ export default function Table({ myPokemon, enemyPokemon }) {
                 
                 {menuType === 'fight' &&
                 <div className='fightMenu'>
-                    <span onClick={() => combat(myPokemon, enemyPokemon, myPokemon.move1.move.name)}>{capitalize(myPokemon.move1.move.name)}</span>
-                    <span>{capitalize(myPokemon.move2.move.name)}</span>
+                    <span onClick={() => combat(myPokemon, enemyPokemon, myPokemon.move1.move.name)}>
+                        {capitalize(myPokemon.move1.move.name)}
+                    </span>
+                    <span onClick={() => combat(myPokemon, enemyPokemon, myPokemon.move2.move.name)}>
+                        {capitalize(myPokemon.move2.move.name)}
+                    </span>
+
                     <span onClick={backClick}>Back</span>
                 </div>
                 }
@@ -142,36 +152,3 @@ export default function Table({ myPokemon, enemyPokemon }) {
         </div>
     )
 }
-
-
-
-
-// if (enemy.spd > you.spd) {
-//     console.log('you go second')
-//     firstPkm = enemy; secondPkm = you;
-    
-    // setScriptOn(true)
-    // scriptRef.current = 1
-    // console.log(scriptRef.current)
-    // setTimeout(() => {scriptRef.current = 2}, 2000)
-    // console.log(scriptRef.current)
-    // setTimeout(() => {scriptRef.current = 3}, 4000)
-    // console.log(scriptRef.current)
-
-    // scriptRef.current = `${firstPkm.name} attacks first`
-    // setTimeout(() => {scriptRef.current = ''}, 2000)
-// } else {
-    // console.log('you go first')
-    
-    // setScriptOn(true)
-    // scriptRef.current = 1
-    // console.log(scriptRef.current)
-    // scriptRef.current = 2
-    // console.log(scriptRef.current)
-    // scriptRef.current = 3
-    // console.log(scriptRef.current)
-    
-    // scriptRef.current = `${firstPkm.name} attacks first`
-    // setTimeout(() => {scriptRef.current = ''}, 2000)
-
-// }
