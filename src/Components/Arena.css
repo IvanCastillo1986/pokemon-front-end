@@ -32,6 +32,12 @@
     border-radius: 10px;
 }
 
+.hp-display {
+    color:  #e0f8d0;
+    font-size: 24px;
+    margin: 10px;
+}
+
 .Player1Table {
     display: flex;
     flex-direction: column;   
@@ -63,6 +69,29 @@
     border: 3px solid black;
     border-top: 5px solid black;
     border-radius: 10px;
+    position: relative;
+    z-index: 2;
+}
+/* .Table .screen::before {
+    content: '';
+    background-color: rgb(237, 228, 228);
+    width: 544px;
+    height: 240px;
+    position: absolute;
+    border: 3px solid black;
+    border-bottom: 5px solid black;
+    border-radius: 10px;    
+    box-sizing: border-box;
+    top: -9.5px;
+    left: -10px;
+    z-index: 1;
+} */
+
+.script {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 .mainTable {
@@ -113,20 +142,8 @@
 
 
 
-/* .Table .screen::before {
-    content: '';
-    background-color: rgb(237, 228, 228);
-    width: 544px;
-    height: 240px;
-    position: absolute;
-    border: 3px solid black;
-    border-bottom: 5px solid black;
-    border-radius: 10px;
-    box-sizing: border-box;
-    top: -9.5px;
-    left: -10px;
-    z-index: -9999;
-} */
+
+
 
 
 
