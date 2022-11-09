@@ -1,6 +1,6 @@
 // It will output the effectiveness, default is 1
 // This function will calculate dmg based on the Pokemon's types
-// The moves won't have types, so only Pokemon types matter
+// The moves don't currently have types, so only Pokemon types matter
 // If your pokemon is strong vs a certain type, the effectiveness increases
 // If the enemy is resistant vs your type, the effectiveness drops
 // This runs for each move in movesArr, to accumulate multiplier for both types

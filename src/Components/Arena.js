@@ -28,6 +28,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
     const [enemyBench, setEnemyBench] = useState([])
     const [showIntro, setShowIntro] = useState(true)
     
+    // This scrolls to top of page on component mount
     useEffect(() => {
         window.document.body.style.backgroundColor = '#88c070'
         window.scrollTo(0, 0)
@@ -37,6 +38,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
         }
     }, [])
 
+    // This function chooses the first Pokemon on click
     function handleInitialClick(e) {
         const myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.innerText.split(' ').join('-').toLowerCase())
         
@@ -79,7 +81,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
                     <h2>Player 2</h2>
                 </div>
 
-                <Table myPokemon={myPokemon} enemyPokemon={enemyPokemon} />
+                <Table myPokemon={myPokemon} setMyPokemon={setMyPokemon} enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} />
 
                 <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />
             </div>

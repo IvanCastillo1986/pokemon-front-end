@@ -20,6 +20,7 @@ export default function Play({ pokemon }) {
 // console.log(listMoves(pokemon))
 
 
+
     return (
         <div className='Play'>
 
@@ -66,7 +67,7 @@ export default function Play({ pokemon }) {
                 currentComponent === 'arena' &&
                 <Arena 
                     // is this statement in props declaration safe to do?
-                    yourDeck={[starterPokemon].concat(yourDeck)}
+                    yourDeck={yourDeck}
                     opponentDeck={aiDeck}
                 />
             }

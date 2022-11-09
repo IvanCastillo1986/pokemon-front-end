@@ -100,19 +100,10 @@ export default function Deck(
         setAiDeck([aiStarter].concat(deckArr))
     };
 
-    // Player:
-    //         "Hey! Welcome to Pokemon Play!"
-    //         "to choose a random deck.
-    //         "Which type is your favorite?"
-    //         Green, Red, Blue
-
-    //         "Great! This is your new Pokemon:"
-    //          Bulbasaur, Charmander, or Squirtle
-    //          And the rest of deck. Decide if I'll say something before revealing the rest of deck.
-    //          Remove ability to recieve more than one of starter Pokemon in random deck.
-    //          Add CSS to render the rest of deck inline.
-    //         "They're all basic Pokemon, so you'll need to level them up before you can evolve them."
-    //         "I know! Let's take them out to the arena and get some training in."
+    useEffect(() => {
+        const fullDeck = [starterPokemon].concat(yourDeck)
+        setYourDeck(fullDeck)
+    }, [starterPokemon])
 
 
     return (
@@ -139,7 +130,7 @@ export default function Deck(
                 <BattleCard key={pokemon.id} pokemon={starterPokemon} />
                 <p>And this is the rest of your deck:</p>
                 <div className='RandomDeck'>
-                    {yourDeck.map((pokemon, i) => {
+                    {yourDeck.slice(1).map((pokemon, i) => {
                         return (
                             <BattleCard className='BattleCard' key={i} pokemon={pokemon} />
                             )

@@ -7,11 +7,12 @@ import { typeMultiplier } from '../Helper/typeMultiplier'
 
 
 
-export default function Table({ myPokemon, enemyPokemon }) {
+export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon }) {
 
     const [menuType, setMenuType] = useState('main')
 
     const [script, setScript] = useState("")
+    const [winner, setWinner] = useState(null)
 
     {/* 
 
@@ -32,6 +33,17 @@ export default function Table({ myPokemon, enemyPokemon }) {
         
         Switching the Pokemon uses a turn, just like attacking.
     */}
+    function hasPokemonDied() {
+        // Here we check if a Pokemon has died
+        // If it did, the Pokemon's HP becomes 0, and set winner
+        if (myPokemon.remaining_hp <= 0) {
+            myPokemon.remaining_hp = 0
+            setWinner(enemyPokemon)
+        } else if (enemyPokemon.remaining_hp <= 0) {
+            enemyPokemon.remaining_hp = 0
+            setWinner(myPokemon)
+        }
+    }
 
     function combat (you, enemy, move) {
         // Keeping code dryer since we'll only use upperCased names in script
@@ -58,40 +70,65 @@ export default function Table({ myPokemon, enemyPokemon }) {
 
             setScript('You attack first')
         }
+        // uppercase moveNames for script
+        firstPkm.cMove = capitalize(firstPkm.cMove).toUpperCase()
+        secondPkm.cMove = capitalize(secondPkm.cMove).toUpperCase()
+
+        // apply the typeMultiplier in case a Pokemon's attack is strong or weak
         let firstEffect = typeMultiplier(firstPkm.type, secondPkm.type)
         let secondEffect = typeMultiplier(secondPkm.type, firstPkm.type)
-
-        console.log(firstEffect)
-        console.log(secondEffect)
 
         // calculate damage
         let firstDmg = Math.round((3 * firstPkm.atk * 5) / secondPkm.def * firstEffect)
         let secondDmg = Math.round((3 * secondPkm.atk * 5) / firstPkm.def * secondEffect)
-        let time = 1
+        let time = 2000
 
-        setTimeout(() => setScript(`${firstPkm.name} used ${capitalize(firstPkm.cMove).toUpperCase()}!`), 2000)
-        if (firstEffect > 1) setTimeout(() => setScript(`${firstPkm.cMove} is super effective!`), 3000)
-        else if (firstEffect < 1) setTimeout(() => setScript(`${firstPkm.cMove} is not very effective!`), 3000)
+        setTimeout(() => setScript(`${firstPkm.name} used ${firstPkm.cMove}!`), time)
+        time += 2000
+        if (firstEffect > 1) {
+            setTimeout(() => setScript(`${firstPkm.cMove} is super effective!`), time)
+            time += 2000
+        } else if (firstEffect < 1) {
+            setTimeout(() => setScript(`${firstPkm.cMove} is not very effective!`), time)
+            time += 2000
+        }
 
         setTimeout(() => {
             setScript(`${firstPkm.name} does ${firstDmg} damage!`)
             // subtract damage from remaining hp
             secondPkm.remaining_hp -= firstDmg
-        }, 4000) 
-        setTimeout(() => setScript(`${secondPkm.name} used ${capitalize(secondPkm.cMove.toUpperCase())}!`), 6000)
+        }, time) 
+        hasPokemonDied()
+        time += 2000
+        
+        setTimeout(() => setScript(`${secondPkm.name} used ${secondPkm.cMove}!`), time)
+        time += 2000
+        
+        if (secondEffect > 1) {
+            setTimeout(() => setScript(`${secondPkm.cMove} is super effective!`), time)
+            time += 2000
+        } else if (secondEffect < 1) {
+            setTimeout(() => setScript(`${secondPkm.cMove} is not very effective!`), time)
+            time += 2000
+        }
         setTimeout(() => {
             setScript(`${secondPkm.name} does ${secondDmg} damage!`)
             firstPkm.remaining_hp -= secondDmg
-        }, 8000)
+        }, time)
+        hasPokemonDied()
+        time += 2000
+
         setTimeout(() => {
             setMenuType('main')
             setScript('')
-        }, 10000)
-        
+        }, time)
     }
 
-
-
+    useEffect(() => {
+        console.log(myPokemon.remaining_hp)
+        console.log(enemyPokemon.remaining_hp)
+        hasPokemonDied()
+    }, [myPokemon.remaining_hp, enemyPokemon.remaining_hp])
 
     const fightClick = () => {
         setMenuType('fight')
@@ -108,6 +145,11 @@ export default function Table({ myPokemon, enemyPokemon }) {
     const backClick = () => {
         setMenuType('main')
     }
+
+
+    // Pokemon should stop attacking if it's hp reaches 0
+    // A winner should be announced if a Pokemon dies
+
 
 
 
