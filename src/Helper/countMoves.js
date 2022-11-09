@@ -28,14 +28,6 @@ const countInstanceOfMove = (pokemonArr) => {
     return movesObj
 }
 
-const countValues = (obj) => {
-    const newObj = {}
-    for (let value of obj) {
-        if (newObj[value]) {
-            console.log('will use later')
-        }
-    }
-}
 
 
 // This will break the build, because I was trying to mix Node.js style exports with ES6 exports (which is used by React)
