@@ -9,7 +9,7 @@ import {capitalize} from '../Helper/capitalize'
 
 
 export default function Arena({ yourDeck, opponentDeck }) {
-    {/* 
+    /* 
     This component will recieve the Deck component's playerDeck, and it will render a random deck of starter
     pokemon for the AI opponent. 
     Two rows, Player will be on the left, AI on the right.
@@ -20,7 +20,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
 
     <Bench>
     <Table>
-    */}
+    */
 
     const [myPokemon, setMyPokemon] = useState({})
     const [myBench, setMyBench] = useState([])

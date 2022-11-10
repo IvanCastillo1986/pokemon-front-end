@@ -36,44 +36,52 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
     function hasPokemonDied() {
         // Here we check if a Pokemon has died
         // If it did, the Pokemon's HP becomes 0, and set winner
+        console.log(myPokemon.remaining_hp)
+        console.log(enemyPokemon.remaining_hp)
         if (myPokemon.remaining_hp <= 0) {
-            myPokemon.remaining_hp = 0
+            console.log('using hasPokemonDied')
+            // setMyPokemon(prevPkm => ({...prevPkm, remaining_hp: 0}))
             setWinner(enemyPokemon)
         } else if (enemyPokemon.remaining_hp <= 0) {
-            enemyPokemon.remaining_hp = 0
+            console.log('using hasPokemonDied')
+            // setEnemyPokemon(prevPkm => ({...prevPkm, remaining_hp: 0}))
             setWinner(myPokemon)
         }
     }
 
-    function combat (you, enemy, move) {
-        // Keeping code dryer since we'll only use upperCased names in script
-        you.name = capitalize(you.name).toUpperCase()
-        enemy.name = capitalize(enemy.name).toUpperCase()
 
-        let firstPkm, secondPkm
+    function combat (clickedMove) {
+
+        let firstPkm, secondPkm, firstPkmMove, secondPkmMove
 
         setMenuType('script')
         
-        let moveIdx = Math.floor(Math.random() * 2)
+        let enemyMoveIdx = Math.floor(Math.random() * 2)
 
         // assign who attacks first, assign moves to each pkm
-        if (enemy.spd > you.spd) {
-            firstPkm = enemy; secondPkm = you;
-            firstPkm.cMove = moveIdx === 0 ? enemy.move1.move.name : enemy.move2.move.name
-            secondPkm.cMove = move
-
+        if (myPokemon.spd < enemyPokemon.spd) {
+            firstPkm = enemyPokemon; secondPkm = myPokemon;
+            firstPkmMove = enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name
+            secondPkmMove = clickedMove
+            // WHY AREN'T THESE  setState cMoves WORKING WHEN CALLED LATER?
+            // setEnemyPokemon({...enemyPokemon, cMove: enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name})
+            // setMyPokemon(prevPokemon => ({...prevPokemon, cMove: clickedMove}))
+            
             setScript('Enemy attacks first')
         } else {
-            firstPkm = you; secondPkm = enemy;
-            firstPkm.cMove = move
-            secondPkm.cMove = moveIdx === 0 ? enemy.move1.move.name : enemy.move2.move.name
+            firstPkm = myPokemon; secondPkm = enemyPokemon;
+            firstPkmMove = clickedMove
+            secondPkmMove = enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name
 
             setScript('You attack first')
         }
-        // uppercase moveNames for script
-        firstPkm.cMove = capitalize(firstPkm.cMove).toUpperCase()
-        secondPkm.cMove = capitalize(secondPkm.cMove).toUpperCase()
 
+        // uppercase pokemonNames and moveNames for script
+        const firstPkmName = capitalize(firstPkm.name).toUpperCase()
+        const secondPkmName = capitalize(secondPkm.name).toUpperCase()
+        firstPkmMove = capitalize(firstPkmMove).toUpperCase()
+        secondPkmMove = capitalize(secondPkmMove).toUpperCase()
+        console.log('Running properly so far')
         // apply the typeMultiplier in case a Pokemon's attack is strong or weak
         let firstEffect = typeMultiplier(firstPkm.type, secondPkm.type)
         let secondEffect = typeMultiplier(secondPkm.type, firstPkm.type)
@@ -83,39 +91,65 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
         let secondDmg = Math.round((3 * secondPkm.atk * 5) / firstPkm.def * secondEffect)
         let time = 2000
 
-        setTimeout(() => setScript(`${firstPkm.name} used ${firstPkm.cMove}!`), time)
+        setTimeout(() => setScript(`${firstPkmName} used ${firstPkmMove}!`), time)
         time += 2000
         if (firstEffect > 1) {
-            setTimeout(() => setScript(`${firstPkm.cMove} is super effective!`), time)
+            setTimeout(() => setScript(`${firstPkmMove} is super effective!`), time)
             time += 2000
         } else if (firstEffect < 1) {
-            setTimeout(() => setScript(`${firstPkm.cMove} is not very effective!`), time)
+            setTimeout(() => setScript(`${firstPkmMove} is not very effective!`), time)
             time += 2000
         }
 
         setTimeout(() => {
-            setScript(`${firstPkm.name} does ${firstDmg} damage!`)
+            setScript(`${firstPkmName} does ${firstDmg} damage!`)
             // subtract damage from remaining hp
-            secondPkm.remaining_hp -= firstDmg
+            if (firstPkm === myPokemon) {
+                if (myPokemon.remaining_hp - firstDmg <= 0) {
+                    setEnemyPokemon({...enemyPokemon, remaining_hp: 0}) 
+                    setWinner(myPokemon) 
+                } else {
+                    setEnemyPokemon({...enemyPokemon, remaining_hp: enemyPokemon.remaining_hp - firstDmg})
+                }
+            } else {
+                if (enemyPokemon.remaining_hp - firstDmg <= 0){
+                    setMyPokemon({...myPokemon, remaining_hp: 0})
+                    setWinner(enemyPokemon) 
+                } else {
+                    setMyPokemon({...myPokemon, remaining_hp: myPokemon.remaining_hp - firstDmg})
+                }
+            }
         }, time) 
-        hasPokemonDied()
         time += 2000
         
-        setTimeout(() => setScript(`${secondPkm.name} used ${secondPkm.cMove}!`), time)
+        setTimeout(() => setScript(`${secondPkmName} used ${secondPkmMove}!`), time)
         time += 2000
         
         if (secondEffect > 1) {
-            setTimeout(() => setScript(`${secondPkm.cMove} is super effective!`), time)
+            setTimeout(() => setScript(`${secondPkmMove} is super effective!`), time)
             time += 2000
         } else if (secondEffect < 1) {
-            setTimeout(() => setScript(`${secondPkm.cMove} is not very effective!`), time)
+            setTimeout(() => setScript(`${secondPkmMove} is not very effective!`), time)
             time += 2000
         }
         setTimeout(() => {
-            setScript(`${secondPkm.name} does ${secondDmg} damage!`)
-            firstPkm.remaining_hp -= secondDmg
+            setScript(`${secondPkmName} does ${secondDmg} damage!`)
+            if (secondPkm === myPokemon) {
+                if (enemyPokemon.remaining_hp - secondDmg <= 0) {
+                    setEnemyPokemon({...enemyPokemon, remaining_hp: 0}) 
+                    setWinner(myPokemon)
+                } else {
+                    setEnemyPokemon({...enemyPokemon, remaining_hp: enemyPokemon.remaining_hp - secondDmg})
+                }
+            } else {
+                if (myPokemon.remaining_hp - secondDmg <= 0) {
+                    setMyPokemon({...myPokemon, remaining_hp: 0})
+                    setWinner(enemyPokemon)
+                } else {
+                    setMyPokemon({...myPokemon, remaining_hp: myPokemon.remaining_hp - secondDmg})
+                }
+            }
         }, time)
-        hasPokemonDied()
         time += 2000
 
         setTimeout(() => {
@@ -124,11 +158,6 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
         }, time)
     }
 
-    useEffect(() => {
-        console.log(myPokemon.remaining_hp)
-        console.log(enemyPokemon.remaining_hp)
-        hasPokemonDied()
-    }, [myPokemon.remaining_hp, enemyPokemon.remaining_hp])
 
     const fightClick = () => {
         setMenuType('fight')
@@ -180,10 +209,10 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
                 
                 {menuType === 'fight' &&
                 <div className='fightMenu'>
-                    <span onClick={() => combat(myPokemon, enemyPokemon, myPokemon.move1.move.name)}>
+                    <span onClick={() => combat(myPokemon.move1.move.name)}>
                         {capitalize(myPokemon.move1.move.name)}
                     </span>
-                    <span onClick={() => combat(myPokemon, enemyPokemon, myPokemon.move2.move.name)}>
+                    <span onClick={() => combat(myPokemon.move2.move.name)}>
                         {capitalize(myPokemon.move2.move.name)}
                     </span>
 

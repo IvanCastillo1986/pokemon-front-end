@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import BattleCard from './BattleCard'
+import BattleCard from '../Components/BattleCard'
 import { capitalize } from '../Helper/capitalize'
 
 
