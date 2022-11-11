@@ -69,15 +69,34 @@ export default function Table({
         const secondPkmName = capitalize(secondPkm.name).toUpperCase()
         firstPkmMove = capitalize(firstPkmMove).toUpperCase()
         secondPkmMove = capitalize(secondPkmMove).toUpperCase()
-        console.log('Running properly so far')
-        // apply the typeMultiplier in case a Pokemon's attack is strong or weak
+
+        // apply the typeMultiplier in case a Pokemon's attack type is strong or weak
         let firstEffect = typeMultiplier(firstPkm.type, secondPkm.type)
         let secondEffect = typeMultiplier(secondPkm.type, firstPkm.type)
 
         // calculate damage
         let firstDmg = Math.round((3 * firstPkm.atk * 5) / secondPkm.def * firstEffect)
         let secondDmg = Math.round((3 * secondPkm.atk * 5) / firstPkm.def * secondEffect)
+
         let time = 2000
+
+        // Defining setTimeout ids so we can access them to cancel future timeouts from running if a Pokemon dies
+        // let superEffective
+        // let notEffective
+        let secondMoveTimeout
+        let superEffectiveTimeout
+        let notEffectiveTimeout
+        let executeDamageTimeout
+        let mainMenuTimeout
+        let damageScriptTimeout
+
+        function clearFutureTimeouts() {
+            clearTimeout(secondMoveTimeout)
+            clearTimeout(superEffectiveTimeout)
+            clearTimeout(notEffectiveTimeout)
+            clearTimeout(executeDamageTimeout)
+            clearTimeout(damageScriptTimeout)
+        }
 
         setTimeout(() => setScript(`${firstPkmName} used ${firstPkmMove}!`), time)
         time += 2000
@@ -89,18 +108,26 @@ export default function Table({
             time += 2000
         }
 
+
+        
         setTimeout(() => {
             setScript(`${firstPkmName} does ${firstDmg} damage!`)
             // subtract damage from remaining hp
             if (firstPkm === myPokemon) {
-                if (myPokemon.remaining_hp - firstDmg <= 0) {
+                if (enemyPokemon.remaining_hp - firstDmg <= 0) {
+                    clearFutureTimeouts()
+                    clearTimeout(mainMenuTimeout)
+
                     setEnemyPokemon({...enemyPokemon, remaining_hp: 0}) 
                     setWinner(myPokemon) 
                 } else {
                     setEnemyPokemon({...enemyPokemon, remaining_hp: enemyPokemon.remaining_hp - firstDmg})
                 }
             } else {
-                if (enemyPokemon.remaining_hp - firstDmg <= 0){
+                if (myPokemon.remaining_hp - firstDmg <= 0){
+                    clearFutureTimeouts()
+                    clearTimeout(mainMenuTimeout)
+
                     setMyPokemon({...myPokemon, remaining_hp: 0})
                     setWinner(enemyPokemon) 
                 } else {
@@ -110,20 +137,25 @@ export default function Table({
         }, time) 
         time += 2000
         
-        setTimeout(() => setScript(`${secondPkmName} used ${secondPkmMove}!`), time)
+        secondMoveTimeout = setTimeout(() => setScript(`${secondPkmName} used ${secondPkmMove}!`), time)
         time += 2000
-        
+
         if (secondEffect > 1) {
-            setTimeout(() => setScript(`${secondPkmMove} is super effective!`), time)
+            superEffectiveTimeout = setTimeout(() => setScript(`${secondPkmMove} is super effective!`), time)
             time += 2000
         } else if (secondEffect < 1) {
-            setTimeout(() => setScript(`${secondPkmMove} is not very effective!`), time)
+            notEffectiveTimeout = setTimeout(() => setScript(`${secondPkmMove} is not very effective!`), time)
             time += 2000
         }
-        setTimeout(() => {
+
+        
+        executeDamageTimeout = setTimeout(() => {
             setScript(`${secondPkmName} does ${secondDmg} damage!`)
+            
             if (secondPkm === myPokemon) {
                 if (enemyPokemon.remaining_hp - secondDmg <= 0) {
+                    clearTimeout(mainMenuTimeout)
+                    
                     setEnemyPokemon({...enemyPokemon, remaining_hp: 0}) 
                     setWinner(myPokemon)
                 } else {
@@ -131,6 +163,8 @@ export default function Table({
                 }
             } else {
                 if (myPokemon.remaining_hp - secondDmg <= 0) {
+                    clearTimeout(mainMenuTimeout)
+                    
                     setMyPokemon({...myPokemon, remaining_hp: 0})
                     setWinner(enemyPokemon)
                 } else {
@@ -141,7 +175,8 @@ export default function Table({
         
         time += 2000
 
-        setTimeout(() => {
+        
+        mainMenuTimeout = setTimeout(() => {
             setMenuType('main')
             setScript('')
         }, time)
@@ -149,7 +184,7 @@ export default function Table({
 
     useEffect(() => {
         if (winner) {
-            setScript(`${winner.name} has won the match`)
+            setScript(`${capitalize(winner.name).toUpperCase()} has won the match`)
         }
     }, [winner])
 
@@ -170,12 +205,9 @@ export default function Table({
         setMenuType('main')
     }
 
-
-    // Pokemon should stop attacking if it's hp reaches 0
-    // A winner should be announced if a Pokemon dies
-    // useEffect(() => {
-
-    // }, [winner])
+    useEffect(() => {
+        console.log('I just ran')
+    }, [])
 
 
     return (
