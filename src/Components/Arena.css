@@ -22,6 +22,7 @@
     justify-content: space-evenly;
 }
 
+
 .Table {
     margin: auto;
     width: 95%;
@@ -37,7 +38,6 @@
     font-size: 24px;
     margin: 10px;
 }
-
 .Player1Table {
     display: flex;
     flex-direction: column;   
@@ -49,7 +49,6 @@
 .moveDiv button {
     margin-bottom: 15px;;
 }
-
 
 .Player2Table {
     display: flex;
@@ -126,6 +125,10 @@
     grid-column: 2/3;
     grid-row: 2/3;
 }
+.backBtn:hover {
+    cursor: pointer;
+    /* width: fit-content; */
+}
 
 .fightMenu {
     height: 100%;
@@ -143,10 +146,22 @@
     text-transform: uppercase;
 }
 
-
-
-
-
+.switchMenu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.switchOptions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.switchOptions > span {
+    margin-right: 20px;
+}
+.switchOptions > span:hover {
+    cursor: pointer;
+}
 
 
 

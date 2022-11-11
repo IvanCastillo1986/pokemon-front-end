@@ -24,13 +24,5 @@ const capitalize = (name) => {
 // capitalize also removes hyphens    
 
 
-const capitalizeObject = (object) => {
-    object.name = capitalize(object.name)
-    return object
-}
 
-
-
-
-export { capitalize, capitalizeObject };
-// module.exports = { capitalize, capitalizeObject }
+export { capitalize };

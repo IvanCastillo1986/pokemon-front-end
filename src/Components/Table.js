@@ -7,12 +7,14 @@ import { typeMultiplier } from '../Helper/typeMultiplier'
 
 
 
-export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon }) {
+export default function Table({ 
+    myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, winner, setWinner, handlePokemonSwitch
+}) {
 
     const [menuType, setMenuType] = useState('main')
 
     const [script, setScript] = useState("")
-    const [winner, setWinner] = useState(null)
+    // const [winner, setWinner] = useState(null)
 
     {/* 
 
@@ -33,21 +35,6 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
         
         Switching the Pokemon uses a turn, just like attacking.
     */}
-    function hasPokemonDied() {
-        // Here we check if a Pokemon has died
-        // If it did, the Pokemon's HP becomes 0, and set winner
-        console.log(myPokemon.remaining_hp)
-        console.log(enemyPokemon.remaining_hp)
-        if (myPokemon.remaining_hp <= 0) {
-            console.log('using hasPokemonDied')
-            // setMyPokemon(prevPkm => ({...prevPkm, remaining_hp: 0}))
-            setWinner(enemyPokemon)
-        } else if (enemyPokemon.remaining_hp <= 0) {
-            console.log('using hasPokemonDied')
-            // setEnemyPokemon(prevPkm => ({...prevPkm, remaining_hp: 0}))
-            setWinner(myPokemon)
-        }
-    }
 
 
     function combat (clickedMove) {
@@ -63,7 +50,8 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
             firstPkm = enemyPokemon; secondPkm = myPokemon;
             firstPkmMove = enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name
             secondPkmMove = clickedMove
-            // WHY AREN'T THESE  setState cMoves WORKING WHEN CALLED LATER?
+            // WHY AREN'T THESE  setState cMoves WORKING WHEN CALLED LATER? 
+            // Seems like a delay to set new state, before new value can be accessed
             // setEnemyPokemon({...enemyPokemon, cMove: enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name})
             // setMyPokemon(prevPokemon => ({...prevPokemon, cMove: clickedMove}))
             
@@ -150,6 +138,7 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
                 }
             }
         }, time)
+        
         time += 2000
 
         setTimeout(() => {
@@ -157,6 +146,12 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
             setScript('')
         }, time)
     }
+
+    useEffect(() => {
+        if (winner) {
+            setScript(`${winner.name} has won the match`)
+        }
+    }, [winner])
 
 
     const fightClick = () => {
@@ -178,8 +173,9 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
 
     // Pokemon should stop attacking if it's hp reaches 0
     // A winner should be announced if a Pokemon dies
+    // useEffect(() => {
 
-
+    // }, [winner])
 
 
     return (
@@ -188,7 +184,6 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
                 <p className='hp-display'>HP: {myPokemon.remaining_hp}/{myPokemon.hp}</p>
                 <BattleCard pokemon={myPokemon} />
             </div>
-
                 
             <div className='screen'>
 
@@ -201,7 +196,7 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
                 {menuType === 'main' &&
                 <div className='mainTable'>
                     <span className='fight' onClick={fightClick}>FIGHT</span>
-                    <span className='switch'>SWITCH</span>
+                    <span className='switch' onClick={switchClick}>SWITCH</span>
                     <span className='item'>ITEM</span>
                     <span className='defend'>DEFEND</span>
                 </div> 
@@ -216,12 +211,23 @@ export default function Table({ myPokemon, enemyPokemon, setMyPokemon, setEnemyP
                         {capitalize(myPokemon.move2.move.name)}
                     </span>
 
-                    <span onClick={backClick}>Back</span>
+                    <span onClick={backClick} className='backBtn'>Back</span>
+                </div>
+                }
+
+                {/* FINISH SWITCH FUNCTIONALITY */}
+                {menuType === 'switch' &&
+                <div className='switchMenu'>
+                    <span>Which Pokemon would you like to switch to?</span>
+                    <div className='switchOptions'>
+                        {myBenchProp.map((mon, i) => {
+                            return <span onClick={handlePokemonSwitch} key={i}>{capitalize(mon.name)}</span>
+                        })}
+                    </div>
+                    <span onClick={backClick} className='backBtn'>Back</span>
                 </div>
                 }
             </div>
-
-            
 
 
             <div className='player2Table'>

@@ -11,7 +11,7 @@ export default function BattleCard({ pokemon, battleCardStyle, nameStyle, statSt
 
     return (
         <div className='BattleCard' style={battleCardStyle} >
-            <div className='Name' style={nameStyle} >{pokemon.name}</div>
+            <div className='Name' style={nameStyle} >{capitalize(pokemon.name)}</div>
             <div className='Row1' style={statStyle} >
                 <span className='HP'>{pokemon.hp}HP</span> <span className='Type'>{pokemon.type}</span>
             </div>
