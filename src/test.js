@@ -10,15 +10,15 @@ console.log(Math.floor(Math.random() * 2))
 
 let time = 2000
 
-let firstCall = setTimeout(() => console.log('1st call'), time)
-time += 2000
-let secondCall = setTimeout(() => console.log('2nd call'), time)
-time += 2000
-let thirdCall = setTimeout(() => console.log('3rd call'), time)
+// let firstCall = setTimeout(() => console.log('1st call'), time)
+// time += 2000
+// let secondCall = setTimeout(() => console.log('2nd call'), time)
+// time += 2000
+// let thirdCall = setTimeout(() => console.log('3rd call'), time)
 
-// clearTimeout(secondCall)
-// clearTimeout(thirdCall)
+const deadMon = []
+console.log(deadMon)
 
-
-
-// console.log(setTimeout)
+deadMon.push('hi')
+console.log(deadMon)
+console.log(deadMon[deadMon.length-1])

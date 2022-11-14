@@ -5,6 +5,7 @@ import './Pokedex.css'
 import { capitalize } from '../Helper/capitalize'
 
 
+
 export default function Pokedex({ pokemon }) {
 
     const [currentPokemon, setCurrentPokemon] = useState(pokemon[0])
@@ -228,7 +229,7 @@ export default function Pokedex({ pokemon }) {
                         <p>ID# {currentPokemon.id}</p>
                         <p>Height: {currentPokemon.height} inches</p>
                         <p>Weight: {currentPokemon.weight} lbs.</p>
-                        {/* Add rest of info:  types(for loop through types), weight, id#, base stats, etc. */}
+                        
                         {currentPokemon.types.map((obj, i) => {
                             return (
                                 <p key={i}>Type {i + 1}: {capitalize(obj.type.name)}</p>

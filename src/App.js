@@ -22,6 +22,7 @@ export default function App() {
 
   // Setting up local cache of original 151 Pokemon, to be used across components
   const [pokemon, setPokemon] = useState([])
+  const numOfPokemon = 151
 
   useEffect(() => {
     
@@ -29,7 +30,7 @@ export default function App() {
     // Takes roughly 6 seconds
     (async function () {
       let pokemonArr = []
-      for (let id = 1; id <= 151; id++) {
+      for (let id = 1; id <= numOfPokemon; id++) {
         await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}/`)
         .then(res => {
           const pokemon = res.data

@@ -28,12 +28,13 @@ export default function Arena({ yourDeck, opponentDeck }) {
     const [enemyPokemon, setEnemyPokemon] = useState({})
     const [enemyBench, setEnemyBench] = useState([])
     const [showIntro, setShowIntro] = useState(true)
+    const [menuType, setMenuType] = useState('main')
     const [winner, setWinner] = useState(null)
     const [deadMon, setDeadMon] = useState([])
     
     // This changes theme and scrolls to top of page on component mount
     useEffect(() => {
-        window.document.body.style.backgroundColor = '#88c070'
+        window.document.body.style.backgroundColor = '#8bac0f'
         window.scrollTo(0, 0)
 
         return () => {
@@ -84,7 +85,12 @@ export default function Arena({ yourDeck, opponentDeck }) {
         // old Pokemon with current remaining_hp
         setMyPokemon(switchedBenchPokemon)
         setMyBench(myNewBench)
+        setMenuType('main')
     }
+
+    useEffect(() => {
+
+    }, [deadMon])
 
 
     return (
@@ -117,8 +123,9 @@ export default function Arena({ yourDeck, opponentDeck }) {
                     enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
                     myBenchProp={myBench} enemyBenchProp={enemyBench} 
                     winner={winner} setWinner={setWinner} 
+                    menuType={menuType} setMenuType={setMenuType}
                     handlePokemonSwitch={handlePokemonSwitch}
-                    setDeadMon={setDeadMon}
+                    deadMon={deadMon} setDeadMon={setDeadMon}
                 />
 
                 <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />

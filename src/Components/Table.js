@@ -8,13 +8,13 @@ import { typeMultiplier } from '../Helper/typeMultiplier'
 
 
 export default function Table({ 
-    myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, winner, setWinner, handlePokemonSwitch
+    myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, winner, setWinner,
+    deadMon, setDeadMon, menuType, setMenuType, handlePokemonSwitch
 }) {
 
-    const [menuType, setMenuType] = useState('main')
+
 
     const [script, setScript] = useState("")
-    // const [winner, setWinner] = useState(null)
 
     {/* 
 
@@ -108,18 +108,19 @@ export default function Table({
             time += 2000
         }
 
-
         
         setTimeout(() => {
             setScript(`${firstPkmName} does ${firstDmg} damage!`)
             // subtract damage from remaining hp
             if (firstPkm === myPokemon) {
+                // if a Pokemon dies
                 if (enemyPokemon.remaining_hp - firstDmg <= 0) {
                     clearFutureTimeouts()
                     clearTimeout(mainMenuTimeout)
 
-                    setEnemyPokemon({...enemyPokemon, remaining_hp: 0}) 
-                    setWinner(myPokemon) 
+                    setDeadMon(deadMonArr => deadMonArr.concat(enemyPokemon))
+                    setEnemyPokemon({...enemyPokemon, remaining_hp: 0})
+                    setWinner(myPokemon)
                 } else {
                     setEnemyPokemon({...enemyPokemon, remaining_hp: enemyPokemon.remaining_hp - firstDmg})
                 }
@@ -128,8 +129,9 @@ export default function Table({
                     clearFutureTimeouts()
                     clearTimeout(mainMenuTimeout)
 
+                    setDeadMon(deadMonArr => deadMonArr.concat(myPokemon))
                     setMyPokemon({...myPokemon, remaining_hp: 0})
-                    setWinner(enemyPokemon) 
+                    setWinner(enemyPokemon)
                 } else {
                     setMyPokemon({...myPokemon, remaining_hp: myPokemon.remaining_hp - firstDmg})
                 }
@@ -156,6 +158,7 @@ export default function Table({
                 if (enemyPokemon.remaining_hp - secondDmg <= 0) {
                     clearTimeout(mainMenuTimeout)
                     
+                    setDeadMon(deadMonArr => deadMonArr.concat(enemyPokemon))
                     setEnemyPokemon({...enemyPokemon, remaining_hp: 0}) 
                     setWinner(myPokemon)
                 } else {
@@ -165,6 +168,7 @@ export default function Table({
                 if (myPokemon.remaining_hp - secondDmg <= 0) {
                     clearTimeout(mainMenuTimeout)
                     
+                    setDeadMon(deadMonArr => deadMonArr.concat(myPokemon))
                     setMyPokemon({...myPokemon, remaining_hp: 0})
                     setWinner(enemyPokemon)
                 } else {
@@ -184,7 +188,8 @@ export default function Table({
 
     useEffect(() => {
         if (winner) {
-            setScript(`${capitalize(winner.name).toUpperCase()} has won the match`)
+            setScript(`${capitalize(deadMon[deadMon.length - 1].name).toUpperCase()} has fainted`)
+            setTimeout(() => setScript(`${capitalize(winner.name).toUpperCase()} has won the match`), 2000)
         }
     }, [winner])
 
@@ -204,10 +209,6 @@ export default function Table({
     const backClick = () => {
         setMenuType('main')
     }
-
-    useEffect(() => {
-        console.log('I just ran')
-    }, [])
 
 
     return (

@@ -1,6 +1,6 @@
 .Arena {
     width: 100%;
-    color: #081820;
+    color: #0f380F;
     margin: 60px auto 40px;
 }
 .Arena .buttonDiv {
@@ -26,10 +26,10 @@
 .Table {
     margin: auto;
     width: 95%;
-    background-color: #346856;
+    background-color: #306230;
     display: flex;
     justify-content: space-around;
-    border: 3px solid #081820;
+    border: 3px solid #0f380f;
     border-radius: 10px;
 }
 
@@ -57,16 +57,19 @@
 
 
 .Table .screen {
-    background-color: rgb(237, 228, 228);
-    color: black;
+    /* background-color: rgb(237, 228, 228); */
+    background-color: #cadc9f;
+    /* color: black; */
+    color: #081820;
+
     font-family: 'PKMN RBYGSC';
     font-size: 24px;
     width: 40%;
     height: 200px;
     margin: auto 0;
     padding: 10px;
-    border: 3px solid black;
-    border-top: 5px solid black;
+    border: 3px solid #081820;
+    border-top: 5px solid #081820;
     border-radius: 10px;
     position: relative;
     z-index: 2;
@@ -166,10 +169,11 @@
 
 
 .Bench {
-    background-color: #e0f8d0;
+    background-color: #0f380F;
+    color: #9bbc0f;
     margin: 30px auto;
     width: 95%;
-    border: 3px solid #081820;
+    border: 3px solid #0f380f;
     border-radius: 10px;
     display: flex;
     justify-content: space-around;
@@ -185,3 +189,19 @@
     align-items: flex-start;
 }
 
+.Discard {
+    background-color: #9bbc0f;
+    color: #306230;
+    width: 95%;
+    margin: auto;
+    border: 3px solid #306230;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+.Discard h2 {
+    color: #0f380f;
+}
+.Discard h3 {
+    color: #0f380f;
+}
