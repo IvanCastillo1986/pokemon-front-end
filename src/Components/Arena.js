@@ -63,21 +63,17 @@ export default function Arena({ yourDeck, opponentDeck }) {
     const handlePokemonSwitch = (e) => {
         // save current Pokemon
         const oldPokemon = myPokemon
-        console.log(oldPokemon)
         
         // set newly clicked Pokmeon to variable, which will later get passed into setMyPokemon
         const switchedBenchPokemon = myBench.find(mon => mon.name === e.target.textContent.split(' ').join('-').toLowerCase())
-        console.log('switchedBenchPokemon', switchedBenchPokemon)
         
         const benchPokemonIdx = myBench.findIndex(mon => mon.name === switchedBenchPokemon.name)
-        console.log('benchPokemonIdx', benchPokemonIdx)
         
         // Will pull newPokemon from the bench
         // Will add oldPokemon to the bench
 
         const myNewBench = myBench.filter(mon => mon.name !== switchedBenchPokemon.name)
         myNewBench.push(oldPokemon)
-        console.log(myNewBench)
 
         // replace old myPokemon with new myPokemon
         // setMyPokemon(myNewPokemon)
@@ -88,9 +84,9 @@ export default function Arena({ yourDeck, opponentDeck }) {
         setMenuType('main')
     }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-    }, [deadMon])
+    // }, [deadMon])
 
 
     return (

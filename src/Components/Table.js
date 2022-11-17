@@ -36,6 +36,12 @@ export default function Table({
         Switching the Pokemon uses a turn, just like attacking.
     */}
 
+    function statFluctuation(stat, minVal, maxVal) {
+        // randomize the stat between two different values (ex: .7 and 1.3)
+        let randomVal = Math.random()
+        console.log(randomVal)
+        return Math.floor((randomVal * (maxVal - minVal) + minVal) * stat)
+    }
 
     function combat (clickedMove) {
 
@@ -46,7 +52,12 @@ export default function Table({
         let enemyMoveIdx = Math.floor(Math.random() * 2)
 
         // assign who attacks first, assign moves to each pkm
-        if (myPokemon.spd < enemyPokemon.spd) {
+        const mySpd = statFluctuation(myPokemon.spd, .7, 1.3)
+        const enemySpd = statFluctuation(enemyPokemon.spd, .7, 1.3)
+        // console.log('mySpd', mySpd)
+        // console.log('enemySpd', enemySpd)
+        if (mySpd < enemySpd) {
+            
             firstPkm = enemyPokemon; secondPkm = myPokemon;
             firstPkmMove = enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name
             secondPkmMove = clickedMove
@@ -75,14 +86,14 @@ export default function Table({
         let secondEffect = typeMultiplier(secondPkm.type, firstPkm.type)
 
         // calculate damage
-        let firstDmg = Math.round((3 * firstPkm.atk * 5) / secondPkm.def * firstEffect)
-        let secondDmg = Math.round((3 * secondPkm.atk * 5) / firstPkm.def * secondEffect)
+        let firstDmg = statFluctuation( Math.round((3 * firstPkm.atk * 5) / secondPkm.def * firstEffect), .8, 1.2 )
+        let secondDmg = statFluctuation( Math.round((3 * secondPkm.atk * 5) / firstPkm.def * secondEffect), .8, 1.2 )
+        // console.log(firstDmg)
+        // console.log(secondDmg)
 
         let time = 2000
 
         // Defining setTimeout ids so we can access them to cancel future timeouts from running if a Pokemon dies
-        // let superEffective
-        // let notEffective
         let secondMoveTimeout
         let superEffectiveTimeout
         let notEffectiveTimeout
@@ -194,20 +205,8 @@ export default function Table({
     }, [winner])
 
 
-    const fightClick = () => {
-        setMenuType('fight')
-    }
-    const switchClick = () => {
-        setMenuType('switch')
-    }
-    const itemClick = () => {
-        setMenuType('item')
-    }
-    const defendClick = () => {
-        setMenuType('defend')
-    }
-    const backClick = () => {
-        setMenuType('main')
+    const menuClick = (menuType) => {
+        setMenuType(menuType)
     }
 
 
@@ -228,8 +227,8 @@ export default function Table({
 
                 {menuType === 'main' &&
                 <div className='mainTable'>
-                    <span className='fight' onClick={fightClick}>FIGHT</span>
-                    <span className='switch' onClick={switchClick}>SWITCH</span>
+                    <span className='fight' onClick={() => menuClick('fight')}>FIGHT</span>
+                    <span className='switch' onClick={() => menuClick('switch')}>SWITCH</span>
                     <span className='item'>ITEM</span>
                     <span className='defend'>DEFEND</span>
                 </div> 
@@ -244,7 +243,7 @@ export default function Table({
                         {capitalize(myPokemon.move2.move.name)}
                     </span>
 
-                    <span onClick={backClick} className='backBtn'>Back</span>
+                    <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
                 </div>
                 }
 
@@ -257,7 +256,7 @@ export default function Table({
                             return <span onClick={handlePokemonSwitch} key={i}>{capitalize(mon.name)}</span>
                         })}
                     </div>
-                    <span onClick={backClick} className='backBtn'>Back</span>
+                    <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
                 </div>
                 }
             </div>
