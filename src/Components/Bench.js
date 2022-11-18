@@ -8,13 +8,14 @@ export default function Bench({ myBenchProp, enemyBenchProp }) {
 
 
     const [myBench, setMyBench] = useState(null)
-    const [enemyBench, setEnemyBench] = useState(enemyBenchProp)
+    const [enemyBench, setEnemyBench] = useState(null)
 
     // This detects when myBench prop has been changed, and triggers a re-render 
     // (why doesn't React re-render automatically when prop changes)
     useEffect(() => {
         setMyBench(myBenchProp)
-    }, [myBenchProp])
+        setEnemyBench(enemyBenchProp)
+    }, [myBenchProp, enemyBenchProp])
     
 
 

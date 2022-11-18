@@ -30,8 +30,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
     const [showIntro, setShowIntro] = useState(true)
     const [menuType, setMenuType] = useState('main')
     const [winner, setWinner] = useState(null)
-    const [deadMon, setDeadMon] = useState([])
-    const [discardPile, setDiscardPile] = useState({player1Discard: [], player2Discard: []})
+    const [discardPile, setDiscardPile] = useState({ player1Discard: [], player2Discard: [] })
     
     // This changes theme and scrolls to top of page on component mount
     useEffect(() => {
@@ -60,15 +59,12 @@ export default function Arena({ yourDeck, opponentDeck }) {
         setShowIntro(false)
     }
 
-    // FINISH THIS FUNCTION WHICH HANDLES SWITCHING POKEMON ONCLICK
     const handlePokemonSwitch = (e) => {
         // save current Pokemon
         const oldPokemon = myPokemon
         
-        // set newly clicked Pokmeon to variable, which will later get passed into setMyPokemon
+        // set newly clicked Pokemon to variable, which will later get passed into setMyPokemon
         const switchedBenchPokemon = myBench.find(mon => mon.name === e.target.textContent.split(' ').join('-').toLowerCase())
-        
-        const benchPokemonIdx = myBench.findIndex(mon => mon.name === switchedBenchPokemon.name)
         
         // Will pull newPokemon from the bench
         // Will add oldPokemon to the bench
@@ -77,16 +73,37 @@ export default function Arena({ yourDeck, opponentDeck }) {
         myNewBench.push(oldPokemon)
 
         // replace old myPokemon with new myPokemon
-        // setMyPokemon(myNewPokemon)
-
-        // old Pokemon with current remaining_hp
+        // old Pokemon retains current remaining_hp
         setMyPokemon(switchedBenchPokemon)
         setMyBench(myNewBench)
         setMenuType('main')
     }
 
-    function handlePokemonDiscard() {
+    const handleNewPokemon = (e) => {
+        const clickedPokemon = e.target.textContent.toLowerCase().split(' ').join('-')
 
+        const switchedBenchPokemon = myBench.find(mon => mon.name === clickedPokemon)
+
+        const myNewBench = myBench.filter(mon => mon.name !== switchedBenchPokemon.name)
+
+        setMyPokemon(switchedBenchPokemon)
+        setMyBench(myNewBench)
+        setMenuType('main')
+    }
+    const handleNewEnemyPokemon = () => {
+        // set a new random Pokemon from bench
+        
+        // get length of bench
+        // determine a random number from 0 to length
+        const benchIdx = Math.floor(Math.random() * enemyBench.length)
+        // get that Pokemon from bench
+        console.log(benchIdx)
+
+        const newEnemyPokemon = enemyBench[benchIdx]
+        const newEnemyBench = enemyBench.filter(mon => mon.name !== newEnemyPokemon.name)
+        console.log(newEnemyPokemon)
+        setEnemyPokemon(newEnemyPokemon)
+        setEnemyBench(newEnemyBench)
     }
 
 
@@ -122,8 +139,8 @@ export default function Arena({ yourDeck, opponentDeck }) {
                     myBenchProp={myBench} enemyBenchProp={enemyBench} 
                     winner={winner} setWinner={setWinner} 
                     menuType={menuType} setMenuType={setMenuType}
-                    handlePokemonSwitch={handlePokemonSwitch}
-                    deadMon={deadMon} setDeadMon={setDeadMon}
+                    handlePokemonSwitch={handlePokemonSwitch} handleNewPokemon={handleNewPokemon}
+                    handleNewEnemyPokemon={handleNewEnemyPokemon}
                     discardPile={discardPile} setDiscardPile={setDiscardPile}
                 />
 
@@ -131,7 +148,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
                 
                 {winner &&
                 // When a Pokemon in Table dies, put them in deadMon state, so that their name renders here
-                <Discard deadMon={deadMon} discardPile={discardPile} />
+                <Discard discardPile={discardPile} />
                 }
             </div>
             }

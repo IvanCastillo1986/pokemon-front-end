@@ -9,7 +9,7 @@ import { typeMultiplier } from '../Helper/typeMultiplier'
 
 export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, winner, setWinner,
-    menuType, setMenuType, handlePokemonSwitch, discardPile, setDiscardPile
+    menuType, setMenuType, handlePokemonSwitch, handleNewPokemon, handleNewEnemyPokemon, discardPile, setDiscardPile
 }) {
 
     const [script, setScript] = useState("")
@@ -202,10 +202,16 @@ export default function Table({
         if (winner) {
             if (winner.player === 1) {
                 setScript(`${capitalize(discardPile.player2Discard[discardPile.player2Discard.length - 1].name).toUpperCase()} has fainted`)
+                setTimeout(() => {
+                    setScript(`Enemy has chosen ${capitalize(enemyPokemon.name).toUpperCase()}!`)
+                    handleNewEnemyPokemon()
+                }, 4000)
+                setTimeout(() => setMenuType('main'), 6000)
             } else {
                 setScript(`${capitalize(discardPile.player1Discard[discardPile.player1Discard.length - 1].name).toUpperCase()} has fainted`)
+                setTimeout(() => setMenuType('newPokemon'), 4000)
             }
-            
+
             setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
         }
     }, [winner])
@@ -235,6 +241,7 @@ export default function Table({
                 <div className='mainTable'>
                     <span className='fight' onClick={() => menuClick('fight')}>FIGHT</span>
                     <span className='switch' onClick={() => menuClick('switch')}>SWITCH</span>
+                    {/* <span className='switch' onClick={() => handleNewEnemyPokemon()}>SWITCH</span> */}
                     <span className='item'>ITEM</span>
                     <span className='defend'>DEFEND</span>
                 </div> 
@@ -262,6 +269,17 @@ export default function Table({
                         })}
                     </div>
                     <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
+                </div>
+                }
+
+                {menuType === 'newPokemon' &&
+                <div className='switchMenu'>
+                    <span>Which Pokemon would you like to use next?</span>
+                    <div className='switchOptions'>
+                        {myBenchProp.map((mon, i) => {
+                            return <span onClick={handleNewPokemon} key={i}>{capitalize(mon.name)}</span>
+                        })}
+                    </div>
                 </div>
                 }
             </div>
