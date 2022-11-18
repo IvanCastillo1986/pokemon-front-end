@@ -9,10 +9,8 @@ import { typeMultiplier } from '../Helper/typeMultiplier'
 
 export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, winner, setWinner,
-    deadMon, setDeadMon, menuType, setMenuType, handlePokemonSwitch
+    menuType, setMenuType, handlePokemonSwitch, discardPile, setDiscardPile
 }) {
-
-
 
     const [script, setScript] = useState("")
 
@@ -38,9 +36,7 @@ export default function Table({
 
     function statFluctuation(stat, minVal, maxVal) {
         // randomize the stat between two different values (ex: .7 and 1.3)
-        let randomVal = Math.random()
-        console.log(randomVal)
-        return Math.floor((randomVal * (maxVal - minVal) + minVal) * stat)
+        return Math.floor((Math.random() * (maxVal - minVal) + minVal) * stat)
     }
 
     function combat (clickedMove) {
@@ -49,13 +45,11 @@ export default function Table({
 
         setMenuType('script')
         
-        let enemyMoveIdx = Math.floor(Math.random() * 2)
+        const enemyMoveIdx = Math.floor(Math.random() * 2)
 
         // assign who attacks first, assign moves to each pkm
         const mySpd = statFluctuation(myPokemon.spd, .7, 1.3)
         const enemySpd = statFluctuation(enemyPokemon.spd, .7, 1.3)
-        // console.log('mySpd', mySpd)
-        // console.log('enemySpd', enemySpd)
         if (mySpd < enemySpd) {
             
             firstPkm = enemyPokemon; secondPkm = myPokemon;
@@ -88,8 +82,6 @@ export default function Table({
         // calculate damage
         let firstDmg = statFluctuation( Math.round((3 * firstPkm.atk * 5) / secondPkm.def * firstEffect), .8, 1.2 )
         let secondDmg = statFluctuation( Math.round((3 * secondPkm.atk * 5) / firstPkm.def * secondEffect), .8, 1.2 )
-        // console.log(firstDmg)
-        // console.log(secondDmg)
 
         let time = 2000
 
@@ -129,9 +121,11 @@ export default function Table({
                     clearFutureTimeouts()
                     clearTimeout(mainMenuTimeout)
 
-                    setDeadMon(deadMonArr => deadMonArr.concat(enemyPokemon))
+                    setDiscardPile(prevDiscardPile => {
+                        return {...prevDiscardPile, player2Discard: prevDiscardPile.player2Discard.concat(enemyPokemon)}
+                    })
                     setEnemyPokemon({...enemyPokemon, remaining_hp: 0})
-                    setWinner(myPokemon)
+                    setWinner({player: 1, pokemon: myPokemon})
                 } else {
                     setEnemyPokemon({...enemyPokemon, remaining_hp: enemyPokemon.remaining_hp - firstDmg})
                 }
@@ -140,9 +134,11 @@ export default function Table({
                     clearFutureTimeouts()
                     clearTimeout(mainMenuTimeout)
 
-                    setDeadMon(deadMonArr => deadMonArr.concat(myPokemon))
+                    setDiscardPile(prevDiscardPile => {
+                        return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(myPokemon)}
+                    })
                     setMyPokemon({...myPokemon, remaining_hp: 0})
-                    setWinner(enemyPokemon)
+                    setWinner({player: 2, pokemon: enemyPokemon})
                 } else {
                     setMyPokemon({...myPokemon, remaining_hp: myPokemon.remaining_hp - firstDmg})
                 }
@@ -169,9 +165,11 @@ export default function Table({
                 if (enemyPokemon.remaining_hp - secondDmg <= 0) {
                     clearTimeout(mainMenuTimeout)
                     
-                    setDeadMon(deadMonArr => deadMonArr.concat(enemyPokemon))
+                    setDiscardPile(prevDiscardPile => {
+                        return {...prevDiscardPile, player2Discard: prevDiscardPile.player2Discard.concat(enemyPokemon)}
+                    })
                     setEnemyPokemon({...enemyPokemon, remaining_hp: 0}) 
-                    setWinner(myPokemon)
+                    setWinner({player: 1, pokemon: myPokemon})
                 } else {
                     setEnemyPokemon({...enemyPokemon, remaining_hp: enemyPokemon.remaining_hp - secondDmg})
                 }
@@ -179,9 +177,11 @@ export default function Table({
                 if (myPokemon.remaining_hp - secondDmg <= 0) {
                     clearTimeout(mainMenuTimeout)
                     
-                    setDeadMon(deadMonArr => deadMonArr.concat(myPokemon))
+                    setDiscardPile(prevDiscardPile => {
+                        return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(myPokemon)}
+                    })
                     setMyPokemon({...myPokemon, remaining_hp: 0})
-                    setWinner(enemyPokemon)
+                    setWinner({player: 2, pokemon: enemyPokemon})
                 } else {
                     setMyPokemon({...myPokemon, remaining_hp: myPokemon.remaining_hp - secondDmg})
                 }
@@ -198,9 +198,15 @@ export default function Table({
     }
 
     useEffect(() => {
+        
         if (winner) {
-            setScript(`${capitalize(deadMon[deadMon.length - 1].name).toUpperCase()} has fainted`)
-            setTimeout(() => setScript(`${capitalize(winner.name).toUpperCase()} has won the match`), 2000)
+            if (winner.player === 1) {
+                setScript(`${capitalize(discardPile.player2Discard[discardPile.player2Discard.length - 1].name).toUpperCase()} has fainted`)
+            } else {
+                setScript(`${capitalize(discardPile.player1Discard[discardPile.player1Discard.length - 1].name).toUpperCase()} has fainted`)
+            }
+            
+            setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
         }
     }, [winner])
 
@@ -247,7 +253,6 @@ export default function Table({
                 </div>
                 }
 
-                {/* FINISH SWITCH FUNCTIONALITY */}
                 {menuType === 'switch' &&
                 <div className='switchMenu'>
                     <span>Which Pokemon would you like to switch to?</span>

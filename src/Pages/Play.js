@@ -4,7 +4,7 @@ import Deck from '../Components/Deck'
 import Arena from '../Components/Arena'
 
 import './Play.css'
-import { listMoves } from '../Helper/countMoves'
+// import { listMoves } from '../Helper/countMoves'
 
 
 export default function Play({ pokemon }) {

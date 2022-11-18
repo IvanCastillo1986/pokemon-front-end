@@ -31,6 +31,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
     const [menuType, setMenuType] = useState('main')
     const [winner, setWinner] = useState(null)
     const [deadMon, setDeadMon] = useState([])
+    const [discardPile, setDiscardPile] = useState({player1Discard: [], player2Discard: []})
     
     // This changes theme and scrolls to top of page on component mount
     useEffect(() => {
@@ -84,9 +85,10 @@ export default function Arena({ yourDeck, opponentDeck }) {
         setMenuType('main')
     }
 
-    // useEffect(() => {
+    function handlePokemonDiscard() {
 
-    // }, [deadMon])
+    }
+
 
 
     return (
@@ -122,13 +124,14 @@ export default function Arena({ yourDeck, opponentDeck }) {
                     menuType={menuType} setMenuType={setMenuType}
                     handlePokemonSwitch={handlePokemonSwitch}
                     deadMon={deadMon} setDeadMon={setDeadMon}
+                    discardPile={discardPile} setDiscardPile={setDiscardPile}
                 />
 
                 <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />
                 
                 {winner &&
                 // When a Pokemon in Table dies, put them in deadMon state, so that their name renders here
-                <Discard deadMon={deadMon} />
+                <Discard deadMon={deadMon} discardPile={discardPile} />
                 }
             </div>
             }
