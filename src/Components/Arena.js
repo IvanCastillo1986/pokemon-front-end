@@ -90,21 +90,6 @@ export default function Arena({ yourDeck, opponentDeck }) {
         setMyBench(myNewBench)
         setMenuType('main')
     }
-    const handleNewEnemyPokemon = () => {
-        // set a new random Pokemon from bench
-        
-        // get length of bench
-        // determine a random number from 0 to length
-        const benchIdx = Math.floor(Math.random() * enemyBench.length)
-        // get that Pokemon from bench
-        console.log(benchIdx)
-
-        const newEnemyPokemon = enemyBench[benchIdx]
-        const newEnemyBench = enemyBench.filter(mon => mon.name !== newEnemyPokemon.name)
-        console.log(newEnemyPokemon)
-        setEnemyPokemon(newEnemyPokemon)
-        setEnemyBench(newEnemyBench)
-    }
 
 
 
@@ -136,11 +121,10 @@ export default function Arena({ yourDeck, opponentDeck }) {
 
                 <Table myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
                     enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
-                    myBenchProp={myBench} enemyBenchProp={enemyBench} 
+                    myBenchProp={myBench} enemyBenchProp={enemyBench}  setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 
                     menuType={menuType} setMenuType={setMenuType}
                     handlePokemonSwitch={handlePokemonSwitch} handleNewPokemon={handleNewPokemon}
-                    handleNewEnemyPokemon={handleNewEnemyPokemon}
                     discardPile={discardPile} setDiscardPile={setDiscardPile}
                 />
 

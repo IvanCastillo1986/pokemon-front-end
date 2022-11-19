@@ -8,7 +8,7 @@ import { typeMultiplier } from '../Helper/typeMultiplier'
 
 
 export default function Table({ 
-    myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, winner, setWinner,
+    myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, winner, setWinner,
     menuType, setMenuType, handlePokemonSwitch, handleNewPokemon, handleNewEnemyPokemon, discardPile, setDiscardPile
 }) {
 
@@ -34,8 +34,8 @@ export default function Table({
         Switching the Pokemon uses a turn, just like attacking.
     */}
 
+    // randomize the stat between two different values (ex: spd = dmg * .7 and 1.3)
     function statFluctuation(stat, minVal, maxVal) {
-        // randomize the stat between two different values (ex: .7 and 1.3)
         return Math.floor((Math.random() * (maxVal - minVal) + minVal) * stat)
     }
 
@@ -202,17 +202,31 @@ export default function Table({
         if (winner) {
             if (winner.player === 1) {
                 setScript(`${capitalize(discardPile.player2Discard[discardPile.player2Discard.length - 1].name).toUpperCase()} has fainted`)
-                setTimeout(() => {
-                    setScript(`Enemy has chosen ${capitalize(enemyPokemon.name).toUpperCase()}!`)
-                    handleNewEnemyPokemon()
-                }, 4000)
-                setTimeout(() => setMenuType('main'), 6000)
+                
+                if (enemyBenchProp.length === 0 && // if the enemy's last Pokemon has been KO'd
+                    discardPile.player2Discard[discardPile.player2Discard.length - 1].name === enemyPokemon.name) 
+                {
+                    setScript('Congrats! You have won the match!')
+                } else {
+
+                    const enemyPkmIdx = Math.floor(Math.random() * enemyBenchProp.length)
+                    const newEnemyPokemon = enemyBenchProp[enemyPkmIdx]
+                    const newEnemyBench = enemyBenchProp.filter(mon => mon.name !== newEnemyPokemon.name)
+                    
+                    setTimeout(() => {
+                        setEnemyPokemon(newEnemyPokemon)
+                        setEnemyBench(newEnemyBench)
+                        setTimeout(() => setScript(`Enemy has chosen ${capitalize(newEnemyPokemon.name).toUpperCase()}!`), 100)                    
+                    }, 2000)
+                    setTimeout(() => setMenuType('main'), 4000)
+                }
+
             } else {
                 setScript(`${capitalize(discardPile.player1Discard[discardPile.player1Discard.length - 1].name).toUpperCase()} has fainted`)
-                setTimeout(() => setMenuType('newPokemon'), 4000)
+                setTimeout(() => setMenuType('newPokemon'), 2000)
             }
 
-            setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
+            // setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
         }
     }, [winner])
 
