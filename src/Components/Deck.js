@@ -84,7 +84,7 @@ export default function Deck(
         let deckArr = []
         const usedIdx = new Set()
 
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 5; i++) {
             let randomNum = Math.floor(Math.random() * (battlePokemon.length))
 
             if (usedIdx.has(randomNum)) {
