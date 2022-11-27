@@ -12,13 +12,13 @@ import CardsPage from './Pages/CardsPage'
 import Pokedex from './Components/Pokedex'
 import Play from './Pages/Play'
 import FourOFour from './Pages/FourOFour'
+import TestBackend from './TestBackend'
 
 import axios from 'axios'
 import { findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
 
 
 export default function App() {
-
 
   // Setting up local cache of original 151 Pokemon, to be used across components
   const [pokemon, setPokemon] = useState([])
@@ -57,6 +57,7 @@ export default function App() {
         <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
         <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
         <Route path="/play" render={() => <Play pokemon={pokemon} />} />
+        <Route path="/test" component={TestBackend} />
         <Route exact path="*" component={FourOFour} />
       </Switch>
     </div>

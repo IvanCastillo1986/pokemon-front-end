@@ -38,22 +38,33 @@ export default function Table({
     function statFluctuation(stat, minVal, maxVal) {
         return Math.floor((Math.random() * (maxVal - minVal) + minVal) * stat)
     }
+    function enemyAttacksFirst(mySpd, enemySpd) {
+        mySpd = statFluctuation(myPokemon.spd, .7, 1.3)
+        enemySpd = statFluctuation(enemyPokemon.spd, .7, 1.3)
+        
+        return enemySpd > mySpd
+    }
+    function setEnemyMove() {
+        const enemyMoveIdx = Math.floor(Math.random() * 2)
+        return enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name
+    }
+    function formatName(name) {
+        return capitalize(name).toUpperCase()
+    }
+    
 
     function combat (clickedMove) {
 
         let firstPkm, secondPkm, firstPkmMove, secondPkmMove
 
         setMenuType('script')
-        
-        const enemyMoveIdx = Math.floor(Math.random() * 2)
 
         // assign who attacks first, assign moves to each pkm
-        const mySpd = statFluctuation(myPokemon.spd, .7, 1.3)
-        const enemySpd = statFluctuation(enemyPokemon.spd, .7, 1.3)
-        if (mySpd < enemySpd) {
-            
+        const enemyMove = setEnemyMove()
+
+        if (enemyAttacksFirst()) {
             firstPkm = enemyPokemon; secondPkm = myPokemon;
-            firstPkmMove = enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name
+            firstPkmMove = enemyMove
             secondPkmMove = clickedMove
             // WHY AREN'T THESE  setState cMoves WORKING WHEN CALLED LATER? 
             // Seems like a delay to set new state, before new value can be accessed
@@ -64,16 +75,16 @@ export default function Table({
         } else {
             firstPkm = myPokemon; secondPkm = enemyPokemon;
             firstPkmMove = clickedMove
-            secondPkmMove = enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name
+            secondPkmMove = enemyMove
 
             setScript('You attack first')
         }
 
         // uppercase pokemonNames and moveNames for script
-        const firstPkmName = capitalize(firstPkm.name).toUpperCase()
-        const secondPkmName = capitalize(secondPkm.name).toUpperCase()
-        firstPkmMove = capitalize(firstPkmMove).toUpperCase()
-        secondPkmMove = capitalize(secondPkmMove).toUpperCase()
+        const firstPkmName = formatName(firstPkm.name)
+        const secondPkmName = formatName(secondPkm.name)
+        firstPkmMove = formatName(firstPkmMove)
+        secondPkmMove = formatName(secondPkmMove)
 
         // apply the typeMultiplier in case a Pokemon's attack type is strong or weak
         let firstEffect = typeMultiplier(firstPkm.type, secondPkm.type)
@@ -196,6 +207,7 @@ export default function Table({
             setScript('')
         }, time)
     }
+
 
     useEffect(() => {
         
