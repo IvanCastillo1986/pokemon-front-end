@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 
 const url = process.env.REACT_APP_API_URL
 
-export default function TestBackend({ pokemon }) {
+export default function TestBackend() {
 
     const [nameInput, setNameInput] = useState("")
     const [users, setUsers] = useState([])

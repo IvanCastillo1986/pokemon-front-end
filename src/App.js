@@ -11,6 +11,7 @@ import Home from './Pages/Home'
 import CardsPage from './Pages/CardsPage'
 import Pokedex from './Components/Pokedex'
 import Play from './Pages/Play'
+import Account from './Pages/Account'
 import FourOFour from './Pages/FourOFour'
 import TestBackend from './TestBackend'
 
@@ -57,7 +58,8 @@ export default function App() {
         <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
         <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
         <Route path="/play" render={() => <Play pokemon={pokemon} />} />
-        <Route path="/test" component={TestBackend} />
+        <Route path="/account" render={() => <Account />} />
+        <Route path="/test" render={() => <TestBackend />} />
         <Route exact path="*" component={FourOFour} />
       </Switch>
     </div>

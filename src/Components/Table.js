@@ -62,7 +62,7 @@ export default function Table({
         // assign who attacks first, assign moves to each pkm
         const enemyMove = setEnemyMove()
 
-        if (enemyAttacksFirst()) {
+        if (enemyAttacksFirst(myPokemon.spd, enemyPokemon.spd)) {
             firstPkm = enemyPokemon; secondPkm = myPokemon;
             firstPkmMove = enemyMove
             secondPkmMove = clickedMove
