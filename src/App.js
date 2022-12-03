@@ -11,9 +11,12 @@ import Home from './Pages/Home'
 import CardsPage from './Pages/CardsPage'
 import Pokedex from './Components/Pokedex'
 import Play from './Pages/Play'
-import Account from './Pages/Account'
-import FourOFour from './Pages/FourOFour'
+import Account from './Pages/Register'
 import TestBackend from './TestBackend'
+import Register from './Pages/Register'
+import LogIn from './Pages/LogIn'
+import LogOut from './Pages/LogOut'
+import FourOFour from './Pages/FourOFour'
 
 import axios from 'axios'
 import { findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
@@ -59,6 +62,9 @@ export default function App() {
         <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
         <Route path="/play" render={() => <Play pokemon={pokemon} />} />
         <Route path="/account" render={() => <Account />} />
+        <Route path="/register" render={() => <Register />} />
+        <Route path="/login" render={() => <LogIn />} />
+        <Route path="/logout" render={() => <LogOut />} />
         <Route path="/test" render={() => <TestBackend />} />
         <Route exact path="*" component={FourOFour} />
       </Switch>
