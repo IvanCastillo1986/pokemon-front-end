@@ -1,21 +1,28 @@
-.User {
+.Register {
     text-align: center;
     /* display: flex;
     flex-direction: column; */
 }
 
-.User h1 {
+.Register h1 {
     margin: 60px;
 }
 
-.User form {
+.Register form {
     font-size: 1.2em;
     margin-bottom: 30px;
+    display: grid;
 }
-.User form input[type=text] {
+/* .User form input[type=text] {
     border-radius: 5px;
     border: 3px solid #3d7dca;
     outline: none;
     padding: 10px;
     margin: 0 10px;
+    display: block;
+} */
+
+.Register form input[type=submit] {
+    display: block;
+    width: fit-content;
 }
