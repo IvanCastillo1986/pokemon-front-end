@@ -1,0 +1,32 @@
+.logIn {
+    text-align: center;
+}
+.logIn h1 {
+    margin: 50px;
+}
+
+.logIn form {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+
+.logIn .email {
+    grid-row: 1 / 2;
+}
+.logIn #email {
+    grid-column: 2 / 4;
+}
+.logIn .password {
+    grid-row: 2 / 3;
+}
+.logIn #password {
+    grid-column: 2 / 4;
+}
+.logIn .submit {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+}

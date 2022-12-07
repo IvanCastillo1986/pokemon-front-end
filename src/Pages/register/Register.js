@@ -1,7 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 
 import './Register.css'
 
+import axios from 'axios'
+const API = process.env.REACT_APP_API_URL
 
 
 export default function Register() {
@@ -31,6 +33,10 @@ export default function Register() {
 
     function handleSubmit(e) {
         e.preventDefault()
+
+        axios.post(API + '/users')
+        .then(res => console.log(res))
+
     }
 
     function doPasswordsMatch() {
@@ -39,6 +45,7 @@ export default function Register() {
         return true
     }
 
+    // Create the calls to my API to register user into database
 
     return (
         <div className='Register' onSubmit={handleSubmit}>
