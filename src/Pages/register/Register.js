@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import { useHistory } from 'react-router-dom'
 
 import './Register.css'
 
@@ -7,6 +8,8 @@ const API = process.env.REACT_APP_API_URL
 
 
 export default function Register() {
+    
+    const history = useHistory()
 
     const [user, setUser] = useState({
         username: "",
@@ -34,9 +37,9 @@ export default function Register() {
     function handleSubmit(e) {
         e.preventDefault()
 
-        axios.post(API + '/users')
-        .then(res => console.log(res))
-
+        axios.post(API + '/users', user)
+        .then(() => history.push('/account', {currentUser: user}))
+        .catch(c => console.error("catch", c))
     }
 
     function doPasswordsMatch() {
