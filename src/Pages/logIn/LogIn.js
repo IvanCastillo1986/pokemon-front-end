@@ -33,10 +33,22 @@ export default function LogIn() {
 
             <form action="" onSubmit={handleSubmit}>
                 <label htmlFor="email" className='email'>E-mail: </label>
-                <input type="email" name="email" id="email" className='email' onChange={(e) => setEmail(e.target.value)} />
+                <input
+                    type="email" name="email" 
+                    id="email" className='email' 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    placeholder="johndoe@email.com"
+                    required
+                />
 
                 <label htmlFor="password" className='password'>Password: </label>
-                <input type="password" name="password" id="password" className='password' onChange={(e) => setPassword(e.target.value)} />
+                <input 
+                    type="password" name="password" 
+                    id="password" className='password' 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    minLength="6" title="Must be 6 characters long" 
+                    required
+                />
 
                 <input type="submit" value="Log In" id="submit" className='submit' />
             </form>

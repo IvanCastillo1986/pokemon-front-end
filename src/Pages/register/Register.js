@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import './Register.css'
@@ -17,6 +17,19 @@ export default function Register() {
         password: ""
     })
     const [passwordConfirm, setPasswordConfirm] = useState("")
+    const [emailsInDatabase, setEmailsInDatabase] = useState([])
+    const [emailAlreadyExists, setEmailAlreadyExists] = useState(false)
+
+    // Gathers the users' emails, so that accounts aren't repeated when registering new account
+    useEffect(() => {
+        const usersEmailArray = []
+
+        axios.get(`${API}/users`)
+        .then(res => {
+            res.data.forEach(user => usersEmailArray.push(user.email))
+            setEmailsInDatabase(usersEmailArray)
+        })
+    }, [])
     
 {/*
     This page will handle all of the user account information.
@@ -30,6 +43,8 @@ export default function Register() {
     MyAccount
 */}
 
+    // ADD ERROR HANDLING IN CASE MORE THAN ONE MATCH WITH THE SAME EMAIL IS ALREADY IN DATABASE
+
     function handleChange(e) {
         setUser({...user, [e.target.name]: e.target.value})
     }
@@ -37,18 +52,24 @@ export default function Register() {
     function handleSubmit(e) {
         e.preventDefault()
 
-        axios.post(API + '/users', user)
-        .then(() => history.push('/account', {currentUser: user}))
-        .catch(c => console.error("catch", c))
+        if (emailsInDatabase.includes(user.email)) {
+            console.log('Sorry, that e-mail has already been registered')
+            setEmailAlreadyExists(true)
+        }
+        else {
+            axios.post(API + '/users', user)
+            .then(() => history.push('/account', {currentUser: user}))
+            .catch(c => console.error("catch", c))
+        }
     }
 
+    // Checks if confirm password field matches the already entered password field
     function doPasswordsMatch() {
         if (passwordConfirm !== user.password.slice(0, passwordConfirm.length)) return false
 
         return true
     }
 
-    // Create the calls to my API to register user into database
 
     return (
         <div className='Register' onSubmit={handleSubmit}>
@@ -69,9 +90,13 @@ export default function Register() {
                     onChange={handleChange}
                     required 
                 /><br />
+                <label style={{visibility: emailAlreadyExists ? "visible" : "hidden", color: "red"}}>
+                    E-mail already exists. Log in instead.
+                </label>
                 
                 <label htmlFor="password">Password</label>
-                <input name="password" type="password" 
+                <input 
+                    name="password" type="password" 
                     minLength="6" title="Must be 6 characters long" 
                     onChange={handleChange}
                     required 
