@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { auth } from '../../../firebase'
+import { onAuthStateChanged } from 'firebase/auth'
+
+import LogOut from '../logOut/LogOut'
 
 import './UserDetails.css'
-import { onAuthStateChanged } from 'firebase/auth'
 
 
 export default function UserDetails() {
@@ -37,7 +39,8 @@ export default function UserDetails() {
 
             {authUser ? 
             <div className='UserDetails__user-div'>
-                <p>Signed in as {authUser.email}</p> 
+                <p>Signed in as {authUser.email}</p>
+                <LogOut />
             </div>
             :
             <p>Signed out</p>
