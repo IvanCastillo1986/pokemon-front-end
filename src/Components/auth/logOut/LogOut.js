@@ -1,11 +1,13 @@
 import React from 'react'
 
+import './LogOut.css'
+
 
 
 export default function LogOut() {
     return (
-        <div>
-            <h1>You have logged out</h1>
+        <div className='LogOut'>
+            <h2>You have logged out</h2>
         </div>
     )
 }

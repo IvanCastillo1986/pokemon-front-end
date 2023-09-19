@@ -21,7 +21,12 @@ const unregisteredMenuItems = [
     {
         linkName: 'Register',
         url: '/register'
-    }
+    },
+    {
+        linkName: 'Account',
+        url: '/my-account'
+    },
+
 ]
 const registeredMenuItems = [
     {
