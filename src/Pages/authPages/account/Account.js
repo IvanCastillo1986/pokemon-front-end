@@ -1,10 +1,7 @@
 import React from 'react'
-
+import UserDetails from '../../../Components/authComponents/userDetails/UserDetails'
 
 import './Account.css'
-import LogIn from '../../Components/auth/logIn/LogIn'
-import Register from '../../Components/auth/register/Register'
-import UserDetails from '../../Components/auth/userDetails/UserDetails'
 
 
 export default function Account() {
@@ -16,10 +13,6 @@ export default function Account() {
     return (
         <div className="account">
             <h1>Account Page</h1>
-
-            <LogIn />
-
-            <Register />
 
             <UserDetails />
             

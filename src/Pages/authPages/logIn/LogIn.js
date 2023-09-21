@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { auth } from '../../../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 
 import "./LogIn.css"
 
-import axios from 'axios'
 const API = process.env.REACT_APP_API_URL
 
 
@@ -15,6 +15,7 @@ export default function LogIn() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const history = useHistory()
 
     const handleSignIn = (e) => {
         e.preventDefault()
@@ -23,6 +24,7 @@ export default function LogIn() {
         .then(() => {
             setEmail('')
             setPassword('')
+            history.push('/my-account')
         }).catch(err => console.log(`Error in handleSignIn:`, err))
     }
 

@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { UserContext } from './UserContext'
+import { user } from './UserContext'
+
 import './App.css'
 
 // Components
@@ -12,8 +14,10 @@ import Home from './Pages/Home'
 import CardsPage from './Pages/CardsPage'
 import Pokedex from './Components/Pokedex'
 import Play from './Pages/Play'
-import TestBackend from './TestBackend'
-import Account from './Pages/account/Account'
+import Account from './Pages/authPages/account/Account'
+import LogIn from './Pages/authPages/logIn/LogIn'
+import LogOut from './Pages/authPages/logOut/LogOut'
+import Register from './Pages/authPages/register/Register'
 import FourOFour from './Pages/FourOFour'
 
 import axios from 'axios'
@@ -26,7 +30,7 @@ export default function App() {
 
   // Setting up local cache of original 151 Pokemon, to be used across components
   const [pokemon, setPokemon] = useState([])
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState()
   
   const numOfPokemon = 151
 
@@ -64,8 +68,10 @@ export default function App() {
           <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
           <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
           <Route path="/play" render={() => <Play pokemon={pokemon} />} />
+          <Route path="/register" render={() => <Register />} />
+          <Route path="/login" render={() => <LogIn />} />
+          <Route path="/logout" render={() => <LogOut />} />
           <Route path="/my-account" render={() => <Account />} />
-          <Route path="/test" render={() => <TestBackend />} />
           <Route exact path="*" component={FourOFour} />
         </Switch>
       </UserContext.Provider>
