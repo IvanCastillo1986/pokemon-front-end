@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { UserContext } from './UserContext'
-import { user } from './UserContext'
 
 import './App.css'
 
@@ -26,33 +25,45 @@ import { findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
 
 export default function App() {
 
-  // REMEMBER THAT THIS USES REACT-ROUTER-DOM V5, NOT V6. THIS MEANS SWITCH INSTEAD OF ROUTES, ETC.
-
   // Setting up local cache of original 151 Pokemon, to be used across components
   const [pokemon, setPokemon] = useState([])
-  const [user, setUser] = useState()
+  const [user, setUser] = useState({})
   
-  const numOfPokemon = 151
-
+  const numOfPokemon = 151;
   useEffect(() => {
     
     // For some reason, I can't benchmark this IIFE(Immediately Invoked Function Expression) function
     // Takes roughly 6 seconds
     (async function () {
       let pokemonArr = []
-      for (let id = 1; id <= numOfPokemon; id++) {
-        await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}/`)
-        .then(res => {
-          const pokemon = res.data
+      
+      // Creating a variable, which stores 151 nulls within an array, and maps through these nulls
+      // to declare a Promise within each null arr element to be made later
+      // [axios.get(`https://pokeapi.co/api/v2/pokemon/${1}/`), axios.get(`https://pokeapi.co/api/v2/pokemon/${2}/`), null]
+      const pokemonApiPromises = new Array(numOfPokemon)
+        .fill(null)
+        .map((d, i) => axios.get(`https://pokeapi.co/api/v2/pokemon/${i + 1}/`))
 
-          // Adding first two learned moves to each Pokemon
+      // Promise takes an array of Promises, and executes them all. 
+      // The Promises are not returned in the same order (or awaited), but are stored in array in same order
+      Promise.all(
+        pokemonApiPromises
+      ).then(resArray => {
+        
+        // pokemonResArray is returned and ready.
+        resArray.forEach((res) => {
+
+          const pokemon = res.data
+          
           const twoMoves = findFirstTwoLearnedMoves(pokemon)
           pokemon.twoMoves = twoMoves
-
+          
           pokemonArr.push(pokemon)
         })
-      }
-      setPokemon(pokemonArr)
+        
+        setPokemon(pokemonArr)
+      })
+  
     })();
 
   }, []);
@@ -78,29 +89,3 @@ export default function App() {
     </div>
   )
 }
-
-{/* 
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDGafur2cuP4_nLvb6_i_VnkOao9vmIKk0",
-  authDomain: "pokemon-card-website.firebaseapp.com",
-  projectId: "pokemon-card-website",
-  storageBucket: "pokemon-card-website.appspot.com",
-  messagingSenderId: "468407471473",
-  appId: "1:468407471473:web:e9612696a99310c34fbad0",
-  measurementId: "G-607G448YE1"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-*/}

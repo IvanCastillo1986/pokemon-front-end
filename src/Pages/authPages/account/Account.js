@@ -1,5 +1,5 @@
 import React from 'react'
-import UserDetails from '../../../Components/authComponents/userDetails/UserDetails'
+import UserStatus from '../../../Components/authComponents/userStatus/UserStatus'
 
 import './Account.css'
 
@@ -12,9 +12,9 @@ export default function Account() {
 
     return (
         <div className="account">
-            <h1>Account Page</h1>
+            <h2>My Account</h2>
 
-            <UserDetails />
+            <UserStatus />
             
         </div>
     )

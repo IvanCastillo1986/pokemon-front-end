@@ -4,7 +4,7 @@ import { auth } from '../../../firebase'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { UserContext } from '../../../UserContext'
 
-import './UserDetails.css'
+import './UserStatus.css'
 
 
 {/*
@@ -12,18 +12,18 @@ import './UserDetails.css'
         name, email, deck, date account was created
 */}
 
-export default function UserDetails() {
+export default function UserStatus() {
 
     const [authUser, setAuthUser] = useState(null)
-    const history = useHistory()
     const {user, setUser} = useContext(UserContext)
-    console.log(user, setUser)
+    
+    const history = useHistory()
     
     
     useEffect(() => {
         const listen = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log('UserDetails user:', user)
+                console.log('UserStatus user:', user)
                 setAuthUser(user)
                 setUser(user)
             } else {
@@ -34,7 +34,6 @@ export default function UserDetails() {
         return () => {
             listen()
         }
-        
     }, [])
     
     const handleSignOut = () => {
@@ -47,17 +46,25 @@ export default function UserDetails() {
     }
     
 
-    
     return (
-        <div className="UserDetails">
-            <h2>My Account</h2>
+        <div className="UserStatus">
 
-            <div className='UserDetails__user-div'>
+            {authUser ?
+
+            <div className='UserStatus__user-div'>
                 <p>Signed in as {authUser && authUser.email}</p>
 
                 <h2>Do you want to log out?</h2>
                 <button onClick={handleSignOut}>Sign Out</button>
             </div>
+
+            :
+
+            <div className='UserStatus__user-div'>
+                <p>You are currently signed out.</p>
+                <p>Please visit our Log In page to sign in.</p>
+            </div>
+            }
 
             {/* <p>{currentUser.username}</p>
             <p>Account E-mail: {currentUser.email}</p>

@@ -13,7 +13,7 @@ export default function LogOut() {
     return (
         <div className='LogOut'>
             
-            <p>You have been signed out</p>
+            <h2>You have been signed out</h2>
 
         </div>
     )

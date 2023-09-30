@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { auth } from '../../../firebase'
 import axios from 'axios'
 
@@ -13,17 +14,31 @@ export default function Register() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const history = useHistory()
+
+    // Make API call to create new user
+    // Add user to UserContext
+        // add hasChosenStarter flag, set to false until they choose from Play page
     
     const register = (e) => {
         e.preventDefault()
 
         createUserWithEmailAndPassword(auth, email, password)
         .then(userCredentials => {
-            console.log(userCredentials)
-            setEmail('')
-            setPassword('')
-        }).catch(err => console.log(err))
-        
+            
+            const newUser = {
+                email: userCredentials.user.email,
+                uuid: userCredentials.user.uid,
+                has_chosen_starter: false
+            }
+
+            // here we not only create the user, but also send the 5 randomly generated numbers so we create the deck
+            axios.post(`${API}/users`, [newUser, [4, 15, 61, 112, 145]])
+            .catch(err => console.log('error adding user:', err))
+
+            history.push('/my-account')
+        })
+        .catch(err => console.log(err))
     }
 
 
