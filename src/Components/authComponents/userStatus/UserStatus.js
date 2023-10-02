@@ -23,7 +23,6 @@ export default function UserStatus() {
     useEffect(() => {
         const listen = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log('UserStatus user:', user)
                 setAuthUser(user)
                 setUser(user)
             } else {
