@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { UserContext } from '../UserContext'
 
 import Deck from '../Components/Deck'
 import Arena from '../Components/Arena'
@@ -13,13 +14,16 @@ export default function Play({ pokemon }) {
     const [aiDeck, setAiDeck] = useState([])
     const [starterPokemon, setStarterPokemon] = useState({})
     const [currentComponent, setCurrentComponent] = useState('deck')
+    const { user } = useContext(UserContext)
+    console.log(user)
 
     const handleCurrentComponent = (str) => {
         setCurrentComponent(str)
     }
-// console.log(listMoves(pokemon))
+    // console.log(listMoves(pokemon))
 
-
+    // if has_chosen_starter is true, render Deck
+    // else, render Arena
 
     return (
         <div className='Play'>

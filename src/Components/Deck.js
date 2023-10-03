@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { capitalize } from '../Helper/capitalize'
 import { convertToBattlePokemon } from '../Helper/convertToBattlePokemon'
 import { basicPokemonIds } from '../Helper/basicPokemonIds'
-import { UserContext } from '../UserContext'
 
 import BattleCard from './BattleCard'
 
@@ -15,7 +14,6 @@ export default function Deck(
 ) {
     
     const [battlePokemon, setBattlePokemon] = useState([])
-    const { user, setUser } = useContext(UserContext)
     
     // Here, we will only pull a deck with basic Pokemon
     useEffect(() => {
