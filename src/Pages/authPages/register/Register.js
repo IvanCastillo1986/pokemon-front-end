@@ -16,7 +16,7 @@ export default function Register() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const { user, setUser } = useContext(UserContext)
+    const { setUser } = useContext(UserContext)
 
     const history = useHistory()
 
@@ -31,8 +31,10 @@ export default function Register() {
         const eliminationArr = [...arr]
 
         // this loop adds 5 pokeIds from basicPokemonIds[] to randomPokemonArr[]
+        // const basicPokemonIds = [10,13,16,19,21,23,25,27,29,32,35,37,39,41,43,46,48,50,52,54,56,58,
+        // 60,63,66,69,72,74,77,79,81,84,86,88,90,92,96,98,100,102,104,109,111,116,118,120,129,133,138,140,147]
         for (let i = 0; i < 5; i++) {
-            const randomNum = Math.floor(Math.random() * (eliminationArr.length))
+            const randomNum = eliminationArr[Math.floor(Math.random() * (eliminationArr.length))]
 
             randomPokemonArr.push(randomNum)
             eliminationArr.splice(randomNum, 1)
@@ -45,7 +47,7 @@ export default function Register() {
         e.preventDefault()
 
         createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredentials => {
+        .then((userCredentials) => {
 
             const newUser = {
                 email: userCredentials.user.email,
@@ -56,17 +58,17 @@ export default function Register() {
             // here we not only create the user, but also send the 5 randomly generated numbers to create deck
             axios.post(`${API}/users`, [newUser, createRandomStarterDeck(basicPokemonIds)])
             .then(res => {
-
+                
                 setUser({
-                    currentUser: res.data.newUser, 
-                    currentDeck: res.data.pokemonDeckArr
+                    currentUser: res.data.user, 
+                    currentDeck: res.data.userDeck,
+                    currentPokemon: res.data.userPokemon
                 })
             })
             .catch(err => console.log('error adding user:', err))
-
-            history.push('/my-account')
+            history.push("/my-account")
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log('Error in createUserWithEmailAndPassword', err))
     }
 
 

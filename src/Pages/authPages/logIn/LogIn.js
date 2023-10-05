@@ -17,23 +17,29 @@ export default function LogIn() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const { user, setUser } = useContext(UserContext)
+    const { setUser } = useContext(UserContext)
     const history = useHistory()
 
-    const handleSignIn = (e) => {
+    const handleSignIn = async (e) => {
         e.preventDefault()
         
-        signInWithEmailAndPassword(auth, email, password)
+        await signInWithEmailAndPassword (auth, email, password)
         .then((userCredentials) => {
             axios.get(`${API}/users/${userCredentials.user.uid}`)
             .then(res => {
-                setUser({ currentUser: res.data.user, currentDeck: res.data.userDeck })
+                setUser({ 
+                    currentUser: res.data.user, 
+                    currentDeck: res.data.userDeck, 
+                    currentPokemon: res.data.userPokemon
+                })
             })
 
             setEmail('')
             setPassword('')
-            history.push('/my-account')
-        }).catch(err => console.log(`Error in handleSignIn:`, err))
+        })
+        .catch(err => console.log(`Error in handleSignIn:`, err))
+
+        history.push('/my-account')
     }
 
     return (

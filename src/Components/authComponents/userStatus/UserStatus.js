@@ -7,15 +7,15 @@ import { UserContext } from '../../../UserContext'
 import './UserStatus.css'
 
 
-{/*
+/*
     Will display the user's data:
         name, email, deck, date account was created
-*/}
+*/
 
 export default function UserStatus() {
 
     const [authUser, setAuthUser] = useState(null)
-    const {user, setUser} = useContext(UserContext)
+    const { setUser } = useContext(UserContext)
     
     const history = useHistory()
     
@@ -38,6 +38,7 @@ export default function UserStatus() {
         signOut(auth)
         .then(() => {
             console.log('Signed out successfully')
+            setUser({})
             history.push("/logout")
         })
         .catch(err => console.log('Error signing out:', err))

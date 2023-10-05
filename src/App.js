@@ -12,7 +12,7 @@ import NavBar from './Layout/Navbar'
 import Home from './Pages/Home'
 import CardsPage from './Pages/CardsPage'
 import Pokedex from './Components/Pokedex'
-import Play from './Pages/Play'
+import NewPlay from './Pages/NewPlay'
 import Account from './Pages/authPages/account/Account'
 import LogIn from './Pages/authPages/logIn/LogIn'
 import LogOut from './Pages/authPages/logOut/LogOut'
@@ -78,7 +78,7 @@ export default function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
           <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
-          <Route path="/play" render={() => <Play pokemon={pokemon} />} />
+          <Route path="/play" render={() => <NewPlay pokemon={pokemon} />} />
           <Route path="/register" render={() => <Register />} />
           <Route path="/login" render={() => <LogIn />} />
           <Route path="/logout" render={() => <LogOut />} />
