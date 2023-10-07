@@ -11,11 +11,8 @@ import './Play.css'
 
 export default function NewPlay() {
 
-
     const { user } = useContext(UserContext)
-    const [yourDeck, setyourDeck] = useState([
-        {name: 'testname', }
-    ])
+    const [yourDeck, setyourDeck] = useState(user.currentPokemon)
     const [aiDeck, setAiDeck] = useState([])
     const [currentComponent, setCurrentComponent] = useState('deck')
 

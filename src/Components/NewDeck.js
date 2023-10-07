@@ -24,7 +24,7 @@ export default function NewDeck({ handleCurrentComponent }) {
 
     // This handleClick let's the player choose their starter Pokemon, and sets the AI's deck
     const handleClick = async (e) => {
-        console.log('using NewDeck')
+
         switch(e.target.className) {
             case 'Grass-btn':
                 setStarterId(1)

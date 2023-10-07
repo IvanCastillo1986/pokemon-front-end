@@ -49,19 +49,18 @@ export default function Register() {
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredentials) => {
 
+            // create new user with newly created firebase user data
             const newUser = {
                 email: userCredentials.user.email,
                 uuid: userCredentials.user.uid,
                 has_chosen_starter: false
             }
 
-            // here we not only create the user, but also send the 5 randomly generated numbers to create deck
+            // here we not only create the user, but also send the 5 randomly generated ids to create deck
             axios.post(`${API}/users`, [newUser, createRandomStarterDeck(basicPokemonIds)])
             .then(res => {
-                
                 setUser({
                     currentUser: res.data.user, 
-                    currentDeck: res.data.userDeck,
                     currentPokemon: res.data.userPokemon
                 })
             })
