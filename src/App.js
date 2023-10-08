@@ -78,7 +78,7 @@ export default function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
           <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
-          <Route path="/play" render={() => <NewPlay pokemon={pokemon} />} />
+          <Route path="/play" render={() => <NewPlay />} />
           <Route path="/register" render={() => <Register />} />
           <Route path="/login" render={() => <LogIn />} />
           <Route path="/logout" render={() => <LogOut />} />

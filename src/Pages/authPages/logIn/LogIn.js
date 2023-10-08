@@ -27,7 +27,6 @@ export default function LogIn() {
         .then((userCredentials) => {
             axios.get(`${API}/users/${userCredentials.user.uid}`)
             .then(res => {
-                console.log(res)
                 setUser({ 
                     currentUser: res.data.user, 
                     currentPokemon: res.data.userPokemon

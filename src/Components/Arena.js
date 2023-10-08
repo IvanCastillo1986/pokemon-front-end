@@ -92,52 +92,54 @@ export default function Arena({ yourDeck, opponentDeck }) {
     }
 
 
-
     return (
-        <div className='Arena'>
-
-            {showIntro ?
-            
-            <div className='intro'>
-                <h1>Welcome to the Arena</h1>
-                <p>Your opponent's first Pokemon will be {capitalize(opponentDeck[0].name)}.</p>
-                <p>Which Pokemon would you like to start the battle with?</p>
-                <div className='buttonDiv'>
-                    {yourDeck.map((pokemon) => {
-                        return (
-                            <button key={pokemon.id} onClick={handleInitialClick}>{capitalize(pokemon.name)}</button>
-                            )
-                        })}
-                </div>
-            </div>
-
-            :
-
-            <div className='game'>
-                <div className='playerDiv'>
-                    <h2>Player 1</h2>
-                    <h2>Player 2</h2>
-                </div>
-
-                <Table myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
-                    enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
-                    myBenchProp={myBench} enemyBenchProp={enemyBench}  setEnemyBench={setEnemyBench}
-                    winner={winner} setWinner={setWinner} 
-                    menuType={menuType} setMenuType={setMenuType}
-                    handlePokemonSwitch={handlePokemonSwitch} handleNewPokemon={handleNewPokemon}
-                    discardPile={discardPile} setDiscardPile={setDiscardPile}
-                />
-
-                <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />
-                
-                {winner &&
-                // When a Pokemon in Table dies, put them in deadMon state, so that their name renders here
-                <Discard discardPile={discardPile} />
-                }
-            </div>
-            }
-
-            
-        </div>
+        <div>Arena component</div>
     )
+    // return (
+    //     <div className='Arena'>
+
+    //         {showIntro ?
+            
+    //         <div className='intro'>
+    //             <h1>Welcome to the Arena</h1>
+    //             <p>Your opponent's first Pokemon will be {capitalize(opponentDeck[0].name)}.</p>
+    //             <p>Which Pokemon would you like to start the battle with?</p>
+    //             <div className='buttonDiv'>
+    //                 {yourDeck.map((pokemon) => {
+    //                     return (
+    //                         <button key={pokemon.id} onClick={handleInitialClick}>{capitalize(pokemon.name)}</button>
+    //                         )
+    //                     })}
+    //             </div>
+    //         </div>
+
+    //         :
+
+    //         <div className='game'>
+    //             <div className='playerDiv'>
+    //                 <h2>Player 1</h2>
+    //                 <h2>Player 2</h2>
+    //             </div>
+
+    //             <Table myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
+    //                 enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
+    //                 myBenchProp={myBench} enemyBenchProp={enemyBench}  setEnemyBench={setEnemyBench}
+    //                 winner={winner} setWinner={setWinner} 
+    //                 menuType={menuType} setMenuType={setMenuType}
+    //                 handlePokemonSwitch={handlePokemonSwitch} handleNewPokemon={handleNewPokemon}
+    //                 discardPile={discardPile} setDiscardPile={setDiscardPile}
+    //             />
+
+    //             <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />
+                
+    //             {winner &&
+    //             // When a Pokemon in Table dies, put them in deadMon state, so that their name renders here
+    //             <Discard discardPile={discardPile} />
+    //             }
+    //         </div>
+    //         }
+
+            
+    //     </div>
+    // )
 }
