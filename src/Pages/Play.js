@@ -19,7 +19,11 @@ export default function Play() {
     // Table, Bench, and Discard components will be used as Arena's children in the game portion.
 
     const { user, setUser } = useContext(UserContext)
-    const [yourDeck, setYourDeck] = useState(user.currentPokemon)
+    // const [yourDeck, setYourDeck] = useState(user.currentPokemon)
+    const [yourDeck, setYourDeck] = useState(() => {
+        const sessionUser = JSON.parse(sessionStorage.getItem('user'))
+        return sessionUser.currentPokemon
+    })
     const [aiDeck, setAiDeck] = useState([])
     const [currentComponent, setCurrentComponent] = useState('deck')
 
@@ -32,9 +36,17 @@ export default function Play() {
         }
         axios.put(`${API}/users/${user.currentUser.uuid}`, updatedUser)
         .then(res => {
+            const user = {
+                currentUser: res.data,
+                currentPokemon: yourDeck
+            }
+            sessionStorage.setItem('user', JSON.stringify(user))
+            const sessionUser = JSON.parse(sessionStorage.getItem('user'))
+
             setUser(prevUser => {
+
                 return {
-                    ...prevUser, currentUser: res.data, currentPokemon: yourDeck
+                    ...prevUser, currentUser: sessionUser.currentUser, currentPokemon: sessionUser.currentPokemon
                 }
             })
         })
@@ -42,6 +54,8 @@ export default function Play() {
     }
 
     useEffect(() => {
+        const sessionUser = JSON.parse(sessionStorage.getItem("user"))
+        console.log(sessionUser)
         // This useEffect chooses a different AI deck everytime Play page mounts
         // with your starter's weakness
         if (yourDeck.length > 5) {
@@ -82,7 +96,7 @@ export default function Play() {
 
     return (
         <div className='Play'>
-            {currentComponent === 'deck' && !user.currentUser.has_chosen_starter 
+            {currentComponent === 'deck' && !JSON.parse(sessionStorage.getItem('user')).currentUser.has_chosen_starter
             ?
                 <Deck 
                     handlePlayerReadyToBattle={handlePlayerReadyToBattle}

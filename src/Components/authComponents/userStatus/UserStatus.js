@@ -39,6 +39,8 @@ export default function UserStatus() {
         .then(() => {
             console.log('Signed out successfully')
             setUser({})
+            sessionStorage.clear()
+
             history.push("/logout")
         })
         .catch(err => console.log('Error signing out:', err))

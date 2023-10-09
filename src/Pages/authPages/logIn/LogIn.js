@@ -27,10 +27,15 @@ export default function LogIn() {
         .then((userCredentials) => {
             axios.get(`${API}/users/${userCredentials.user.uid}`)
             .then(res => {
-                setUser({ 
+
+                const user = { 
                     currentUser: res.data.user, 
                     currentPokemon: res.data.userPokemon
-                })
+                }
+                setUser(user)
+
+                sessionStorage.setItem('user', JSON.stringify(user))
+                const sessionUser = JSON.parse(sessionStorage.getItem("user"))
             })
 
             setEmail('')

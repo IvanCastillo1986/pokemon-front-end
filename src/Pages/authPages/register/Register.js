@@ -40,10 +40,14 @@ export default function Register() {
             // here we not only create the user, but also send the 5 random pokeIds array to create deck
             axios.post(`${API}/users`, [newUser, createRandomPokemonIds(5)])
             .then(res => {
-                setUser({
-                    currentUser: res.data.user, 
+                const user = {
+                    currentUser: res.data.user,
                     currentPokemon: res.data.userPokemon
-                })
+                }
+                
+                sessionStorage.setItem("user", JSON.stringify(user))
+                const sessionUser = JSON.parse(sessionStorage.getItem("user"))
+                setUser(sessionUser)
             })
             .catch(err => console.log('error adding user:', err))
             history.push("/my-account")

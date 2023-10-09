@@ -81,6 +81,9 @@ export default function Table({
             setScript('You attack first')
         }
 
+        // add remaining_hp to pokemon
+        firstPkm.remaining_hp = firstPkm.hp
+
         // uppercase pokemonNames and moveNames for script
         const firstPkmName = formatName(firstPkm.name)
         const secondPkmName = formatName(secondPkm.name)
