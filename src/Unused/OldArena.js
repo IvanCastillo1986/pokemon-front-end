@@ -9,10 +9,10 @@ import {capitalize} from '../Helper/capitalize'
 
 
 
-export default function Arena({ yourDeck, opponentDeck }) {
+export default function OldArena({ yourDeck, opponentDeck }) {
     /* 
-    This component will recieve the user and AI decks created in Deck component.
-    This will be the game's parent component.
+    This component will recieve the Deck component's playerDeck, and it will render a random deck of starter
+    pokemon for the AI opponent. 
     Two rows, Player will be on the left, AI on the right.
 
     AI puts down a random Pokemon.
@@ -44,13 +44,10 @@ export default function Arena({ yourDeck, opponentDeck }) {
 
     // This function chooses the first Pokemon to battle on click
     function handleInitialClick(e) {
-        // match the clicked button name with the pokemon in deck
-        const myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.textContent)
+        const myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.textContent.split(' ').join('-').toLowerCase())
         
-        // find the idx of chosen pokemon in deck
         const idx = yourDeck.findIndex(mon => mon.name === myCurrentPokemon.name)
 
-        // remove this pokemon from the rest of pokemon in bench
         const bench = yourDeck.filter((pokemon, i) => i !== idx)
         
         setMyPokemon(myCurrentPokemon)
@@ -95,20 +92,19 @@ export default function Arena({ yourDeck, opponentDeck }) {
     }
 
 
-
     return (
-        <div className='Arena'>
+        <div className='OldArena'>
 
             {showIntro ?
             
             <div className='intro'>
                 <h1>Welcome to the Arena</h1>
-                <p>Your opponent's first Pokemon will be {opponentDeck[0].name}.</p>
+                <p>Your opponent's first Pokemon will be {capitalize(opponentDeck[0].name)}.</p>
                 <p>Which Pokemon would you like to start the battle with?</p>
                 <div className='buttonDiv'>
                     {yourDeck.map((pokemon) => {
                         return (
-                            <button key={pokemon.id} onClick={handleInitialClick}>{pokemon.name}</button>
+                            <button key={pokemon.id} onClick={handleInitialClick}>{capitalize(pokemon.name)}</button>
                             )
                         })}
                 </div>

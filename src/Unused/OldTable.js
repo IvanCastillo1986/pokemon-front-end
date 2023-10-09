@@ -34,21 +34,20 @@ export default function Table({
         Switching the Pokemon uses a turn, just like attacking.
     */}
 
-    // randomize the stat between two different values (ex: speed = dmg * .7 and 1.3)
+    // randomize the stat between two different values (ex: spd = dmg * .7 and 1.3)
     function statFluctuation(stat, minVal, maxVal) {
         return Math.floor((Math.random() * (maxVal - minVal) + minVal) * stat)
     }
-    function enemyAttacksFirst(myspeed, enemyspeed) {
-        myspeed = statFluctuation(myPokemon.speed, .7, 1.3)
-        enemyspeed = statFluctuation(enemyPokemon.speed, .7, 1.3)
+    function enemyAttacksFirst(mySpd, enemySpd) {
+        mySpd = statFluctuation(myPokemon.spd, .7, 1.3)
+        enemySpd = statFluctuation(enemyPokemon.spd, .7, 1.3)
         
-        return enemyspeed > myspeed
+        return enemySpd > mySpd
     }
     function setEnemyMove() {
         const enemyMoveIdx = Math.floor(Math.random() * 2)
-        return enemyMoveIdx === 0 ? enemyPokemon.move1 : enemyPokemon.move2
+        return enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name
     }
-    // Eventually we won't need this, after refactoring
     function formatName(name) {
         return capitalize(name).toUpperCase()
     }
@@ -63,7 +62,7 @@ export default function Table({
         // assign who attacks first, assign moves to each pkm
         const enemyMove = setEnemyMove()
 
-        if (enemyAttacksFirst(myPokemon.speed, enemyPokemon.speed)) {
+        if (enemyAttacksFirst(myPokemon.spd, enemyPokemon.spd)) {
             firstPkm = enemyPokemon; secondPkm = myPokemon;
             firstPkmMove = enemyMove
             secondPkmMove = clickedMove
@@ -88,8 +87,8 @@ export default function Table({
         secondPkmMove = formatName(secondPkmMove)
 
         // apply the typeMultiplier in case a Pokemon's attack type is strong or weak
-        let firstEffect = typeMultiplier(firstPkm.type1, secondPkm.type1)
-        let secondEffect = typeMultiplier(secondPkm.type1, firstPkm.type1)
+        let firstEffect = typeMultiplier(firstPkm.type, secondPkm.type)
+        let secondEffect = typeMultiplier(secondPkm.type, firstPkm.type)
 
         // calculate damage
         let firstDmg = statFluctuation( Math.round((3 * firstPkm.atk * 5) / secondPkm.def * firstEffect), .8, 1.2 )
@@ -304,7 +303,7 @@ export default function Table({
                     <span>Which Pokemon would you like to use next?</span>
                     <div className='switchOptions'>
                         {myBenchProp.map((mon, i) => {
-                            return <span onClick={handleNewPokemon} key={i}>{mon.name}</span>
+                            return <span onClick={handleNewPokemon} key={i}>{capitalize(mon.name)}</span>
                         })}
                     </div>
                 </div>

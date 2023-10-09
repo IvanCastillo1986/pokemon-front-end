@@ -1,110 +1,55 @@
-import React, { useState, useEffect } from 'react'
-import { capitalize } from '../Helper/capitalize'
-import { convertToBattlePokemon } from '../Helper/convertToBattlePokemon'
-import { basicPokemonIds } from '../Helper/basicPokemonIds'
+import React, { useState, useContext } from 'react'
+import { UserContext } from '../UserContext'
+import axios from 'axios'
 
 import BattleCard from './BattleCard'
 
 import './BattleCard.css'
+const API = process.env.REACT_APP_API_URL
 
 
-// This component let's player choose their starter Pokemon, and randomly chooses player and AI decks
-export default function Deck(
-    { pokemon, handleCurrentComponent, setStarterPokemon, starterPokemon, setYourDeck, yourDeck, setAiDeck }
-) {
+// This component let's player choose their starter Pokemon
+export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck, setAiDeck }) {
     
-    const [battlePokemon, setBattlePokemon] = useState([])
-    
-    // Here, we will only pull a deck with basic Pokemon
-    useEffect(() => {
+    const [starterPokemon, setStarterPokemon] = useState({})
+    const { user } = useContext(UserContext)
 
-        if (pokemon.length) {
+    // This handleClick let's the player choose their starter Pokemon, no longer making AI Pokemon call
+    const handleClick = async (e) => {
+        let starterId;
 
-            let pokeArr = []
-            
-            for (const id of basicPokemonIds) {
-                pokeArr.push(pokemon[id - 1])
-            }
-            setBattlePokemon(convertToBattlePokemon(pokeArr))
-        }
-        
-    }, [pokemon])
-
-    // This useEffect sets up your deck and the AI opponent's deck, including an AI starter Pokemon
-    useEffect(() => {
-
-        // Choose 5 random cards from battlePokemon[]
-        if (battlePokemon.length) {
-
-            let deckArr = []
-            const usedIdx = new Set()
-
-            for (let i = 0; i < 5; i++) {
-                // convert to battle pokemon, add each card to yourDeck (without duplicates)
-                let randomNum = Math.floor(Math.random() * (battlePokemon.length))
-
-                if (usedIdx.has(randomNum)) {
-                    i--
-                }
-                else {
-                    deckArr.push(battlePokemon[randomNum])
-                    usedIdx.add(randomNum)
-                }
-            }
-            setYourDeck(deckArr)
-        }
-    }, [battlePokemon])
-
-    // This handleClick let's the player choose their starter Pokemon, and sets the AI's deck
-    const handleClick = (e) => {
-
-        let starterPokemonArr = convertToBattlePokemon(pokemon.filter(mon => 
-            mon.name === 'bulbasaur' || mon.name === 'charmander' || mon.name === 'squirtle'
-        ))
         switch(e.target.className) {
             case 'Grass-btn':
-                setStarterPokemon(starterPokemonArr[0]);
-                starterPokemonArr.splice(0, 1)
+                starterId = 1
                 break;
             case 'Fire-btn':
-                setStarterPokemon(starterPokemonArr[1]);
-                starterPokemonArr.splice(1, 1)
+                starterId = 4
                 break;
             case 'Water-btn':
-                setStarterPokemon(starterPokemonArr[2]);
-                starterPokemonArr.splice(2, 1)
+                starterId = 7
                 break;
         }
 
-        // This sets the aiDeck, plus starter Pokemon not chosen by player
-        let deckArr = []
-        const usedIdx = new Set()
+        // make API call to add starter to user's deck
+        const starterDeck = await axios.post(`${API}/decks`, [user.currentUser.uuid, starterId])
+        .then(res => res.data)
 
-        for (let i = 0; i < 5; i++) {
-            let randomNum = Math.floor(Math.random() * (battlePokemon.length))
-
-            if (usedIdx.has(randomNum)) {
-                i--
-            }
-            else {
-                deckArr.push(battlePokemon[randomNum])
-                usedIdx.add(randomNum)
-            }
-        }
-        let aiStarter = starterPokemonArr[Math.floor(Math.random() * 2)]
+        // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
+        const newStarterPokemonPlusDeck = await axios.get(`${API}/pokemon/${starterId}`)
+        .then(res => {
+            return {...res.data, ...starterDeck}
+        })
         
-        setAiDeck([aiStarter].concat(deckArr))
-    };
-
-    useEffect(() => {
-        const fullDeck = [starterPokemon].concat(yourDeck)
+        // spread both deck and pokemon response into one object, so that pokemon also has exp and lvl
+        setStarterPokemon({...newStarterPokemonPlusDeck})
+        
+        // add starterPokemon to our Play page yourDeck state, with 6 Pokemon
+        const fullDeck = [newStarterPokemonPlusDeck].concat(yourDeck)
         setYourDeck(fullDeck)
-    }, [starterPokemon])
+    };
 
 
     return (
-        pokemon.length ?
-
         <div className='Deck'>
             <h1>Hey, welcome to Pokemon Play!</h1>
             {Object.keys(starterPokemon).length === 0 
@@ -121,16 +66,14 @@ export default function Deck(
                 </>
             :
                 <>
-                <p>Congrats! Your new starter Pokemon is {capitalize(starterPokemon.name)}.<br />
+                <p>Congrats! Your new starter Pokemon is {starterPokemon.name}.<br />
                 You two will be best of friends!</p>
-                <BattleCard key={pokemon.id} pokemon={starterPokemon} />
+                <BattleCard key={starterPokemon.pokemon_id} pokemon={starterPokemon} />
                 <p>And this is the rest of your deck:</p>
                 <div className='RandomDeck'>
-                    {yourDeck.slice(1).map((pokemon, i) => {
-                        return (
-                            <BattleCard className='BattleCard' key={i} pokemon={pokemon} />
-                            )
-                        })}
+                    {user.currentPokemon.map(pokemon => {
+                        return <BattleCard key={pokemon.pokemon_id} pokemon={pokemon} />
+                    })}
                 </div>
                 <p  className='ArenaPrompt'>These are all basic-level Pokemon. This means that they have not evolved yet.<br />
                 You will need to evolve them through experience and levels. <br />
@@ -139,18 +82,19 @@ export default function Deck(
                 However, these Pokemon are not as strong as many level 1 or level 2 Pokemon who have already evolved.</p>
                 <p>Click the button below when you're ready to enter the Arena and test out your deck!</p>
                 {/* Link this button to the Arena with deck props, and unmount the Deck component */}
-                <button className='ArenaPromptBtn' onClick={() => handleCurrentComponent('arena')}>
+                <button className='ArenaPromptBtn' onClick={() => handlePlayerReadyToBattle('arena')}>
                     Go to Arena
                 </button>
                 </>
             }
         </div>
 
-        : 
-        <div>
-            <h1>Hey, welcome to Pokemon Play!</h1>
-            <p>Please wait while the page loads.<br />
-            We promise, it's worth it!</p>
-        </div>
+        // : 
+        // <div>
+        //     <h1>Hey, welcome to Pokemon Play!</h1>
+        //     <p>Please wait while the page loads.<br />
+        //     We promise, it's worth it!</p>
+        // </div>
     )
+    
 }

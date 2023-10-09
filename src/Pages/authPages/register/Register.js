@@ -40,7 +40,6 @@ export default function Register() {
             // here we not only create the user, but also send the 5 random pokeIds array to create deck
             axios.post(`${API}/users`, [newUser, createRandomPokemonIds(5)])
             .then(res => {
-                console.log(res)
                 setUser({
                     currentUser: res.data.user, 
                     currentPokemon: res.data.userPokemon
