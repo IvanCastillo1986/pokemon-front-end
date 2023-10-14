@@ -63,11 +63,11 @@ export default function Arena({ yourDeck, opponentDeck }) {
     }
 
     const handlePokemonSwitch = (e) => {
-        // save current Pokemon
+        // save current Pokemon, so that it retains remaining_hp when sent to bench
         const oldPokemon = myPokemon
         
         // set newly clicked Pokemon to variable, which will later get passed into setMyPokemon
-        const switchedBenchPokemon = myBench.find(mon => mon.name === e.target.textContent.split(' ').join('-').toLowerCase())
+        const switchedBenchPokemon = myBench.find(mon => mon.name === e.target.textContent)
         
         // Will pull newPokemon from the bench
         // Will add oldPokemon to the bench
@@ -83,11 +83,14 @@ export default function Arena({ yourDeck, opponentDeck }) {
     }
 
     const handleNewPokemon = (e) => {
-        const clickedPokemon = e.target.textContent.toLowerCase().split(' ').join('-')
+        const clickedPokemon = e.target.textContent
 
         const switchedBenchPokemon = myBench.find(mon => mon.name === clickedPokemon)
+    
 
-        const myNewBench = myBench.filter(mon => mon.name !== switchedBenchPokemon.name)
+        const myNewBench = myBench.filter(mon => {
+            return mon.name !== switchedBenchPokemon.name
+        })
 
         setMyPokemon(switchedBenchPokemon)
         setMyBench(myNewBench)

@@ -13,8 +13,6 @@ const API = process.env.REACT_APP_API_URL
 
 export default function LogIn() {
 
-    // this component will use form to trigger login function to firebase
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const { setUser } = useContext(UserContext)
@@ -27,15 +25,13 @@ export default function LogIn() {
         .then((userCredentials) => {
             axios.get(`${API}/users/${userCredentials.user.uid}`)
             .then(res => {
-
                 const user = { 
                     currentUser: res.data.user, 
                     currentPokemon: res.data.userPokemon
                 }
+                
                 setUser(user)
-
                 sessionStorage.setItem('user', JSON.stringify(user))
-                const sessionUser = JSON.parse(sessionStorage.getItem("user"))
             })
 
             setEmail('')

@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 import BattleCard from './BattleCard'
 
 import { capitalize } from '../Helper/capitalize'
 import { typeMultiplier } from '../Helper/typeMultiplier'
 
+const API = process.env.REACT_APP_API_URL
+
 
 
 export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, winner, setWinner,
-    menuType, setMenuType, handlePokemonSwitch, handleNewPokemon, handleNewEnemyPokemon, discardPile, setDiscardPile
+    menuType, setMenuType, handlePokemonSwitch, handleNewPokemon, discardPile, setDiscardPile
 }) {
 
     const [script, setScript] = useState("")
+    
 
     {/* 
 
@@ -82,7 +86,8 @@ export default function Table({
         }
 
         // add remaining_hp to pokemon
-        firstPkm.remaining_hp = firstPkm.hp
+        // firstPkm.remaining_hp = firstPkm.hp
+        // secondPkm.remaining_hp = secondPkm.hp
 
         // uppercase pokemonNames and moveNames for script
         const firstPkmName = formatName(firstPkm.name)
@@ -214,8 +219,12 @@ export default function Table({
 
 
     useEffect(() => {
+        // handles what happens when player wins or loses. Update user with new wins or losses
         
         if (winner) {
+            const { currentUser } = JSON.parse(sessionStorage.getItem('user'))
+            console.log(currentUser)
+
             if (winner.player === 1) {
                 setScript(`${capitalize(discardPile.player2Discard[discardPile.player2Discard.length - 1].name).toUpperCase()} has fainted`)
                 
@@ -223,6 +232,9 @@ export default function Table({
                     discardPile.player2Discard[discardPile.player2Discard.length - 1].name === enemyPokemon.name) 
                 {
                     setScript('Congrats! You have won the match!')
+
+                    axios.put(`${API}/users/${currentUser.uuid}`, { wins: currentUser.wins + 1 })
+                    .then(res => console.log(res))
                 } else {
 
                     const enemyPkmIdx = Math.floor(Math.random() * enemyBenchProp.length)
@@ -242,7 +254,7 @@ export default function Table({
                 setTimeout(() => setMenuType('newPokemon'), 2000)
             }
 
-            // setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
+            setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
         }
     }, [winner])
 
@@ -271,7 +283,6 @@ export default function Table({
                 <div className='mainTable'>
                     <span className='fight' onClick={() => menuClick('fight')}>FIGHT</span>
                     <span className='switch' onClick={() => menuClick('switch')}>SWITCH</span>
-                    {/* <span className='switch' onClick={() => handleNewEnemyPokemon()}>SWITCH</span> */}
                     <span className='item'>ITEM</span>
                     <span className='defend'>DEFEND</span>
                 </div> 
@@ -279,11 +290,11 @@ export default function Table({
                 
                 {menuType === 'fight' &&
                 <div className='fightMenu'>
-                    <span onClick={() => combat(myPokemon.move1.move.name)}>
-                        {capitalize(myPokemon.move1.move.name)}
+                    <span onClick={() => combat(myPokemon.move1)}>
+                        {capitalize(myPokemon.move1)}
                     </span>
-                    <span onClick={() => combat(myPokemon.move2.move.name)}>
-                        {capitalize(myPokemon.move2.move.name)}
+                    <span onClick={() => combat(myPokemon.move2)}>
+                        {capitalize(myPokemon.move2)}
                     </span>
 
                     <span onClick={() => menuClick('main')} className='backBtn'>Back</span>

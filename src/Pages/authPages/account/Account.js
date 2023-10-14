@@ -6,10 +6,6 @@ import './Account.css'
 
 export default function Account() {
 
-    
-
-
-
     return (
         <div className="account">
             <h2>My Account</h2>

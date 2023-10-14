@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { UserContext } from '../UserContext'
 import { createRandomPokemonIds } from '../Helper/createRandomPokemonIds'
+import { addRemainingHp } from '../Helper/addRemainingHp'
 import axios from 'axios'
 
 import Deck from '../Components/Deck'
@@ -17,24 +18,21 @@ export default function Play() {
     // API calls and changes to UserContext will only be made from Play page and Deck.
     // Arena component will encapsulate and manipulate all of it's local state relating to the game. 
     // Table, Bench, and Discard components will be used as Arena's children in the game portion.
-
+    
     const { user, setUser } = useContext(UserContext)
-    // const [yourDeck, setYourDeck] = useState(user.currentPokemon)
-    const [yourDeck, setYourDeck] = useState(() => {
-        const sessionUser = JSON.parse(sessionStorage.getItem('user'))
-        return sessionUser.currentPokemon
-    })
-    const [aiDeck, setAiDeck] = useState([])
-    const [currentComponent, setCurrentComponent] = useState('deck')
+    const sessionUser = JSON.parse(sessionStorage.getItem('user'))
+    const [yourDeck, setYourDeck] = useState(sessionUser.currentPokemon)
+    const whichComponent = sessionUser.currentUser.has_chosen_starter ? 'arena' : 'deck'
+    const [currentComponent, setCurrentComponent] = useState(whichComponent)
 
 
     const handlePlayerReadyToBattle = (component) => {
         // update user in both API and UserContext to has_chosen_starter = true
-        // update UserContext currentPokemon to conta
+
         const updatedUser = {
             has_chosen_starter: true
         }
-        axios.put(`${API}/users/${user.currentUser.uuid}`, updatedUser)
+        axios.put(`${API}/users/${sessionUser.currentUser.uuid}`, updatedUser)
         .then(res => {
             const user = {
                 currentUser: res.data,
@@ -54,8 +52,6 @@ export default function Play() {
     }
 
     useEffect(() => {
-        const sessionUser = JSON.parse(sessionStorage.getItem("user"))
-        console.log(sessionUser)
         // This useEffect chooses a different AI deck everytime Play page mounts
         // with your starter's weakness
         if (yourDeck.length > 5) {
@@ -84,39 +80,50 @@ export default function Play() {
                 return axios.get(`${API}/pokemon/${pokemonId}`)
             })
             
-            // make all API calls at once with Promise.all()
+            // make all API calls at once with Promise.all() and add to sessionStorage opponentDeck
             Promise.all(pokemonApiPromises)
             .then(resArray => {
-                resArray.forEach(res => aiDeckArr.push(res.data))
-            })
-                setAiDeck(aiDeckArr)
-            }
-    }, [currentComponent])
+                // add remaining_hp property to enemy's deck
+                // addRemainingHp(resArray)
+                resArray.forEach(res => {
+                    const enemyPokemon = res.data
+                    enemyPokemon.remaining_hp = 1
+                    aiDeckArr.push(enemyPokemon)
+                })
+
+                // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
+                sessionStorage.setItem('opponentDeck', JSON.stringify(addRemainingHp(aiDeckArr)))
+                // sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
+                // console.log(JSON.parse(sessionStorage.getItem('user')))
+            }).catch(err => console.log(err))
+        }
+    }, [])
 
 
     return (
         <div className='Play'>
-            {currentComponent === 'deck' && !JSON.parse(sessionStorage.getItem('user')).currentUser.has_chosen_starter
-            ?
-                <Deck 
-                    handlePlayerReadyToBattle={handlePlayerReadyToBattle}
-                    yourDeck={yourDeck}
-                    setYourDeck={setYourDeck}
-                /> 
-            :
-                /*
-                <Arena />
-                After you have your Pokemon, choose which ones to use first in the arena.
-                When one Pokemon dies, you choose the next one to battle with.
-                You can switch Pokemon out whenever you want, but then the Pokemon that has just
-                been switched in will recieve the damage from the opponent's selected move.
-                */
-                /* <Arena 
-                    opponentDeck={aiDeck}
-                    yourDeck={yourDeck}
-                />  */
-                <div>Arena</div>
-            }
+                {!sessionUser.currentUser.has_chosen_starter && 
+                currentComponent === 'deck'
+                    ?
+                    <Deck 
+                        handlePlayerReadyToBattle={handlePlayerReadyToBattle}
+                        yourDeck={yourDeck}
+                        setYourDeck={setYourDeck}
+                    /> 
+                    :
+                    /*
+                    <Arena />
+                    After you have your Pokemon, choose which ones to use first in the arena.
+                    When one Pokemon dies, you choose the next one to battle with.
+                    You can switch Pokemon out whenever you want, but then the Pokemon that has just
+                    been switched in will recieve the damage from the opponent's selected move.
+                    */
+                    JSON.parse(sessionStorage.getItem('opponentDeck')) &&
+                    <Arena 
+                        opponentDeck={JSON.parse(sessionStorage.getItem('opponentDeck'))}
+                        yourDeck={addRemainingHp(yourDeck)}
+                    />
+                }
         </div>
     )
 }

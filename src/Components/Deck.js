@@ -9,8 +9,9 @@ const API = process.env.REACT_APP_API_URL
 
 
 // This component let's player choose their starter Pokemon
-export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck, setAiDeck }) {
-    
+export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck }) {
+
+    const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [starterPokemon, setStarterPokemon] = useState({})
     const { user } = useContext(UserContext)
 
@@ -31,7 +32,9 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck,
         }
 
         // make API call to add starter to user's deck
-        const starterDeck = await axios.post(`${API}/decks`, [user.currentUser.uuid, starterId])
+        // ASK BILLY: here, should I make api call with UserContext or sessionStorage (in case of refresh)
+        // const starterDeck = await axios.post(`${API}/decks`, [user.currentUser.uuid, starterId])
+        const starterDeck = await axios.post(`${API}/decks`, [JSON.parse(sessionStorage.getItem('user')).currentUser.uuid, starterId])
         .then(res => res.data)
 
         // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
@@ -46,6 +49,10 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck,
         // add starterPokemon to our Play page yourDeck state, with 6 Pokemon
         const fullDeck = [newStarterPokemonPlusDeck].concat(yourDeck)
         setYourDeck(fullDeck)
+        const user = JSON.parse(sessionStorage.getItem('user'))
+        user.currentPokemon = fullDeck
+        console.log(user)
+        sessionStorage.setItem('user', JSON.stringify(user))
     };
 
 
@@ -71,7 +78,7 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck,
                 <BattleCard key={starterPokemon.pokemon_id} pokemon={starterPokemon} />
                 <p>And this is the rest of your deck:</p>
                 <div className='RandomDeck'>
-                    {user.currentPokemon.map(pokemon => {
+                    {sessionUser.currentPokemon.map(pokemon => {
                         return <BattleCard key={pokemon.pokemon_id} pokemon={pokemon} />
                     })}
                 </div>
