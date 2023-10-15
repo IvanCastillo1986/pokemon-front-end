@@ -16,7 +16,6 @@ export default function Table({
 }) {
 
     const [script, setScript] = useState("")
-    
 
     {/* 
 
@@ -233,7 +232,15 @@ export default function Table({
                 {
                     setScript('Congrats! You have won the match!')
 
-                    axios.put(`${API}/users/${currentUser.uuid}`, { wins: currentUser.wins + 1 })
+                    const user = {
+                        email: currentUser.email,
+                        uuid: currentUser.uuid,
+                        has_chosen_starter: true,
+                        wins: currentUser.wins + 1,
+                        losses: currentUser.losses
+                    }
+
+                    axios.put(`${API}/users/${currentUser.uuid}`, user)
                     .then(res => console.log(res))
                 } else {
 

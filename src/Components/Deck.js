@@ -13,7 +13,7 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck 
 
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [starterPokemon, setStarterPokemon] = useState({})
-    const { user } = useContext(UserContext)
+    const { setUser } = useContext(UserContext)
 
     // This handleClick let's the player choose their starter Pokemon, no longer making AI Pokemon call
     const handleClick = async (e) => {
@@ -33,25 +33,26 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck 
 
         // make API call to add starter to user's deck
         // ASK BILLY: here, should I make api call with UserContext or sessionStorage (in case of refresh)
-        // const starterDeck = await axios.post(`${API}/decks`, [user.currentUser.uuid, starterId])
-        const starterDeck = await axios.post(`${API}/decks`, [JSON.parse(sessionStorage.getItem('user')).currentUser.uuid, starterId])
+        const starterDeckProperties = await axios.post(`${API}/decks`, [JSON.parse(sessionStorage.getItem('user')).currentUser.uuid, starterId])
         .then(res => res.data)
 
         // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
-        const newStarterPokemonPlusDeck = await axios.get(`${API}/pokemon/${starterId}`)
+        const starterPokemonPlusDeckProperties = await axios.get(`${API}/pokemon/${starterId}`)
         .then(res => {
-            return {...res.data, ...starterDeck}
+            const starterPokemon = res.data
+            return {...starterPokemon, ...starterDeckProperties}
         })
         
         // spread both deck and pokemon response into one object, so that pokemon also has exp and lvl
-        setStarterPokemon({...newStarterPokemonPlusDeck})
+        setStarterPokemon({...starterPokemonPlusDeckProperties})
         
         // add starterPokemon to our Play page yourDeck state, with 6 Pokemon
-        const fullDeck = [newStarterPokemonPlusDeck].concat(yourDeck)
+        const fullDeck = [starterPokemonPlusDeckProperties].concat(yourDeck)
         setYourDeck(fullDeck)
         const user = JSON.parse(sessionStorage.getItem('user'))
         user.currentPokemon = fullDeck
-        console.log(user)
+
+        setUser(user)
         sessionStorage.setItem('user', JSON.stringify(user))
     };
 
@@ -79,7 +80,7 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck 
                 <p>And this is the rest of your deck:</p>
                 <div className='RandomDeck'>
                     {sessionUser.currentPokemon.map(pokemon => {
-                        return <BattleCard key={pokemon.pokemon_id} pokemon={pokemon} />
+                        return <BattleCard key={pokemon.id} pokemon={pokemon} />
                     })}
                 </div>
                 <p  className='ArenaPrompt'>These are all basic-level Pokemon. This means that they have not evolved yet.<br />
@@ -95,13 +96,6 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck 
                 </>
             }
         </div>
-
-        // : 
-        // <div>
-        //     <h1>Hey, welcome to Pokemon Play!</h1>
-        //     <p>Please wait while the page loads.<br />
-        //     We promise, it's worth it!</p>
-        // </div>
     )
     
 }

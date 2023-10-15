@@ -20,19 +20,27 @@ export default function Play() {
     // Table, Bench, and Discard components will be used as Arena's children in the game portion.
     
     const { user, setUser } = useContext(UserContext)
+    console.log(user)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
-    const [yourDeck, setYourDeck] = useState(sessionUser.currentPokemon)
+    const [yourDeck, setYourDeck] = useState(user.currentPokemon)
+    console.log(yourDeck)
     const whichComponent = sessionUser.currentUser.has_chosen_starter ? 'arena' : 'deck'
     const [currentComponent, setCurrentComponent] = useState(whichComponent)
+    console.log(currentComponent)
 
 
     const handlePlayerReadyToBattle = (component) => {
         // update user in both API and UserContext to has_chosen_starter = true
+        const { currentUser } = sessionUser
 
         const updatedUser = {
-            has_chosen_starter: true
+            email: currentUser.email,
+            uuid: currentUser.uuid,
+            has_chosen_starter: true,
+            wins: currentUser.wins,
+            losses: currentUser.losses
         }
-        axios.put(`${API}/users/${sessionUser.currentUser.uuid}`, updatedUser)
+        axios.put(`${API}/users/${currentUser.uuid}`, updatedUser)
         .then(res => {
             const user = {
                 currentUser: res.data,
@@ -42,7 +50,6 @@ export default function Play() {
             const sessionUser = JSON.parse(sessionStorage.getItem('user'))
 
             setUser(prevUser => {
-
                 return {
                     ...prevUser, currentUser: sessionUser.currentUser, currentPokemon: sessionUser.currentPokemon
                 }
@@ -51,11 +58,8 @@ export default function Play() {
         setCurrentComponent(component)
     }
 
-    useEffect(() => {
-        // This useEffect chooses a different AI deck everytime Play page mounts
-        // with your starter's weakness
+    function setOpponentDeck() {
         if (yourDeck.length > 5) {
-
             const yourStarterId = yourDeck[0].pokemon_id
             let enemyStarterId;
 
@@ -71,8 +75,8 @@ export default function Play() {
                     break;
             }
 
-            // Get aiDeck's 6 pokemon:
             const aiDeckArr = []
+            // Get 6 pokemon ids:
             const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(5))
             
             // create array with 6 API promises
@@ -84,19 +88,34 @@ export default function Play() {
             Promise.all(pokemonApiPromises)
             .then(resArray => {
                 // add remaining_hp property to enemy's deck
-                // addRemainingHp(resArray)
+                addRemainingHp(resArray)
                 resArray.forEach(res => {
                     const enemyPokemon = res.data
                     enemyPokemon.remaining_hp = 1
                     aiDeckArr.push(enemyPokemon)
                 })
-
                 // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
-                sessionStorage.setItem('opponentDeck', JSON.stringify(addRemainingHp(aiDeckArr)))
-                // sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
-                // console.log(JSON.parse(sessionStorage.getItem('user')))
+                sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
             }).catch(err => console.log(err))
         }
+    }
+    setOpponentDeck()
+
+
+    useEffect(() => {
+        // on page refresh, store most up-to-date user data (wins/exp/lvl)
+        if (sessionUser) {
+            axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
+            .then(res => {
+                sessionStorage.setItem('user', JSON.stringify({
+                    currentUser: res.data.user,
+                    currentPokemon: res.data.userPokemon
+                }))
+                console.log(JSON.parse(sessionStorage.getItem('user')))
+            })
+        }
+
+        console.log(JSON.parse(sessionStorage.getItem('opponentDeck')))
     }, [])
 
 
@@ -118,6 +137,7 @@ export default function Play() {
                     You can switch Pokemon out whenever you want, but then the Pokemon that has just
                     been switched in will recieve the damage from the opponent's selected move.
                     */
+                    // JSON.parse(sessionStorage.getItem('opponentDeck')) &&
                     JSON.parse(sessionStorage.getItem('opponentDeck')) &&
                     <Arena 
                         opponentDeck={JSON.parse(sessionStorage.getItem('opponentDeck'))}
