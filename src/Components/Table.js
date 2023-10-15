@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { UserContext } from '../UserContext'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'
@@ -15,7 +16,9 @@ export default function Table({
     menuType, setMenuType, handlePokemonSwitch, handleNewPokemon, discardPile, setDiscardPile
 }) {
 
+    const { user, setUser } = useContext(UserContext)
     const [script, setScript] = useState("")
+
 
     {/* 
 
@@ -84,9 +87,6 @@ export default function Table({
             setScript('You attack first')
         }
 
-        // add remaining_hp to pokemon
-        // firstPkm.remaining_hp = firstPkm.hp
-        // secondPkm.remaining_hp = secondPkm.hp
 
         // uppercase pokemonNames and moveNames for script
         const firstPkmName = formatName(firstPkm.name)
@@ -218,21 +218,20 @@ export default function Table({
 
 
     useEffect(() => {
-        // handles what happens when player wins or loses. Update user with new wins or losses
-        
+        // handles what happens when a Pokemon dies. {winner} prop has been set to round-winning player
         if (winner) {
             const { currentUser } = JSON.parse(sessionStorage.getItem('user'))
-            console.log(currentUser)
-
+            
+            // if user's Pokemon has beat an opponent Pokemon
             if (winner.player === 1) {
                 setScript(`${capitalize(discardPile.player2Discard[discardPile.player2Discard.length - 1].name).toUpperCase()} has fainted`)
                 
                 if (enemyBenchProp.length === 0 && // if the enemy's last Pokemon has been KO'd
-                    discardPile.player2Discard[discardPile.player2Discard.length - 1].name === enemyPokemon.name) 
-                {
+                    discardPile.player2Discard[discardPile.player2Discard.length - 1].name === enemyPokemon.name
+                ) {
                     setScript('Congrats! You have won the match!')
 
-                    const user = {
+                    const winningUser = {
                         email: currentUser.email,
                         uuid: currentUser.uuid,
                         has_chosen_starter: true,
@@ -240,9 +239,18 @@ export default function Table({
                         losses: currentUser.losses
                     }
 
-                    axios.put(`${API}/users/${currentUser.uuid}`, user)
-                    .then(res => console.log(res))
-                } else {
+                    axios.put(`${API}/users/${currentUser.uuid}`, winningUser)
+                    .then(res => {
+                        setUser(res.data)
+
+                        const { currentPokemon } = JSON.parse(sessionStorage.getItem('user'))
+                        const newSessionUser = {
+                            currentUser: res.data,
+                            currentPokemon
+                        }
+                        sessionStorage.setItem('user', JSON.stringify(newSessionUser))
+                    })
+                } else { // if the enemy still has Pokemon in their bench
 
                     const enemyPkmIdx = Math.floor(Math.random() * enemyBenchProp.length)
                     const newEnemyPokemon = enemyBenchProp[enemyPkmIdx]
@@ -256,7 +264,7 @@ export default function Table({
                     setTimeout(() => setMenuType('main'), 4000)
                 }
 
-            } else {
+            } else { // if player 1's Pokemon has fainted
                 setScript(`${capitalize(discardPile.player1Discard[discardPile.player1Discard.length - 1].name).toUpperCase()} has fainted`)
                 setTimeout(() => setMenuType('newPokemon'), 2000)
             }

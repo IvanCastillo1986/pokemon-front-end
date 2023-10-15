@@ -16,6 +16,8 @@ export default function UserStatus() {
 
     const [authUser, setAuthUser] = useState(null)
     const { setUser } = useContext(UserContext)
+    const sessionUser = JSON.parse(sessionStorage.getItem('user'))
+    console.log(sessionUser)
     
     const history = useHistory()
     
@@ -54,6 +56,7 @@ export default function UserStatus() {
 
             <div className='UserStatus__user-div'>
                 <p>Signed in as {authUser && authUser.email}</p>
+
 
                 <h2>Do you want to log out?</h2>
                 <button onClick={handleSignOut}>Sign Out</button>

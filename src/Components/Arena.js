@@ -5,7 +5,6 @@ import Table from './Table'
 import Discard from './Discard'
 
 import './Arena.css'
-import {capitalize} from '../Helper/capitalize'
 
 
 

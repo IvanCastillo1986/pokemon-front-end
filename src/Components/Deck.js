@@ -11,9 +11,9 @@ const API = process.env.REACT_APP_API_URL
 // This component let's player choose their starter Pokemon
 export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck }) {
 
+    const { setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [starterPokemon, setStarterPokemon] = useState({})
-    const { setUser } = useContext(UserContext)
 
     // This handleClick let's the player choose their starter Pokemon, no longer making AI Pokemon call
     const handleClick = async (e) => {

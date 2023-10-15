@@ -20,7 +20,6 @@ export default function Play() {
     // Table, Bench, and Discard components will be used as Arena's children in the game portion.
     
     const { user, setUser } = useContext(UserContext)
-    console.log(user)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [yourDeck, setYourDeck] = useState(user.currentPokemon)
     console.log(yourDeck)
@@ -107,11 +106,13 @@ export default function Play() {
         if (sessionUser) {
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
-                sessionStorage.setItem('user', JSON.stringify({
+                const userUpdate = {
                     currentUser: res.data.user,
                     currentPokemon: res.data.userPokemon
-                }))
-                console.log(JSON.parse(sessionStorage.getItem('user')))
+                }
+                sessionStorage.setItem('user', JSON.stringify(userUpdate))
+                setUser(userUpdate)
+                console.log(user)
             })
         }
 
