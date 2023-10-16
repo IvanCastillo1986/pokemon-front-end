@@ -132,13 +132,12 @@ export default function Play() {
                     /> 
                     :
                     /*
-                    <Arena />
+                    Arena
                     After you have your Pokemon, choose which ones to use first in the arena.
                     When one Pokemon dies, you choose the next one to battle with.
                     You can switch Pokemon out whenever you want, but then the Pokemon that has just
                     been switched in will recieve the damage from the opponent's selected move.
                     */
-                    // JSON.parse(sessionStorage.getItem('opponentDeck')) &&
                     JSON.parse(sessionStorage.getItem('opponentDeck')) &&
                     <Arena 
                         opponentDeck={JSON.parse(sessionStorage.getItem('opponentDeck'))}

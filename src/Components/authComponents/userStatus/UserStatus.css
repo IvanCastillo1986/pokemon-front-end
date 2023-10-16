@@ -1,8 +1,21 @@
 .UserStatus {
-    width: 100%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1em;
+    margin-bottom: 20px;
 }
 
-.UserStatus ul {
-    list-style: none;
-    padding: 0;
+.UserStatus .user-div {
+
+}
+.UserStatus p {
+    margin-bottom: 30px;
+}
+.UserStatus span {
+    font-weight: bold;
+}
+.UserStatus button {
+    display: block;
 }

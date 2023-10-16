@@ -28,7 +28,7 @@ export default function App() {
   // Setting up local cache of original 151 Pokemon, to be used across components
   const [pokemon, setPokemon] = useState([])
   // Everytime App or its children render with sessionStorage, we get the user from storage
-  const sessionUser = JSON.parse(sessionStorage.getItem('user'))
+  const sessionUser = JSON.parse(sessionStorage.getItem('user')) || {}
   const [user, setUser] = useState(sessionUser)
   
   const numOfPokemon = 151;
@@ -69,6 +69,10 @@ export default function App() {
     })();
 
   }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem('user', JSON.stringify(user))
+  }, [sessionUser])
 
 
   return (

@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { auth } from '../../../firebase'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { UserContext } from '../../../UserContext'
+import { capitalize } from '../../../Helper/capitalize'
 
 import './UserStatus.css'
 
@@ -55,8 +56,7 @@ export default function UserStatus() {
             {authUser ?
 
             <div className='UserStatus__user-div'>
-                <p>Signed in as {authUser && authUser.email}</p>
-
+                <p>Signed in as <span>{authUser && authUser.email}</span></p>
 
                 <h2>Do you want to log out?</h2>
                 <button onClick={handleSignOut}>Sign Out</button>
@@ -69,16 +69,6 @@ export default function UserStatus() {
                 <p>Please visit our Log In page to sign in.</p>
             </div>
             }
-
-            {/* <p>{currentUser.username}</p>
-            <p>Account E-mail: {currentUser.email}</p>
-            <ul>
-                <p>Pokemon:</p>
-                {currentUser.deck && 
-                currentUser.deck.map((pokemon, i) => {
-                    return <li key={i}>{pokemon.name}</li>
-                })}
-            </ul> */}
         </div>
     )
 }
