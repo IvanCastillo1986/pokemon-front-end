@@ -22,10 +22,8 @@ export default function Play() {
     const { user, setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [yourDeck, setYourDeck] = useState(user.currentPokemon)
-    console.log(yourDeck)
     const whichComponent = sessionUser.currentUser.has_chosen_starter ? 'arena' : 'deck'
     const [currentComponent, setCurrentComponent] = useState(whichComponent)
-    console.log(currentComponent)
 
 
     const handlePlayerReadyToBattle = (component) => {
@@ -115,35 +113,38 @@ export default function Play() {
                 console.log(user)
             })
         }
-
-        console.log(JSON.parse(sessionStorage.getItem('opponentDeck')))
+        
+        // this adds currentComponent to sessionStorage, so that a new player can't refresh for infinite starters during select
+        if (yourDeck.length > 5) sessionStorage.setItem('currentComponent', 'arena')
     }, [])
 
 
     return (
         <div className='Play'>
-                {!sessionUser.currentUser.has_chosen_starter && 
-                currentComponent === 'deck'
-                    ?
-                    <Deck 
-                        handlePlayerReadyToBattle={handlePlayerReadyToBattle}
-                        yourDeck={yourDeck}
-                        setYourDeck={setYourDeck}
-                    /> 
-                    :
-                    /*
-                    Arena
-                    After you have your Pokemon, choose which ones to use first in the arena.
-                    When one Pokemon dies, you choose the next one to battle with.
-                    You can switch Pokemon out whenever you want, but then the Pokemon that has just
-                    been switched in will recieve the damage from the opponent's selected move.
-                    */
-                    JSON.parse(sessionStorage.getItem('opponentDeck')) &&
-                    <Arena 
-                        opponentDeck={JSON.parse(sessionStorage.getItem('opponentDeck'))}
-                        yourDeck={addRemainingHp(yourDeck)}
-                    />
-                }
+                
+            {currentComponent === 'deck' &&
+            sessionStorage.getItem('currentComponent') !== 'arena' 
+                ?
+                <Deck 
+                    handlePlayerReadyToBattle={handlePlayerReadyToBattle}
+                    yourDeck={yourDeck}
+                    setYourDeck={setYourDeck}
+                /> 
+                :
+                /*
+                Arena
+                After you have your Pokemon, choose which ones to use first in the arena.
+                When one Pokemon dies, you choose the next one to battle with.
+                You can switch Pokemon out whenever you want, but then the Pokemon that has just
+                been switched in will recieve the damage from the opponent's selected move.
+                */
+                JSON.parse(sessionStorage.getItem('opponentDeck')) &&
+                <Arena 
+                    opponentDeck={JSON.parse(sessionStorage.getItem('opponentDeck'))}
+                    yourDeck={addRemainingHp(yourDeck)}
+                />
+            }
+
         </div>
     )
 }

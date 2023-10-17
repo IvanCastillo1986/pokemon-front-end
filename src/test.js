@@ -4,9 +4,9 @@ let num = 8
 
 arr.unshift(num)
 
-console.log(arr)
+// console.log(arr)
 
-console.log(Math.floor(Math.random() * 2))
+// console.log(Math.floor(Math.random() * 2))
 
 let time = 2000
 
@@ -16,9 +16,16 @@ let time = 2000
 // time += 2000
 // let thirdCall = setTimeout(() => console.log('3rd call'), time)
 
-const deadMon = []
-console.log(deadMon)
+// const deadMon = []
+// console.log(deadMon)
 
-deadMon.push('hi')
-console.log(deadMon)
-console.log(deadMon[deadMon.length-1])
+// deadMon.push('hi')
+// console.log(deadMon)
+// console.log(deadMon[deadMon.length-1])
+
+const user = {name: "Ivan"}
+
+console.log(user)
+
+console.log(user.currentUser === undefined)
+console.log(user.currentUser?.age !== undefined)

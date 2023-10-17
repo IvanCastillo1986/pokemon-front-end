@@ -5,6 +5,8 @@ import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { UserContext } from '../../../UserContext'
 import { capitalize } from '../../../Helper/capitalize'
 
+import LogOut from '../../../Pages/authPages/logOut/LogOut'
+
 import './UserStatus.css'
 
 
@@ -17,8 +19,6 @@ export default function UserStatus() {
 
     const [authUser, setAuthUser] = useState(null)
     const { setUser } = useContext(UserContext)
-    const sessionUser = JSON.parse(sessionStorage.getItem('user'))
-    console.log(sessionUser)
     
     const history = useHistory()
     
@@ -53,20 +53,15 @@ export default function UserStatus() {
     return (
         <div className="UserStatus">
 
-            {authUser ?
+            {authUser &&
 
-            <div className='UserStatus__user-div'>
+            <div className='user-div'>
+                <h1>My Account</h1>
+                
                 <p>Signed in as <span>{authUser && authUser.email}</span></p>
 
                 <h2>Do you want to log out?</h2>
                 <button onClick={handleSignOut}>Sign Out</button>
-            </div>
-
-            :
-
-            <div className='UserStatus__user-div'>
-                <p>You are currently signed out.</p>
-                <p>Please visit our Log In page to sign in.</p>
             </div>
             }
         </div>

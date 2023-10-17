@@ -54,6 +54,9 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck 
 
         setUser(user)
         sessionStorage.setItem('user', JSON.stringify(user))
+
+        // this adds currentComponent to sessionStorage, so that a new player can't refresh for infinite starters during select
+        sessionStorage.setItem('currentComponent', 'arena')
     };
 
 

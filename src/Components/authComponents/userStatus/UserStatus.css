@@ -8,7 +8,9 @@
 }
 
 .UserStatus .user-div {
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .UserStatus p {
     margin-bottom: 30px;
