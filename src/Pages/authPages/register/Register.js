@@ -15,6 +15,8 @@ export default function Register() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [passwordTooShort, showPasswordTooShort] = useState(false)
+    const [userAlreadyExists, showUserAlreadyExists] = useState(false)
 
     const { setUser } = useContext(UserContext)
 
@@ -52,7 +54,22 @@ export default function Register() {
             .catch(err => console.log('error adding user:', err))
             history.push("/my-account")
         })
-        .catch(err => console.log('Error in createUserWithEmailAndPassword', err))
+        .catch(err => {
+            console.log('Error in createUserWithEmailAndPassword', err.message)
+
+            if (err.code.includes('auth/weak-password')) showPasswordTooShort(true)
+            if (err.code.includes('auth/email-already-in-use')) showUserAlreadyExists(true)
+        })
+    }
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value)
+        showUserAlreadyExists(false)
+    }
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value)
+        showPasswordTooShort(false)
     }
 
 
@@ -61,10 +78,21 @@ export default function Register() {
             <h2>Register</h2>
             
             <form onSubmit={register}>
-                <input type='email' placeholder='E-mail' value={email} onChange={e => setEmail(e.target.value)} />
-                <input type='password' placeholder='Password' value={password} onChange={e => setPassword(e.target.value)} />
+                <input type='email' placeholder='E-mail' value={email} onChange={handleEmailChange} />
+                <input type='password' placeholder='Password' value={password} onChange={handlePasswordChange} />
                 <input type='submit' value='Register' />
             </form>
+            
+            { passwordTooShort &&
+            <p>Password should be at least 6 characters</p>
+            }
+            
+            { userAlreadyExists &&
+            <div>
+                <p>User already exists. Please sign in existing user instead</p>
+                <button onClick={() => history.push('/login')}>To Sign In</button>
+            </div>
+            }
         </div>
     )
 }

@@ -57,3 +57,8 @@ hr {
     border: .1em solid rgba(255, 0, 0, 0.386);
     border-radius: 5px;
 }
+
+.getDeck {
+    display: flex;
+    flex-direction: column;
+}

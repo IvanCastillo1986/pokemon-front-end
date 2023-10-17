@@ -3,9 +3,6 @@ import { useHistory } from 'react-router-dom'
 import { auth } from '../../../firebase'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { UserContext } from '../../../UserContext'
-import { capitalize } from '../../../Helper/capitalize'
-
-import LogOut from '../../../Pages/authPages/logOut/LogOut'
 
 import './UserStatus.css'
 

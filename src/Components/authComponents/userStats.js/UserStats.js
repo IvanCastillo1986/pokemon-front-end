@@ -1,4 +1,5 @@
 import React, { useContext} from 'react'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { UserContext } from '../../../UserContext'
 
 import { capitalize } from '../../../Helper/capitalize'
@@ -9,7 +10,8 @@ import './UserStats.css'
 
 export default function UserStats() {
 
-    const {user} = useContext(UserContext)
+    const { user } = useContext(UserContext)
+    const history = useHistory()
 
     
     return (
@@ -18,14 +20,16 @@ export default function UserStats() {
             <div className='win-loss'>
                 <div className='win'>
                     <p>Wins:</p>
-                    <p>{user.currentUser.wins}</p>
+                    <p>{user.currentUser?.wins}</p>
                 </div>
                 <div className='loss'>
                     <p>Losses:</p>
-                    <p>{user.currentUser.losses}</p>
+                    <p>{user.currentUser?.losses}</p>
                 </div>
             </div>
             <h1 className='pokemon-header'>My Pokemon</h1>
+            {user.currentPokemon?.length > 5 // if user has chosen starter, then show their Pokemon
+            ?
             <ul>
                 {user.currentPokemon.map(pokemon => {
                     return (
@@ -46,6 +50,12 @@ export default function UserStats() {
                     </div>)
                 })}
             </ul>
+            :
+            <div className='getDeck'>
+                <p>You have no Pokemon yet. Go to the Play page and grab your deck!</p>
+                <button onClick={() => history.push('/play')}>Play Page</button>
+            </div>
+            }
         </div>
     )
 }

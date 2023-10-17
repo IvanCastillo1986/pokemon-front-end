@@ -241,14 +241,14 @@ export default function Table({
 
                     axios.put(`${API}/users/${currentUser.uuid}`, winningUser)
                     .then(res => {
-                        setUser(res.data)
-
+                        
                         const { currentPokemon } = JSON.parse(sessionStorage.getItem('user'))
                         const newSessionUser = {
                             currentUser: res.data,
                             currentPokemon
                         }
                         sessionStorage.setItem('user', JSON.stringify(newSessionUser))
+                        setUser(newSessionUser)
                     })
                 } else { // if the enemy still has Pokemon in their bench
 

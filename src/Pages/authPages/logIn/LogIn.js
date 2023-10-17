@@ -15,6 +15,8 @@ export default function LogIn() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [userUnregistered, showUserUnregistered] = useState(false)
+    const [wrongPassword, showWrongPassword] = useState(false)
     const { setUser } = useContext(UserContext)
     const history = useHistory()
 
@@ -33,13 +35,23 @@ export default function LogIn() {
                 setUser(user)
                 sessionStorage.setItem('user', JSON.stringify(user))
             })
-
-            setEmail('')
-            setPassword('')
+            history.push('/my-account')
         })
-        .catch(err => console.log(`Error in handleSignIn:`, err))
+        .catch(err => {
+            console.log(`Error in handleSignIn:`, err)
+            if (err.code.includes('user-not-found')) showUserUnregistered(true)
+            if (err.code.includes('wrong-password')) showWrongPassword(true)
+        })
+    }
 
-        history.push('/my-account')
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value)
+        showUserUnregistered(false)
+    }
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value)
+        showWrongPassword(false)
     }
 
     return (
@@ -47,10 +59,20 @@ export default function LogIn() {
             <h2>Log in</h2>
 
             <form onSubmit={handleSignIn}>
-                <input type='email' placeholder='E-mail' onChange={e => setEmail(e.target.value)} value={email} />
-                <input type='password' placeholder='Password' onChange={e => setPassword(e.target.value)} value={password} />
+                <input type='email' placeholder='E-mail' onChange={handleEmailChange} value={email} />
+                <input type='password' placeholder='Password' onChange={handlePasswordChange} value={password} />
                 <input type='submit' value='Log In' />
             </form>
+            { wrongPassword &&
+            <p>Wrong password. Please check your password and try again.</p>
+            }
+            { userUnregistered &&
+            <div>
+                <p>User not found. If you've already registered, check the e-mail and try again.</p>
+                <p>If you have not yet signed up, please visit the Register page.</p>
+                <button onClick={() => history.push('/register')}>To Sign Up</button>
+            </div>
+            }
         </div>
     )
 }

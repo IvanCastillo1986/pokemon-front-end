@@ -12,9 +12,9 @@ const API = process.env.REACT_APP_API_URL
 
 
 export default function Play() {
-    // Here, we will choose the ai player's deck and render all of the game's children components.
-    // We need yourDeck and aiDeck to manipulate pokemon's state like hp during battles
-    // during battles, we'll manipulate the UserContext's pokemon exp and lvls
+    // Here, we will choose the ai player's deck and render all of the game's components.
+    // We hand down yourDeck and aiDeck props to manipulate pokemon's state like hp during battles.
+    // During battles, we'll manipulate the UserContext's pokemon exp and lvls
     // API calls and changes to UserContext will only be made from Play page and Deck.
     // Arena component will encapsulate and manipulate all of it's local state relating to the game. 
     // Table, Bench, and Discard components will be used as Arena's children in the game portion.
@@ -121,7 +121,7 @@ export default function Play() {
 
     return (
         <div className='Play'>
-                
+            
             {currentComponent === 'deck' &&
             sessionStorage.getItem('currentComponent') !== 'arena' 
                 ?
