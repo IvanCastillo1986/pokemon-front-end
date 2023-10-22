@@ -25,7 +25,8 @@ let time = 2000
 
 const user = {name: "Ivan"}
 
-console.log(user)
+// console.log(user)
 
-console.log(user.currentUser === undefined)
-console.log(user.currentUser?.age !== undefined)
+// console.log(user.currentUser === undefined)
+// console.log(user.currentUser?.age !== undefined)
+

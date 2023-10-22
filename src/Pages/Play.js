@@ -121,7 +121,6 @@ export default function Play() {
 
     return (
         <div className='Play'>
-            
             {currentComponent === 'deck' &&
             sessionStorage.getItem('currentComponent') !== 'arena' 
                 ?

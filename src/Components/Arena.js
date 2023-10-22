@@ -141,7 +141,6 @@ export default function Arena({ yourDeck, opponentDeck }) {
                 }
             </div>
             }
-
             
         </div>
     )

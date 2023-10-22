@@ -16,8 +16,9 @@ export default function Table({
     menuType, setMenuType, handlePokemonSwitch, handleNewPokemon, discardPile, setDiscardPile
 }) {
 
-    const { user, setUser } = useContext(UserContext)
+    const { setUser } = useContext(UserContext)
     const [script, setScript] = useState("")
+    const [deckExpArr, setDeckExpArr] = useState([])
 
 
     {/* 
@@ -214,17 +215,40 @@ export default function Table({
             setMenuType('main')
             setScript('')
         }, time)
-    }
 
+    }
+    console.log(myPokemon)
+
+    /* ToDo
+        add temporary pokemon object, or array, which holds the won exp
+        After the match, update each of the player's decks row with won exp
+        This happens whether they win or lose. It'll give incentive to finish match.
+    */
 
     useEffect(() => {
+        
         // handles what happens when a Pokemon dies. {winner} prop has been set to round-winning player
         if (winner) {
             const { currentUser } = JSON.parse(sessionStorage.getItem('user'))
             
             // if user's Pokemon has beat an opponent Pokemon
             if (winner.player === 1) {
-                setScript(`${capitalize(discardPile.player2Discard[discardPile.player2Discard.length - 1].name).toUpperCase()} has fainted`)
+                
+                // Everytime the user is declared winner, create a new deckExpArrItem,
+                // to be either kept or sent to API at end of match
+                const deckExpObj = {
+                    uuid: myPokemon.user_id,
+                    pokemon_id: myPokemon.pokemon_id,
+                    exp: myPokemon.exp + 30,
+                    lvl: myPokemon.lvl
+                }
+                const deckId = myPokemon.id
+                const deckExpArrItem = { deckExpObj, deckId }
+
+
+                setScript(`
+                ${capitalize(discardPile.player2Discard[discardPile.player2Discard.length - 1].name).toUpperCase()} has fainted`
+                )
                 
                 if (enemyBenchProp.length === 0 && // if the enemy's last Pokemon has been KO'd
                     discardPile.player2Discard[discardPile.player2Discard.length - 1].name === enemyPokemon.name
@@ -249,8 +273,32 @@ export default function Table({
                         }
                         sessionStorage.setItem('user', JSON.stringify(newSessionUser))
                         setUser(newSessionUser)
+                    }).catch(err => console.log('error updating winning user:', err.message))
+
+                    // send a put call to api to update user's Deck for each obj in deckExpArr
+                    // add the winning Pokemon's 
+                    const finalDeckExpArr = [...deckExpArr, deckExpArrItem]
+                    console.log('finalDeckExpArr', finalDeckExpArr)
+                    const deckExpPromises = finalDeckExpArr.map(deckItem => {
+                        return axios.put(`${API}/decks/${deckItem.deckId}`, deckItem.deckExpObj)
                     })
+                    
+                    // axios.put(`${API}/decks/${deckExpObj.deckId}`, finalDeckExpArr)
+                    Promise.all(deckExpPromises)
+                    .then(resArray => {
+                        console.log(resArray)
+                        resArray.forEach(res => {
+                            // const enemyPokemon = res.data
+                            // enemyPokemon.remaining_hp = 1
+                            // aiDeckArr.push(enemyPokemon)
+                            console.log(res.data)
+                        })
+                        // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
+                        // sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
+                    }).catch(err => console.log('error updating deck after win with Promise.all:', err.message))
+
                 } else { // if the enemy still has Pokemon in their bench
+                    setDeckExpArr(prevArr => [...prevArr, deckExpArrItem])
 
                     const enemyPkmIdx = Math.floor(Math.random() * enemyBenchProp.length)
                     const newEnemyPokemon = enemyBenchProp[enemyPkmIdx]
