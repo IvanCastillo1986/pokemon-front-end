@@ -74,10 +74,6 @@ export default function Table({
             firstPkm = enemyPokemon; secondPkm = myPokemon;
             firstPkmMove = enemyMove
             secondPkmMove = clickedMove
-            // WHY AREN'T THESE  setState cMoves WORKING WHEN CALLED LATER? 
-            // Seems like a delay to set new state, before new value can be accessed
-            // setEnemyPokemon({...enemyPokemon, cMove: enemyMoveIdx === 0 ? enemyPokemon.move1.move.name : enemyPokemon.move2.move.name})
-            // setMyPokemon(prevPokemon => ({...prevPokemon, cMove: clickedMove}))
             
             setScript('Enemy attacks first')
         } else {
@@ -217,7 +213,6 @@ export default function Table({
         }, time)
 
     }
-    console.log(myPokemon)
 
     /* ToDo
         add temporary pokemon object, or array, which holds the won exp
@@ -235,16 +230,33 @@ export default function Table({
             if (winner.player === 1) {
                 
                 // Everytime the user is declared winner, create a new deckExpArrItem,
-                // to be either kept or sent to API at end of match
+                // and newDeckExpArr copy, to be either stored or sent to API at end of match
+                const newDeckExpArr = [...deckExpArr]
+
+                // currentPokemon's data to add to new deck exp update array
+                // (this is only needed because .put() fails with no body)
                 const deckExpObj = {
                     uuid: myPokemon.user_id,
                     pokemon_id: myPokemon.pokemon_id,
-                    exp: myPokemon.exp + 30,
+                    exp: myPokemon.exp,
                     lvl: myPokemon.lvl
                 }
                 const deckId = myPokemon.id
-                const deckExpArrItem = { deckExpObj, deckId }
+                // expToAdd will be changed with a function once we have AI trainers
+                const expToAdd = 10
+                // find Pokemon in deckExpArr that has the same deckId: 
+                const idxOfPokemonInDeck = newDeckExpArr.findIndex(deck => deck.deckId === deckId)
 
+                
+                // if pokemon found, add to current deck item's expAdded property
+                if (idxOfPokemonInDeck > -1) {
+                    newDeckExpArr[idxOfPokemonInDeck].expAdded += expToAdd
+                } else {
+                    // else, add new item to deckExpArr
+                    const newDeckItem = { deckExpObj, deckId, expAdded: expToAdd }
+                    newDeckExpArr.push(newDeckItem)
+                }
+                
 
                 setScript(`
                 ${capitalize(discardPile.player2Discard[discardPile.player2Discard.length - 1].name).toUpperCase()} has fainted`
@@ -255,6 +267,28 @@ export default function Table({
                 ) {
                     setScript('Congrats! You have won the match!')
 
+                    // send an API put call to update user's Deck for each obj in deckExpArr, plus exp
+                    const deckExpPromises = newDeckExpArr.map(deckItem => {
+                        return axios.put(`${API}/decks/${deckItem.deckId}?expAdded=${deckItem.expAdded}`, 
+                        deckItem.deckExpObj)
+                    })
+                    
+                    // axios.put(`${API}/decks/${deckExpObj.deckId}`, finalDeckExpArr)
+                    Promise.all(deckExpPromises)
+                    .then(resArray => {
+                        console.log(resArray)
+                        resArray.forEach(res => {
+                            // const enemyPokemon = res.data
+                            // enemyPokemon.remaining_hp = 1
+                            // aiDeckArr.push(enemyPokemon)
+                            console.log(res.data)
+                        })
+                        // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
+                        // sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
+                    }).catch(err => console.log('error updating deck after win with Promise.all:', err.message))
+
+
+                    // update current user with new values, and new exp
                     const winningUser = {
                         email: currentUser.email,
                         uuid: currentUser.uuid,
@@ -275,30 +309,9 @@ export default function Table({
                         setUser(newSessionUser)
                     }).catch(err => console.log('error updating winning user:', err.message))
 
-                    // send a put call to api to update user's Deck for each obj in deckExpArr
-                    // add the winning Pokemon's 
-                    const finalDeckExpArr = [...deckExpArr, deckExpArrItem]
-                    console.log('finalDeckExpArr', finalDeckExpArr)
-                    const deckExpPromises = finalDeckExpArr.map(deckItem => {
-                        return axios.put(`${API}/decks/${deckItem.deckId}`, deckItem.deckExpObj)
-                    })
-                    
-                    // axios.put(`${API}/decks/${deckExpObj.deckId}`, finalDeckExpArr)
-                    Promise.all(deckExpPromises)
-                    .then(resArray => {
-                        console.log(resArray)
-                        resArray.forEach(res => {
-                            // const enemyPokemon = res.data
-                            // enemyPokemon.remaining_hp = 1
-                            // aiDeckArr.push(enemyPokemon)
-                            console.log(res.data)
-                        })
-                        // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
-                        // sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
-                    }).catch(err => console.log('error updating deck after win with Promise.all:', err.message))
-
                 } else { // if the enemy still has Pokemon in their bench
-                    setDeckExpArr(prevArr => [...prevArr, deckExpArrItem])
+                    // setDeckExpArr(prevArr => [...prevArr, deckExpArrItem])
+                    setDeckExpArr(newDeckExpArr)
 
                     const enemyPkmIdx = Math.floor(Math.random() * enemyBenchProp.length)
                     const newEnemyPokemon = enemyBenchProp[enemyPkmIdx]
@@ -307,13 +320,17 @@ export default function Table({
                     setTimeout(() => {
                         setEnemyPokemon(newEnemyPokemon)
                         setEnemyBench(newEnemyBench)
-                        setTimeout(() => setScript(`Enemy has chosen ${capitalize(newEnemyPokemon.name).toUpperCase()}!`), 100)                    
+                        setTimeout(() => setScript(
+                            `Enemy has chosen ${capitalize(newEnemyPokemon.name).toUpperCase()}!`), 
+                        100)
                     }, 2000)
                     setTimeout(() => setMenuType('main'), 4000)
                 }
 
             } else { // if player 1's Pokemon has fainted
-                setScript(`${capitalize(discardPile.player1Discard[discardPile.player1Discard.length - 1].name).toUpperCase()} has fainted`)
+                setScript(
+                    `${capitalize(discardPile.player1Discard[discardPile.player1Discard.length - 1].name).toUpperCase()} has fainted`
+                )
                 setTimeout(() => setMenuType('newPokemon'), 2000)
             }
 
