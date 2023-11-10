@@ -1,4 +1,4 @@
-import '../Pages/Cards.css'
+import '../../Pages/Cards.css'
 
 // import { capitalize } from '../Helper/capitalize'
 

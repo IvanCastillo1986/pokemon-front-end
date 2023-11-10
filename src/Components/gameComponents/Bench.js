@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { capitalize } from '../Helper/capitalize'
+import { capitalize } from '../../Helper/capitalize'
 
 
 

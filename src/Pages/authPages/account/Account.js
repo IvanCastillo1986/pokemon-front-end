@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { UserContext } from '../../../UserContext'
 
 import UserStatus from '../../../Components/authComponents/userStatus/UserStatus'
-import UserStats from '../../../Components/authComponents/userStats.js/UserStats'
+import UserStats from '../../../Components/authComponents/userStats/UserStats'
 
 import './Account.css'
 import LogOut from '../logOut/LogOut'

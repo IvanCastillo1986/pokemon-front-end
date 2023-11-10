@@ -1,5 +1,5 @@
 import React from 'react'
-import { capitalize } from '../Helper/capitalize'
+import { capitalize } from '../../Helper/capitalize'
 
 
 export default function Discard({ deadMon, discardPile }) {

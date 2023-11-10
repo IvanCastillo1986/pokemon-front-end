@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { UserContext } from '../UserContext'
+import { UserContext } from '../../UserContext'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'

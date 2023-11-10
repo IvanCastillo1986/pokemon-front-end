@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { UserContext } from '../UserContext'
-import { createRandomPokemonIds } from '../Helper/createRandomPokemonIds'
-import { addRemainingHp } from '../Helper/addRemainingHp'
+import { UserContext } from '../../UserContext'
+import { createRandomPokemonIds } from '../../Helper/createRandomPokemonIds'
+import { addRemainingHp } from '../../Helper/addRemainingHp'
 import axios from 'axios'
 
-import Deck from '../Components/Deck'
-import Arena from '../Components/Arena'
+import Deck from '../../Components/gameComponents/Deck'
+import Arena from '../../Components/gameComponents/Arena'
 
 import './Play.css'
 const API = process.env.REACT_APP_API_URL

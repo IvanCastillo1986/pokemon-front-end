@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { UserContext } from '../UserContext'
+import { UserContext } from '../../UserContext'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'
 
-import { capitalize } from '../Helper/capitalize'
-import { typeMultiplier } from '../Helper/typeMultiplier'
+import { capitalize } from '../../Helper/capitalize'
+import { typeMultiplier } from '../../Helper/typeMultiplier'
 
 const API = process.env.REACT_APP_API_URL
 
@@ -19,6 +19,7 @@ export default function Table({
     const { setUser } = useContext(UserContext)
     const [script, setScript] = useState("")
     const [deckExpArr, setDeckExpArr] = useState([])
+    // console.log(JSON.parse(sessionStorage.user))
 
 
     {/* 
@@ -223,6 +224,7 @@ export default function Table({
     useEffect(() => {
         
         // handles what happens when a Pokemon dies. {winner} prop has been set to round-winning player
+        async function pokemonDies() {
         if (winner) {
             const { currentUser } = JSON.parse(sessionStorage.getItem('user'))
             
@@ -273,21 +275,13 @@ export default function Table({
                         deckItem.deckExpObj)
                     })
                     
-                    // axios.put(`${API}/decks/${deckExpObj.deckId}`, finalDeckExpArr)
-                    Promise.all(deckExpPromises)
+                    // make api call to deck, and save decks with updated exp, to be added to currentPokemon
+                    await Promise.all(deckExpPromises)
                     .then(resArray => {
-                        console.log(resArray)
-                        resArray.forEach(res => {
-                            // const enemyPokemon = res.data
-                            // enemyPokemon.remaining_hp = 1
-                            // aiDeckArr.push(enemyPokemon)
-                            console.log(res.data)
-                        })
-                        // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
-                        // sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
+                        // console.log('deckExpPromises resArray:', resArray)
                     }).catch(err => console.log('error updating deck after win with Promise.all:', err.message))
 
-
+                    // AFTER we have updated our decks and waited:
                     // update current user with new values, and new exp
                     const winningUser = {
                         email: currentUser.email,
@@ -297,14 +291,14 @@ export default function Table({
                         losses: currentUser.losses
                     }
 
-                    axios.put(`${API}/users/${currentUser.uuid}`, winningUser)
+                    // update user and return user with query to that gets user's pokemon as well
+                    axios.put(`${API}/users/${currentUser.uuid}?getPokemon=true`, winningUser)
                     .then(res => {
-                        
-                        const { currentPokemon } = JSON.parse(sessionStorage.getItem('user'))
                         const newSessionUser = {
-                            currentUser: res.data,
-                            currentPokemon
+                            currentUser: res.data.updatedUser,
+                            currentPokemon: res.data.updatedUserPokemon
                         }
+                        console.log(newSessionUser)
                         sessionStorage.setItem('user', JSON.stringify(newSessionUser))
                         setUser(newSessionUser)
                     }).catch(err => console.log('error updating winning user:', err.message))
@@ -336,6 +330,8 @@ export default function Table({
 
             setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
         }
+        }
+        pokemonDies()
     }, [winner])
 
 

@@ -15,7 +15,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
     Two rows, Player will be on the left, AI on the right.
 
     AI puts down a random Pokemon.
-    Player will choose the Pokemon they'd like to start with.
+    Player will choose the Pokemon they'd like to start with.[]
     All the other Pokemon will be on the bench.
 
     <Bench>
