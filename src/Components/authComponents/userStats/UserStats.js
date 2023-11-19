@@ -11,6 +11,7 @@ import './UserStats.css'
 export default function UserStats() {
 
     const { user } = useContext(UserContext)
+    console.log(user)
     const history = useHistory()
 
     
@@ -27,10 +28,23 @@ export default function UserStats() {
                     <p>{user.currentUser?.losses}</p>
                 </div>
             </div>
+            <h1>My Items</h1>
+            <div className='my-items'>
+                {user.currentItems.map(item => {
+                    return (
+                        <ul key={item.id}>
+                            <li>
+                                <p>{item.item_name}</p>
+                                <p>{item.item_desc}</p>
+                            </li>
+                        </ul>
+                    )
+                })}
+            </div>
             <h1 className='pokemon-header'>My Pokemon</h1>
             {user.currentPokemon?.length > 5 // if user has chosen starter, then show their Pokemon
             ?
-            <ul>
+            <ul className='pokemon-list'>
                 {user.currentPokemon.map(pokemon => {
                     return (
                     <div key={pokemon.id}>

@@ -215,18 +215,16 @@ export default function Table({
 
     }
 
-    /* ToDo
-        add temporary pokemon object, or array, which holds the won exp
-        After the match, update each of the player's decks row with won exp
-        This happens whether they win or lose. It'll give incentive to finish match.
+    /* 
+        After the match, this useEffect updates each of the player's decks row with won exp
+        This happens even if they refresh. It'll give incentive to finish match.
     */
-
     useEffect(() => {
         
         // handles what happens when a Pokemon dies. {winner} prop has been set to round-winning player
         async function pokemonDies() {
         if (winner) {
-            const { currentUser } = JSON.parse(sessionStorage.getItem('user'))
+            const { currentUser, currentItems } = JSON.parse(sessionStorage.getItem('user'))
             
             // if user's Pokemon has beat an opponent Pokemon
             if (winner.player === 1) {
@@ -296,9 +294,9 @@ export default function Table({
                     .then(res => {
                         const newSessionUser = {
                             currentUser: res.data.updatedUser,
-                            currentPokemon: res.data.updatedUserPokemon
+                            currentPokemon: res.data.updatedUserPokemon,
+                            currentItems
                         }
-                        console.log(newSessionUser)
                         sessionStorage.setItem('user', JSON.stringify(newSessionUser))
                         setUser(newSessionUser)
                     }).catch(err => console.log('error updating winning user:', err.message))
@@ -330,7 +328,7 @@ export default function Table({
 
             setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
         }
-        }
+        } // pokemonDies() closes
         pokemonDies()
     }, [winner])
 

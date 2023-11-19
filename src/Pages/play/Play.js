@@ -41,14 +41,18 @@ export default function Play() {
         .then(res => {
             const user = {
                 currentUser: res.data,
-                currentPokemon: yourDeck
+                currentPokemon: yourDeck,
+                currentItems: currentUser.currentItems
             }
             sessionStorage.setItem('user', JSON.stringify(user))
             const sessionUser = JSON.parse(sessionStorage.getItem('user'))
 
             setUser(prevUser => {
                 return {
-                    ...prevUser, currentUser: sessionUser.currentUser, currentPokemon: sessionUser.currentPokemon
+                    ...prevUser, 
+                    currentUser: sessionUser.currentUser, 
+                    currentPokemon: sessionUser.currentPokemon,
+                    currentItems: sessionUser.currentItems
                 }
             })
         })
@@ -106,7 +110,9 @@ export default function Play() {
             .then(res => {
                 const userUpdate = {
                     currentUser: res.data.user,
-                    currentPokemon: res.data.userPokemon
+                    currentPokemon: res.data.userPokemon,
+// TODO!!! Replace this with res.data.userItems once I'm recieving it from back-end
+                    currentItems: res.data.userItems
                 }
                 sessionStorage.setItem('user', JSON.stringify(userUpdate))
                 setUser(userUpdate)

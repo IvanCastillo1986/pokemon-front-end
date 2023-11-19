@@ -29,7 +29,8 @@ export default function LogIn() {
             .then(res => {
                 const user = { 
                     currentUser: res.data.user, 
-                    currentPokemon: res.data.userPokemon
+                    currentPokemon: res.data.userPokemon,
+                    currentItems: res.data.userItems
                 }
                 
                 setUser(user)

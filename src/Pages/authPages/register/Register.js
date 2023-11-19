@@ -22,9 +22,7 @@ export default function Register() {
 
     const history = useHistory()
 
-    // Make API call to create new user
-    // Add user to UserContext
-        // add hasChosenStarter flag, set to false until they choose from Play page
+    // Make API call to retrieve new user's items
 
     const register = (e) => {
         e.preventDefault()
@@ -39,12 +37,16 @@ export default function Register() {
                 has_chosen_starter: false
             }
 
+            // Also add a starter potion to new user's bag
+            // bags.post("${API}/bags", bagItem)
+
             // here we not only create the user, but also send the 5 random pokeIds array to create deck
             axios.post(`${API}/users`, [newUser, createRandomPokemonIds(5)])
             .then(res => {
                 const user = {
                     currentUser: res.data.user,
-                    currentPokemon: res.data.userPokemon
+                    currentPokemon: res.data.userPokemon,
+                    currentItems: [res.data.userItems]
                 }
                 
                 sessionStorage.setItem("user", JSON.stringify(user))
@@ -52,6 +54,7 @@ export default function Register() {
                 setUser(sessionUser)
             })
             .catch(err => console.log('error adding user:', err))
+
             history.push("/my-account")
         })
         .catch(err => {
