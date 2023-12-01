@@ -166,6 +166,33 @@
     cursor: pointer;
 }
 
+.itemMenu .itemsContainer {
+    height: 100px;
+    margin-top: 20px;
+    overflow-y: scroll;
+    text-align: start;
+}
+.itemOption {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: 1fr 1fr;
+}
+.itemOption .name {
+    font-size: .8em;
+    text-transform: uppercase;
+    grid-column-start: 4;
+    grid-column-end: 8;
+}
+.itemOption .quantity {
+    font-size: .7em;
+    grid-column-start: 6;
+    grid-row-start: 2;
+}
+.itemMenu .backBtn {
+    position: absolute;
+    left: 40px;
+    bottom: 20px;
+}
 
 
 .Bench {

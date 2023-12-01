@@ -18,14 +18,16 @@ export default function Arena({ yourDeck, opponentDeck }) {
     Player will choose the Pokemon they'd like to start with.[]
     All the other Pokemon will be on the bench.
 
-    <Bench>
     <Table>
+    <Bench>
+    <Discard>
     */
 
     const [myPokemon, setMyPokemon] = useState({})
     const [myBench, setMyBench] = useState([])
     const [enemyPokemon, setEnemyPokemon] = useState({})
     const [enemyBench, setEnemyBench] = useState([])
+    const [myItems, setMyItems] = useState(user.currentItems)
     const [showIntro, setShowIntro] = useState(true)
     const [menuType, setMenuType] = useState('main')
     const [winner, setWinner] = useState(null)
@@ -96,6 +98,10 @@ export default function Arena({ yourDeck, opponentDeck }) {
         setMenuType('main')
     }
 
+    const handleUseItem = (e) => {
+        console.log(e.currentTarget.dataset.item)
+    }
+
 
 
     return (
@@ -129,6 +135,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
                     myBenchProp={myBench} enemyBenchProp={enemyBench}  setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 
                     menuType={menuType} setMenuType={setMenuType}
+                    handleUseItem={handleUseItem}
                     handlePokemonSwitch={handlePokemonSwitch} handleNewPokemon={handleNewPokemon}
                     discardPile={discardPile} setDiscardPile={setDiscardPile}
                 />

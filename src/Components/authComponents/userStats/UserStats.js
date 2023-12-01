@@ -11,10 +11,8 @@ import './UserStats.css'
 export default function UserStats() {
 
     const { user } = useContext(UserContext)
-    console.log(user)
     const history = useHistory()
 
-    
     return (
         <div className='UserStats'>
             <h1>My stats</h1>

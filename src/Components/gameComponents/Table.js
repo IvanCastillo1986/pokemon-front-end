@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../UserContext'
 import axios from 'axios'
+import { displayItems } from '../../Helper/displayItems'
 
 import BattleCard from './BattleCard'
 
@@ -13,13 +14,13 @@ const API = process.env.REACT_APP_API_URL
 
 export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, winner, setWinner,
-    menuType, setMenuType, handlePokemonSwitch, handleNewPokemon, discardPile, setDiscardPile
+    menuType, setMenuType, handleUseItem, handlePokemonSwitch, handleNewPokemon, discardPile, setDiscardPile
 }) {
 
-    const { setUser } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
     const [script, setScript] = useState("")
     const [deckExpArr, setDeckExpArr] = useState([])
-    // console.log(JSON.parse(sessionStorage.user))
+    const sessionUser = JSON.parse(sessionStorage.user)
 
 
     {/* 
@@ -357,7 +358,7 @@ export default function Table({
                 <div className='mainTable'>
                     <span className='fight' onClick={() => menuClick('fight')}>FIGHT</span>
                     <span className='switch' onClick={() => menuClick('switch')}>SWITCH</span>
-                    <span className='item'>ITEM</span>
+                    <span className='item' onClick={() => menuClick('item')}>ITEM</span>
                     <span className='defend'>DEFEND</span>
                 </div> 
                 }
@@ -383,6 +384,25 @@ export default function Table({
                             return <span onClick={handlePokemonSwitch} key={i}>{capitalize(mon.name)}</span>
                         })}
                     </div>
+                    <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
+                </div>
+                }
+
+                {menuType === 'item' &&
+                <div className='itemMenu'>
+                    <span className='prompt'>Which item would you like to use?</span>
+                        <div className='itemsContainer'>
+                        {displayItems(user.currentItems).map((item, i) => {
+                            return <div className='itemOption' key={item.id}>
+                                <span className='name' onClick={handleUseItem} key={item.id} data-item={item.id}>{item.itemName}</span>
+                                <span className='quantity'> x {item.quantity}</span>
+                            </div>
+                        })}
+                        </div>
+                        {/* item should display as:
+                            POTION
+                                    x 3
+                        */}
                     <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
                 </div>
                 }

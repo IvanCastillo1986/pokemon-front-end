@@ -108,15 +108,14 @@ export default function Play() {
         if (sessionUser) {
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
+                console.log(res)
                 const userUpdate = {
                     currentUser: res.data.user,
                     currentPokemon: res.data.userPokemon,
-// TODO!!! Replace this with res.data.userItems once I'm recieving it from back-end
                     currentItems: res.data.userItems
                 }
                 sessionStorage.setItem('user', JSON.stringify(userUpdate))
                 setUser(userUpdate)
-                console.log(user)
             })
         }
         

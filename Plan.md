@@ -1,14 +1,15 @@
-IDEAS
-Make the 
+ToDo
 
+When user visits Play page, populate myItems with items in context User{}'s currentItems[]
 
+When user clicks on Item menu, it displays the items in myItems
 
-* App.js
-    * pokemon state []
-    
-    * for (let id = 1; id <= 151; id++) {
-        axios.get(`url/{id}`)
-        add current API call to pokemon [] array
-    }
+When the user clicks on item, it prompts them if they'd like to use it.
 
-    * return pokemon.map(each pokemon object.name/stats/etc as card)
+If they use it, it removes the item from myItems.
+
+After the match ends, make call to put.users to adjust the bags table items. 
+    For items that were used, make a Delete query.
+    For new item that was won, make a Post query.
+    The User{} context and sessionStorage are updated with new/removed items as well.
+
