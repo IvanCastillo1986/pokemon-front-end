@@ -1,38 +1,56 @@
-// this function takes an array of items, finds duplicates, and 
-// returns an object with  {name, id, quantity} 
+// This file contains all the functions to be performed on user items from back-end
 
-const legend = {
-    1: {id: 1, itemName: "potion", quantity: null},
-    2: {id: 2, itemName: "super potion ", quantity: null},
-    3: {id: 3, itemName: "lemonade", quantity: null},
-    4: {id: 4, itemName: "ether", quantity: null},
+
+
+// This function takes an array of items, and decides where it belongs via convertedItems
+// It then mutates the convertedItems array and adds quantity and bagIds to each item
+const convertUsableItems = (itemsArr) => {
+    const convertedItems = [
+        {item_id: 1, bagIdArr: [], name: "potion", quantity: 0},
+        {item_id: 2, bagIdArr: [], name: "super potion ", quantity: 0},
+        {item_id: 3, bagIdArr: [], name: "lemonade", quantity: 0},
+        {item_id: 4, bagIdArr: [], name: "ether", quantity: 0},
+    ]
+    
+    for (const item of itemsArr) {
+        const currentItem = convertedItems[item.item_id - 1]
+        currentItem.quantity++
+        currentItem.bagIdArr.push(item.id)
+    }
+
+    // if item quantity in output array is 0, remove from array
+    for (let i = 0; i < convertedItems.length; i++) {
+        const item = convertedItems[i]
+        if (item.quantity < 1) convertedItems.splice(i, 1)
+    }
+
+    return convertedItems
 }
 
-const displayItems = (itemsArr) => {
-    const counter = {}
+// This function decrements item onClick, and it also removes item if quantity reaches 0
+const decrementItemQuantity = (itemsArr, itemName) => {
+    const decrementedArr = [...itemsArr]
 
-    for (const item of itemsArr) {
-        const id = item.item_id
-
-        if (id in counter) {
-            counter[id]++
-        } else {
-            counter[id] = 1
+    for (let i = 0; i < decrementedArr.length; i++) {
+        const item = decrementedArr[i]
+        if (item.name === itemName) {
+            item.quantity--
+            item.bagIdArr.shift()
+        }
+        if (item.quantity < 1) {
+            decrementedArr.splice(i, 1)
+            i--
         }
     }
 
-    const duplicateItemsArr = []
-
-    for (const id in counter) {
-        const item = legend[id]
-        item.quantity = counter[id]
-        duplicateItemsArr.push(item)
-    }
-
-    return duplicateItemsArr
+    return decrementedArr
 }
 
-module.exports = { displayItems }
+const applyItem = (item) => {
+
+}
+
+module.exports = { convertUsableItems, decrementItemQuantity }
 
 
 
@@ -42,7 +60,7 @@ module.exports = { displayItems }
 
 
 // TEST FUNCTION
-// console.log(displayItems([
+// console.log(convertUsableItems([
 //     {
 //       "id": 4,
 //       "item_name": "potion",
@@ -84,7 +102,7 @@ module.exports = { displayItems }
 //       "item_id": 4
 //     },
 //     {
-//       "id": 2,
+//       "id": 5,
 //       "item_name": "super potion",
 //       "effect": null,
 //       "hp_restored": null,
@@ -94,7 +112,7 @@ module.exports = { displayItems }
 //       "item_id": 2
 //     },
 //     {
-//       "id": 2,
+//       "id": 6,
 //       "item_name": "super potion",
 //       "effect": null,
 //       "hp_restored": null,
@@ -104,7 +122,7 @@ module.exports = { displayItems }
 //       "item_id": 2
 //     },
 //     {
-//       "id": 2,
+//       "id": 7,
 //       "item_name": "super potion",
 //       "effect": null,
 //       "hp_restored": null,

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { convertUsableItems, decrementItemQuantity } from '../../Helper/itemFunctions'
 
 import Bench from './Bench'
 import Table from './Table'
@@ -8,7 +9,7 @@ import './Arena.css'
 
 
 
-export default function Arena({ yourDeck, opponentDeck }) {
+export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     /* 
     This component will recieve the user and AI decks created in Deck component.
     This will be the game's parent component.
@@ -25,13 +26,14 @@ export default function Arena({ yourDeck, opponentDeck }) {
 
     const [myPokemon, setMyPokemon] = useState({})
     const [myBench, setMyBench] = useState([])
+    const [myItems, setMyItems] = useState(convertUsableItems(yourItems))
     const [enemyPokemon, setEnemyPokemon] = useState({})
     const [enemyBench, setEnemyBench] = useState([])
-    const [myItems, setMyItems] = useState(user.currentItems)
     const [showIntro, setShowIntro] = useState(true)
     const [menuType, setMenuType] = useState('main')
     const [winner, setWinner] = useState(null)
     const [discardPile, setDiscardPile] = useState({ player1Discard: [], player2Discard: [] })
+    // console.log('myItems:', myItems)
     
     // This changes theme and scrolls to top of page on component mount
     useEffect(() => {
@@ -85,9 +87,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
 
     const handleNewPokemon = (e) => {
         const clickedPokemon = e.target.textContent
-
         const switchedBenchPokemon = myBench.find(mon => mon.name === clickedPokemon)
-    
 
         const myNewBench = myBench.filter(mon => {
             return mon.name !== switchedBenchPokemon.name
@@ -99,7 +99,11 @@ export default function Arena({ yourDeck, opponentDeck }) {
     }
 
     const handleUseItem = (e) => {
-        console.log(e.currentTarget.dataset.item)
+        const newItemsArr = [...myItems]
+        const selectedItem = e.currentTarget.dataset.itemName
+        const itemDecrementedArr = decrementItemQuantity(newItemsArr, selectedItem)
+
+        setMyItems(itemDecrementedArr)
     }
 
 
@@ -135,7 +139,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
                     myBenchProp={myBench} enemyBenchProp={enemyBench}  setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 
                     menuType={menuType} setMenuType={setMenuType}
-                    handleUseItem={handleUseItem}
+                    handleUseItem={handleUseItem} myItems={myItems}
                     handlePokemonSwitch={handlePokemonSwitch} handleNewPokemon={handleNewPokemon}
                     discardPile={discardPile} setDiscardPile={setDiscardPile}
                 />

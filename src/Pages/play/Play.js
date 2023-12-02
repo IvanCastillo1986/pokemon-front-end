@@ -22,6 +22,7 @@ export default function Play() {
     const { user, setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [yourDeck, setYourDeck] = useState(user.currentPokemon)
+    const [yourItems, setYourItems] = useState(user.currentItems)
     const whichComponent = sessionUser.currentUser.has_chosen_starter ? 'arena' : 'deck'
     const [currentComponent, setCurrentComponent] = useState(whichComponent)
 
@@ -108,7 +109,7 @@ export default function Play() {
         if (sessionUser) {
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
-                console.log(res)
+                console.log('page has refreshed:', res)
                 const userUpdate = {
                     currentUser: res.data.user,
                     currentPokemon: res.data.userPokemon,
@@ -118,6 +119,7 @@ export default function Play() {
                 setUser(userUpdate)
             })
         }
+        // NOTE: this means every state that needs to persist, needs to begin in this Play component
         
         // this adds currentComponent to sessionStorage, so that a new player can't refresh for infinite starters during select
         if (yourDeck.length > 5) sessionStorage.setItem('currentComponent', 'arena')
@@ -145,7 +147,7 @@ export default function Play() {
                 JSON.parse(sessionStorage.getItem('opponentDeck')) &&
                 <Arena 
                     opponentDeck={JSON.parse(sessionStorage.getItem('opponentDeck'))}
-                    yourDeck={addRemainingHp(yourDeck)}
+                    yourDeck={addRemainingHp(yourDeck)} yourItems={yourItems}
                 />
             }
 

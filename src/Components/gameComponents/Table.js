@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../UserContext'
 import axios from 'axios'
-import { displayItems } from '../../Helper/displayItems'
 
 import BattleCard from './BattleCard'
 
@@ -13,14 +12,16 @@ const API = process.env.REACT_APP_API_URL
 
 
 export default function Table({ 
-    myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, winner, setWinner,
-    menuType, setMenuType, handleUseItem, handlePokemonSwitch, handleNewPokemon, discardPile, setDiscardPile
+    myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, 
+    winner, setWinner, menuType, setMenuType, handleUseItem, myItems, handlePokemonSwitch, 
+    handleNewPokemon, discardPile, setDiscardPile
 }) {
 
     const { user, setUser } = useContext(UserContext)
+    const sessionUser = JSON.parse(sessionStorage.user)
+
     const [script, setScript] = useState("")
     const [deckExpArr, setDeckExpArr] = useState([])
-    const sessionUser = JSON.parse(sessionStorage.user)
 
 
     {/* 
@@ -338,6 +339,30 @@ export default function Table({
         setMenuType(menuType)
     }
 
+    const renderItemMenu = () => {
+        if (myItems.length > 0) {
+                return <div className='itemMenu'>
+                    <span className='prompt'>Which item would you like to use?</span>
+                        <div className='itemsContainer'>
+                        {myItems.map((item) => {
+                            return (
+                            <div className='itemOption' key={item.name}>
+                                <span className='name' onClick={handleUseItem} data-item-name={item.name}>{item.name}</span>
+                                <span className='quantity'> x {item.quantity}</span>
+                            </div>
+                        )})}
+                        </div>
+                        {/* Each item's structure:
+                        {item_id: 1, bagIdArr: [6,5,2], itemName: "potion", quantity: 3} */}
+                    <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
+                </div>
+        } else {
+            return <div className='noItemsDiv'>
+                <span>You are out of items</span>
+                <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
+            </div>
+        }
+    }
 
     return (
         <div className='Table'>
@@ -388,23 +413,8 @@ export default function Table({
                 </div>
                 }
 
-                {menuType === 'item' &&
-                <div className='itemMenu'>
-                    <span className='prompt'>Which item would you like to use?</span>
-                        <div className='itemsContainer'>
-                        {displayItems(user.currentItems).map((item, i) => {
-                            return <div className='itemOption' key={item.id}>
-                                <span className='name' onClick={handleUseItem} key={item.id} data-item={item.id}>{item.itemName}</span>
-                                <span className='quantity'> x {item.quantity}</span>
-                            </div>
-                        })}
-                        </div>
-                        {/* item should display as:
-                            POTION
-                                    x 3
-                        */}
-                    <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
-                </div>
+                {menuType === 'item' && 
+                    renderItemMenu()
                 }
 
                 {menuType === 'newPokemon' &&
