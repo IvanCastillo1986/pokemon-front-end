@@ -13,7 +13,7 @@ const API = process.env.REACT_APP_API_URL
 
 export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, 
-    winner, setWinner, menuType, setMenuType, handleUseItem, myItems, handlePokemonSwitch, 
+    winner, setWinner, menuType, setMenuType, handleUseItem, myItems, deletedItemIds, handlePokemonSwitch, 
     handleNewPokemon, discardPile, setDiscardPile
 }) {
 
@@ -220,6 +220,8 @@ export default function Table({
     /* 
         After the match, this useEffect updates each of the player's decks row with won exp
         This happens even if they refresh. It'll give incentive to finish match.
+
+        ToDo: update user's bag with current items
     */
     useEffect(() => {
         
@@ -269,7 +271,18 @@ export default function Table({
                 ) {
                     setScript('Congrats! You have won the match!')
 
-                    // send an API put call to update user's Deck for each obj in deckExpArr, plus exp
+                    // API call to delete each of User's used bagItems from deletedItemIds[int]
+                    const deletedItemsPromises = deletedItemIds.map(itemId => {
+                        return axios.delete(`${API}/bags/${currentUser.uuid}?bagId=${itemId}`)
+                    })
+                    
+                    await Promise.all(deletedItemsPromises)
+                    .then(resArray => {
+                        console.log('Deleted bag items resArray:', resArray)
+                    }).catch(err => console.log('error deleting user bag items after winning:', err.message))
+
+
+                    // API put call to update user's Deck for each obj in deckExpArr, plus exp
                     const deckExpPromises = newDeckExpArr.map(deckItem => {
                         return axios.put(`${API}/decks/${deckItem.deckId}?expAdded=${deckItem.expAdded}`, 
                         deckItem.deckExpObj)
@@ -341,21 +354,26 @@ export default function Table({
 
     const renderItemMenu = () => {
         if (myItems.length > 0) {
-                return <div className='itemMenu'>
-                    <span className='prompt'>Which item would you like to use?</span>
-                        <div className='itemsContainer'>
-                        {myItems.map((item) => {
-                            return (
-                            <div className='itemOption' key={item.name}>
-                                <span className='name' onClick={handleUseItem} data-item-name={item.name}>{item.name}</span>
-                                <span className='quantity'> x {item.quantity}</span>
-                            </div>
-                        )})}
+            return <div className='itemMenu'>
+                <span className='prompt'>Which item would you like to use?</span>
+                    <div className='itemsContainer'>
+                    {myItems.map((item) => {
+                        return (
+                        <div className='itemOption' key={item.name}>
+                            <span 
+                                className='name' onClick={handleUseItem} 
+                                data-name={item.name} data-id={item.bagIdArr[0]}
+                            >
+                                {item.name}
+                            </span>
+                            <span className='quantity'> x {item.quantity}</span>
                         </div>
-                        {/* Each item's structure:
-                        {item_id: 1, bagIdArr: [6,5,2], itemName: "potion", quantity: 3} */}
-                    <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
-                </div>
+                    )})}
+                    </div>
+                    {/* Each item's structure:
+                    {item_id: 1, bagIdArr: [6,5,2], itemName: "potion", quantity: 3} */}
+                <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
+            </div>
         } else {
             return <div className='noItemsDiv'>
                 <span>You are out of items</span>

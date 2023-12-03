@@ -27,13 +27,13 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     const [myPokemon, setMyPokemon] = useState({})
     const [myBench, setMyBench] = useState([])
     const [myItems, setMyItems] = useState(convertUsableItems(yourItems))
+    const [deletedItemIds, setDeletedItemIds] = useState([])
     const [enemyPokemon, setEnemyPokemon] = useState({})
     const [enemyBench, setEnemyBench] = useState([])
     const [showIntro, setShowIntro] = useState(true)
     const [menuType, setMenuType] = useState('main')
     const [winner, setWinner] = useState(null)
     const [discardPile, setDiscardPile] = useState({ player1Discard: [], player2Discard: [] })
-    // console.log('myItems:', myItems)
     
     // This changes theme and scrolls to top of page on component mount
     useEffect(() => {
@@ -99,11 +99,17 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     }
 
     const handleUseItem = (e) => {
+        // This function not only decrements quantity from myItems[] item onClick,
+        // it also adds the itemId to deleteItemIds[] to use in Delete API call after player wins/loses
         const newItemsArr = [...myItems]
-        const selectedItem = e.currentTarget.dataset.itemName
+        const selectedItem = e.currentTarget.dataset.name
+        const deletedItemId = e.currentTarget.dataset.id
+
+        const newDeletedItemIds = [...deletedItemIds, Number(deletedItemId)]
         const itemDecrementedArr = decrementItemQuantity(newItemsArr, selectedItem)
 
         setMyItems(itemDecrementedArr)
+        setDeletedItemIds(newDeletedItemIds)
     }
 
 
@@ -139,7 +145,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     myBenchProp={myBench} enemyBenchProp={enemyBench}  setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 
                     menuType={menuType} setMenuType={setMenuType}
-                    handleUseItem={handleUseItem} myItems={myItems}
+                    handleUseItem={handleUseItem} myItems={myItems} deletedItemIds={deletedItemIds}
                     handlePokemonSwitch={handlePokemonSwitch} handleNewPokemon={handleNewPokemon}
                     discardPile={discardPile} setDiscardPile={setDiscardPile}
                 />
