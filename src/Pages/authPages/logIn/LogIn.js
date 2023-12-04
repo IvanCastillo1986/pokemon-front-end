@@ -4,6 +4,7 @@ import { auth } from '../../../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { UserContext } from '../../../UserContext'
 import axios from 'axios'
+import { convertUsableItems } from '../../../Helper/itemFunctions'
 
 import "./LogIn.css"
 
@@ -30,8 +31,9 @@ export default function LogIn() {
                 const user = { 
                     currentUser: res.data.user, 
                     currentPokemon: res.data.userPokemon,
-                    currentItems: res.data.userItems
+                    currentItems: convertUsableItems(res.data.userItems)
                 }
+                console.log('Items from login:', user.currentItems)
                 
                 setUser(user)
                 sessionStorage.setItem('user', JSON.stringify(user))

@@ -359,19 +359,19 @@ export default function Table({
                     <div className='itemsContainer'>
                     {myItems.map((item) => {
                         return (
-                        <div className='itemOption' key={item.name}>
+                        <div className='itemOption' key={item.item_name}>
                             <span 
-                                className='name' onClick={handleUseItem} 
-                                data-name={item.name} data-id={item.bagIdArr[0]}
+                                className='name' onClick={(e) => handleUseItem(e, item, myPokemon)} 
+                                data-name={item.item_name} data-id={item.bagIdArr[0]}
                             >
-                                {item.name}
+                                {item.item_name}
                             </span>
                             <span className='quantity'> x {item.quantity}</span>
                         </div>
                     )})}
                     </div>
                     {/* Each item's structure:
-                    {item_id: 1, bagIdArr: [6,5,2], itemName: "potion", quantity: 3} */}
+                    {item_id: 1, bagIdArr: [6,5,2], item_name: "potion", quantity: 3} */}
                 <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
             </div>
         } else {

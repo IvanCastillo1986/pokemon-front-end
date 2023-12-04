@@ -4,24 +4,52 @@
 
 // This function takes an array of items, and decides where it belongs via convertedItems
 // It then mutates the convertedItems array and adds quantity and bagIds to each item
+// Also removes bag id (we don't need this, since used items will be deleted)
 const convertUsableItems = (itemsArr) => {
+    const itemsAlreadyAddedToOutput = new Set()
+
+    // console.log(itemsArr)
+    // Will eventually output items like this:
+    // {item_id: 1, bagIdArr: [], name: "potion", hp_restored: 20, item_desc: "Restores 20 hp", quantity: 0},
     const convertedItems = [
-        {item_id: 1, bagIdArr: [], name: "potion", quantity: 0},
-        {item_id: 2, bagIdArr: [], name: "super potion ", quantity: 0},
-        {item_id: 3, bagIdArr: [], name: "lemonade", quantity: 0},
-        {item_id: 4, bagIdArr: [], name: "ether", quantity: 0},
+        {}, // potion
+        {}, // super potion
+        {}, // lemonade
+        {}, // ether
     ]
-    
-    for (const item of itemsArr) {
-        const currentItem = convertedItems[item.item_id - 1]
-        currentItem.quantity++
-        currentItem.bagIdArr.push(item.id)
+
+    for (let i = 0; i < itemsArr.length; i++) {
+        const item = itemsArr[i]
+        // console.log('current item:', item)
+        const { item_id } = item
+
+        if (itemsAlreadyAddedToOutput.has(item_id)) {
+            // grabs item already in output array, increment quantity and add id to bagIdArr
+            const convertedItem = convertedItems[item_id - 1]
+
+            convertedItem.quantity++
+            convertedItem.bagIdArr.push(item.id)
+            // console.log(convertedItem)
+        } else {
+            // add new properties, remove id property
+            item.quantity = 1
+            item.bagIdArr = [item.id]
+            delete item.id
+            
+            convertedItems[item_id - 1] = item
+            itemsAlreadyAddedToOutput.add(item_id)
+            // console.log('convertedItems:', convertedItems)
+        }
+        
     }
 
-    // if item quantity in output array is 0, remove from array
+    // if item in output array is empty, remove from array
     for (let i = 0; i < convertedItems.length; i++) {
         const item = convertedItems[i]
-        if (item.quantity < 1) convertedItems.splice(i, 1)
+        if (!Object.keys(item).length) {
+            convertedItems.splice(i, 1)
+            i--
+        }
     }
 
     return convertedItems
@@ -46,16 +74,60 @@ const decrementItemQuantity = (itemsArr, itemName) => {
     return decrementedArr
 }
 
-const applyItem = (item) => {
+const applyItem = (item, pokemon) => {
+    const effect = item.effect
+    const effectedPokemon = pokemon
+    console.log('pre-healed Pokemon:', pokemon)
 
+    if (effect === 'heal') {
+        // for restoring hp
+        effectedPokemon.remaining_hp += item.hp_restored
+
+        console.log('effected Pokemon:', effectedPokemon)
+        return effectedPokemon
+    } else if (effect === 'restore') {
+        // for restoring pp
+        // pokemon.pp += item.pp_restored
+    } else if (effect === 'status') {
+        // for restoring status
+    }
 }
 
-module.exports = { convertUsableItems, decrementItemQuantity }
+// console.log(applyItem(
+//     {
+//         "id": 2,
+//         "item_name": "super potion",
+//         "effect": 'heal',
+//         "hp_restored": 50,
+//         "pp_restored": null,
+//         "item_desc": "Restores 50 hp"
+//     }, 
+//     {
+//         "id": 6,
+//         "name": "Bulbasaur",
+//         "hp": 45,
+//         "remaining_hp": 45,
+//         "atk": 49,
+//         "def": 49,
+//         "special_atk": 65,
+//         "special_def": 65,
+//         "speed": 45,
+//         "type1": "grass",
+//         "type2": "poison",
+//         "move1": "Tackle",
+//         "move2": "Vine Whip",
+//         "front_img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+//         "rear_img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png",
+//         "user_id": "7XzFvOUVS4eQHGI8ClxNbN7qY7b2",
+//         "pokemon_id": 1,
+//         "exp": 10,
+//         "lvl": 1
+//     }
+// ))
 
 
 
-
-
+module.exports = { convertUsableItems, decrementItemQuantity, applyItem }
 
 
 

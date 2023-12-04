@@ -24,7 +24,9 @@ let time = 2000
 // console.log(deadMon[deadMon.length-1])
 
 const user = {name: "Ivan"}
-
+const emptyObj = {}
+console.log(Object.keys(user).length)
+console.log(Object.keys(emptyObj).length)
 // console.log(user)
 
 // console.log(user.currentUser === undefined)

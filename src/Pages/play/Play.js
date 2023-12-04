@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { UserContext } from '../../UserContext'
 import { createRandomPokemonIds } from '../../Helper/createRandomPokemonIds'
 import { addRemainingHp } from '../../Helper/addRemainingHp'
+import { convertUsableItems } from '../../Helper/itemFunctions'
 import axios from 'axios'
 
 import Deck from '../../Components/gameComponents/Deck'
@@ -113,7 +114,7 @@ export default function Play() {
                 const userUpdate = {
                     currentUser: res.data.user,
                     currentPokemon: res.data.userPokemon,
-                    currentItems: res.data.userItems
+                    currentItems: convertUsableItems(res.data.userItems)
                 }
                 sessionStorage.setItem('user', JSON.stringify(userUpdate))
                 setUser(userUpdate)
