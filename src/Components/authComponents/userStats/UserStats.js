@@ -29,11 +29,13 @@ export default function UserStats() {
             <h1>My Items</h1>
             <div className='my-items'>
                 {user.currentItems.map(item => {
+                    console.log(item)
                     return (
                         <ul key={item.id}>
                             <li>
                                 <p>{item.item_name}</p>
                                 <p>{item.item_desc}</p>
+                                <p>Quantity: {item.bagIdArr.length}</p>
                             </li>
                         </ul>
                     )

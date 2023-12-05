@@ -361,8 +361,7 @@ export default function Table({
                         return (
                         <div className='itemOption' key={item.item_name}>
                             <span 
-                                className='name' onClick={(e) => handleUseItem(e, item, myPokemon)} 
-                                data-name={item.item_name} data-id={item.bagIdArr[0]}
+                                className='name' onClick={() => handleUseItem(item, myPokemon)}
                             >
                                 {item.item_name}
                             </span>
@@ -388,7 +387,7 @@ export default function Table({
                 <p className='hp-display'>HP: {myPokemon.remaining_hp}/{myPokemon.hp}</p>
                 <BattleCard pokemon={myPokemon} />
             </div>
-                
+            
             <div className='screen'>
 
                 {menuType === 'script' &&

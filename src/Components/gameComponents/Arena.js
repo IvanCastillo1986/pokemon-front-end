@@ -98,24 +98,24 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         setMenuType('main')
     }
 
-    const handleUseItem = (e, item, myPokemon) => {
+    const handleUseItem = (item, myPokemon) => {
         // This function not only decrements quantity from myItems[] item onClick,
-        // it also adds the itemId to deleteItemIds[] to use in Delete API call after player wins/loses
+        // It also adds the itemId to deleteItemIds[] to use in Delete API call after player wins/loses
         // It also applies the item effect to Pokemon and sets myPokemon state
-        const newItemsArr = [...myItems]
-        // const selectedItem = e.currentTarget.dataset.name
-        const selectedItem = item.name
-        // const deletedItemId = e.currentTarget.dataset.id
-        const deletedItemId = item.id
-        const effectedPokemon = {...myPokemon}
-
+        
+        const selectedItemName = item.item_name
+        
+        const deletedItemId = item.bagIdArr[0]
         const newDeletedItemIds = [...deletedItemIds, Number(deletedItemId)]
-        const itemDecrementedArr = decrementItemQuantity(newItemsArr, selectedItem)
+        
+        const newItemsArr = [...myItems]
+        const itemDecrementedArr = decrementItemQuantity(newItemsArr, selectedItemName)
 
         setMyItems(itemDecrementedArr)
         setDeletedItemIds(newDeletedItemIds)
 
-        setMyPokemon(applyItem(effectedPokemon))
+        const effectedPokemon = applyItem(item, myPokemon)
+        setMyPokemon(effectedPokemon)
     }
 
 

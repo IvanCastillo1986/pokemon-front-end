@@ -8,7 +8,6 @@
 const convertUsableItems = (itemsArr) => {
     const itemsAlreadyAddedToOutput = new Set()
 
-    // console.log(itemsArr)
     // Will eventually output items like this:
     // {item_id: 1, bagIdArr: [], name: "potion", hp_restored: 20, item_desc: "Restores 20 hp", quantity: 0},
     const convertedItems = [
@@ -20,7 +19,6 @@ const convertUsableItems = (itemsArr) => {
 
     for (let i = 0; i < itemsArr.length; i++) {
         const item = itemsArr[i]
-        // console.log('current item:', item)
         const { item_id } = item
 
         if (itemsAlreadyAddedToOutput.has(item_id)) {
@@ -29,7 +27,6 @@ const convertUsableItems = (itemsArr) => {
 
             convertedItem.quantity++
             convertedItem.bagIdArr.push(item.id)
-            // console.log(convertedItem)
         } else {
             // add new properties, remove id property
             item.quantity = 1
@@ -38,7 +35,6 @@ const convertUsableItems = (itemsArr) => {
             
             convertedItems[item_id - 1] = item
             itemsAlreadyAddedToOutput.add(item_id)
-            // console.log('convertedItems:', convertedItems)
         }
         
     }
@@ -55,13 +51,14 @@ const convertUsableItems = (itemsArr) => {
     return convertedItems
 }
 
+
 // This function decrements item onClick, and it also removes item if quantity reaches 0
 const decrementItemQuantity = (itemsArr, itemName) => {
     const decrementedArr = [...itemsArr]
 
     for (let i = 0; i < decrementedArr.length; i++) {
         const item = decrementedArr[i]
-        if (item.name === itemName) {
+        if (item.item_name === itemName) {
             item.quantity--
             item.bagIdArr.shift()
         }
@@ -74,24 +71,28 @@ const decrementItemQuantity = (itemsArr, itemName) => {
     return decrementedArr
 }
 
+
 const applyItem = (item, pokemon) => {
     const effect = item.effect
-    const effectedPokemon = pokemon
-    console.log('pre-healed Pokemon:', pokemon)
 
     if (effect === 'heal') {
-        // for restoring hp
-        effectedPokemon.remaining_hp += item.hp_restored
+        // for restoring hp, doesn't go over max hp
+        pokemon.remaining_hp += item.hp_restored
+        if (pokemon.hp < pokemon.remaining_hp) pokemon.remaining_hp = pokemon.hp
 
-        console.log('effected Pokemon:', effectedPokemon)
-        return effectedPokemon
+        return pokemon
     } else if (effect === 'restore') {
         // for restoring pp
         // pokemon.pp += item.pp_restored
+        return pokemon
     } else if (effect === 'status') {
         // for restoring status
     }
 }
+
+
+
+module.exports = { convertUsableItems, decrementItemQuantity, applyItem }
 
 // console.log(applyItem(
 //     {
@@ -124,10 +125,6 @@ const applyItem = (item, pokemon) => {
 //         "lvl": 1
 //     }
 // ))
-
-
-
-module.exports = { convertUsableItems, decrementItemQuantity, applyItem }
 
 
 
