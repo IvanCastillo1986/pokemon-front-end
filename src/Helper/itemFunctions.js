@@ -91,8 +91,17 @@ const applyItem = (item, pokemon) => {
 }
 
 
+// Returns a number from 1 to numOfItems
+const randomItem = (numOfItems) => {
+    const min = 0
+    const max = numOfItems
 
-module.exports = { convertUsableItems, decrementItemQuantity, applyItem }
+    return Math.ceil(Math.random() * (max - min) + min)
+}
+
+
+
+module.exports = { convertUsableItems, decrementItemQuantity, applyItem, randomItem }
 
 // console.log(applyItem(
 //     {

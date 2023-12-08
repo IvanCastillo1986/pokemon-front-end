@@ -10,6 +10,13 @@
     padding: 15px;
     margin: 20px 0 0 0;
 }
+
+.overlay {
+    background-color: rgba(0,0,0,.3);
+    width: 100vw;
+    height: 200vh;
+    position: fixed;
+}
 .Navbar a {
     color: white;
     font-size: 26px;

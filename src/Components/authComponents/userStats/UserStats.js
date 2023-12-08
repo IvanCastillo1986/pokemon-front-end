@@ -29,9 +29,8 @@ export default function UserStats() {
             <h1>My Items</h1>
             <div className='my-items'>
                 {user.currentItems.map(item => {
-                    console.log(item)
                     return (
-                        <ul key={item.id}>
+                        <ul key={item.item_id}>
                             <li>
                                 <p>{item.item_name}</p>
                                 <p>{item.item_desc}</p>

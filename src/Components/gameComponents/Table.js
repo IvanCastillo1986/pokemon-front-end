@@ -6,6 +6,7 @@ import BattleCard from './BattleCard'
 
 import { capitalize } from '../../Helper/capitalize'
 import { typeMultiplier } from '../../Helper/typeMultiplier'
+import { randomItem } from '../../Helper/itemFunctions'
 
 const API = process.env.REACT_APP_API_URL
 
@@ -218,10 +219,10 @@ export default function Table({
     }
 
     /* 
-        After the match, this useEffect updates each of the player's decks row with won exp
+        After the match, this useEffect updates each of the player's decks row with won exp, and new item.
         This happens even if they refresh. It'll give incentive to finish match.
 
-        ToDo: update user's bag with current items
+        ToDo: give the player a random item after each win
     */
     useEffect(() => {
         
@@ -277,10 +278,20 @@ export default function Table({
                     })
                     
                     await Promise.all(deletedItemsPromises)
-                    .then(resArray => {
-                        console.log('Deleted bag items resArray:', resArray)
-                    }).catch(err => console.log('error deleting user bag items after winning:', err.message))
+                        .then(resArray => {
+                            console.log('Deleted bag items resArray:', resArray)
+                        }).catch(err => console.log('error deleting user bag items after winning:', err.message))
 
+                    
+                    // API call to add a random won item to user's bag
+                    const randomBagItem = { user_id: user.uuid, item_id: randomItem(3) }
+                    const wonItem = await axios.post(`${API}/bags`, randomBagItem)
+                        .then(res => {
+                            return res.data
+                        })
+                        .catch(err => console.log('errorAddingRandomItem:', err.message))
+                    console.log('The user has just won:', wonItem)
+                    
 
                     // API put call to update user's Deck for each obj in deckExpArr, plus exp
                     const deckExpPromises = newDeckExpArr.map(deckItem => {
@@ -290,9 +301,10 @@ export default function Table({
                     
                     // make api call to deck, and save decks with updated exp, to be added to currentPokemon
                     await Promise.all(deckExpPromises)
-                    .then(resArray => {
-                        // console.log('deckExpPromises resArray:', resArray)
-                    }).catch(err => console.log('error updating deck after win with Promise.all:', err.message))
+                        .then(resArray => {
+                            // console.log('deckExpPromises resArray:', resArray)
+                        }).catch(err => console.log('error updating deck after win with Promise.all:', err.message))
+
 
                     // AFTER we have updated our decks and waited:
                     // update current user with new values, and new exp
@@ -306,15 +318,15 @@ export default function Table({
 
                     // update user and return user with query to that gets user's pokemon as well
                     axios.put(`${API}/users/${currentUser.uuid}?getPokemon=true`, winningUser)
-                    .then(res => {
-                        const newSessionUser = {
-                            currentUser: res.data.updatedUser,
-                            currentPokemon: res.data.updatedUserPokemon,
-                            currentItems
-                        }
-                        sessionStorage.setItem('user', JSON.stringify(newSessionUser))
-                        setUser(newSessionUser)
-                    }).catch(err => console.log('error updating winning user:', err.message))
+                        .then(res => {
+                            const newSessionUser = {
+                                currentUser: res.data.updatedUser,
+                                currentPokemon: res.data.updatedUserPokemon,
+                                currentItems
+                            }
+                            sessionStorage.setItem('user', JSON.stringify(newSessionUser))
+                            setUser(newSessionUser)
+                        }).catch(err => console.log('error updating winning user:', err.message))
 
                 } else { // if the enemy still has Pokemon in their bench
                     // setDeckExpArr(prevArr => [...prevArr, deckExpArrItem])

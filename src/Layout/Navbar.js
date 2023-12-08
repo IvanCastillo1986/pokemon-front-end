@@ -49,6 +49,7 @@ export default function Navbar() {
 
     return (
         <nav className="Navbar">
+            <div className="overlay" onClick={() => setShow(!show)} style={{"display" : show ? "block" : "none"}}></div>
             <div><Link to="/"><img src={pokeball} style={{height: "100px"}} alt="pokeball" /></Link></div>
             <Link to="/cards">Cards</Link>
             <Link to="/pokedex">Pokedex</Link>
