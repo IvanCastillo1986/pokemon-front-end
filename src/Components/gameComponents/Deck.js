@@ -11,7 +11,7 @@ const API = process.env.REACT_APP_API_URL
 // This component let's player choose their starter Pokemon
 export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck }) {
 
-    const { setUser } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [starterPokemon, setStarterPokemon] = useState({})
 
@@ -32,7 +32,6 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck 
         }
 
         // make API call to add starter to user's deck
-        // ASK BILLY: here, should I make api call with UserContext or sessionStorage (in case of refresh)
         const starterDeckProperties = await axios.post(`${API}/decks`, [JSON.parse(sessionStorage.getItem('user')).currentUser.uuid, starterId])
         .then(res => res.data)
 
@@ -49,11 +48,13 @@ export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck 
         // add starterPokemon to our Play page yourDeck state, with 6 Pokemon
         const fullDeck = [starterPokemonPlusDeckProperties].concat(yourDeck)
         setYourDeck(fullDeck)
-        const user = JSON.parse(sessionStorage.getItem('user'))
-        user.currentPokemon = fullDeck
 
-        setUser(user)
-        sessionStorage.setItem('user', JSON.stringify(user))
+        // add the starter Pokemon to user Context and sessionStorage
+        const userAfterPicking = {...user}
+        userAfterPicking.currentPokemon = fullDeck
+
+        setUser(userAfterPicking)
+        sessionStorage.setItem('user', JSON.stringify(userAfterPicking))
 
         // this adds currentComponent to sessionStorage, so that a new player can't refresh for infinite starters during select
         sessionStorage.setItem('currentComponent', 'arena')

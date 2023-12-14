@@ -6,7 +6,7 @@ import BattleCard from './BattleCard'
 
 import { capitalize } from '../../Helper/capitalize'
 import { typeMultiplier } from '../../Helper/typeMultiplier'
-import { randomItem } from '../../Helper/itemFunctions'
+import { convertUsableItems, randomItem } from '../../Helper/itemFunctions'
 
 const API = process.env.REACT_APP_API_URL
 
@@ -20,6 +20,7 @@ export default function Table({
 
     const { user, setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.user)
+    // console.log(user)
 
     const [script, setScript] = useState("")
     const [deckExpArr, setDeckExpArr] = useState([])
@@ -222,7 +223,7 @@ export default function Table({
         After the match, this useEffect updates each of the player's decks row with won exp, and new item.
         This happens even if they refresh. It'll give incentive to finish match.
 
-        ToDo: give the player a random item after each win
+        ToDo: display the item that the player has just won
     */
     useEffect(() => {
         
@@ -284,7 +285,7 @@ export default function Table({
 
                     
                     // API call to add a random won item to user's bag
-                    const randomBagItem = { user_id: user.uuid, item_id: randomItem(3) }
+                    const randomBagItem = { user_id: user.currentUser.uuid, item_id: randomItem(3) }
                     const wonItem = await axios.post(`${API}/bags`, randomBagItem)
                         .then(res => {
                             return res.data
@@ -302,7 +303,7 @@ export default function Table({
                     // make api call to deck, and save decks with updated exp, to be added to currentPokemon
                     await Promise.all(deckExpPromises)
                         .then(resArray => {
-                            // console.log('deckExpPromises resArray:', resArray)
+                            // console.log('deckExpPromisesw resArray:', resArray)
                         }).catch(err => console.log('error updating deck after win with Promise.all:', err.message))
 
 
@@ -322,10 +323,11 @@ export default function Table({
                             const newSessionUser = {
                                 currentUser: res.data.updatedUser,
                                 currentPokemon: res.data.updatedUserPokemon,
-                                currentItems
+                                currentItems: convertUsableItems(res.data.updatedItems)
                             }
                             sessionStorage.setItem('user', JSON.stringify(newSessionUser))
                             setUser(newSessionUser)
+                            console.log('newSessionUser after winning:', newSessionUser)
                         }).catch(err => console.log('error updating winning user:', err.message))
 
                 } else { // if the enemy still has Pokemon in their bench

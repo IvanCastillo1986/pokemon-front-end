@@ -118,6 +118,10 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         setMyPokemon(effectedPokemon)
     }
 
+    const handleLevelUp = () => {
+        // recieves pokemon, checks if it has received enough experience, level up or do nothing
+    }
+
 
 
     return (

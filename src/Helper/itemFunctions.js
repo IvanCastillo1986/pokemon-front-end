@@ -16,7 +16,7 @@ const convertUsableItems = (itemsArr) => {
         {}, // lemonade
         {}, // ether
     ]
-
+    
     for (let i = 0; i < itemsArr.length; i++) {
         const item = itemsArr[i]
         const { item_id } = item
@@ -38,6 +38,7 @@ const convertUsableItems = (itemsArr) => {
         }
         
     }
+    console.log('convertedItems:', convertedItems)
 
     // if item in output array is empty, remove from array
     for (let i = 0; i < convertedItems.length; i++) {

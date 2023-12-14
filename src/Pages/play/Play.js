@@ -9,6 +9,7 @@ import Deck from '../../Components/gameComponents/Deck'
 import Arena from '../../Components/gameComponents/Arena'
 
 import './Play.css'
+import { convertUser } from '../../Helper/convertUser'
 const API = process.env.REACT_APP_API_URL
 
 
@@ -110,12 +111,14 @@ export default function Play() {
         if (sessionUser) {
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
-                console.log('page has refreshed:', res)
-                const userUpdate = {
-                    currentUser: res.data.user,
-                    currentPokemon: res.data.userPokemon,
-                    currentItems: convertUsableItems(res.data.userItems)
-                }
+                // const userUpdate = {
+                    //     currentUser: res.data.user,
+                    //     currentPokemon: res.data.userPokemon,
+                    //     currentItems: convertUsableItems(res.data.userItems)
+                    // }
+                const userUpdate = convertUser(res.data)
+                console.log('page has refreshed:', userUpdate)
+                
                 sessionStorage.setItem('user', JSON.stringify(userUpdate))
                 setUser(userUpdate)
             })

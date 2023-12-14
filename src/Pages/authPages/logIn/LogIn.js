@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { UserContext } from '../../../UserContext'
 import axios from 'axios'
 import { convertUsableItems } from '../../../Helper/itemFunctions'
+import { convertUser } from '../../../Helper/convertUser'
 
 import "./LogIn.css"
 
@@ -28,15 +29,16 @@ export default function LogIn() {
         .then((userCredentials) => {
             axios.get(`${API}/users/${userCredentials.user.uid}`)
             .then(res => {
-                const user = { 
-                    currentUser: res.data.user, 
-                    currentPokemon: res.data.userPokemon,
-                    currentItems: convertUsableItems(res.data.userItems)
-                }
-                console.log('Items from login:', user.currentItems)
-                
-                setUser(user)
-                sessionStorage.setItem('user', JSON.stringify(user))
+                // res.data = { 
+                //     currentUser: res.data.user, 
+                //     currentPokemon: res.data.userPokemon,
+                //     currentItems: convertUsableItems(res.data.userItems)
+                // }
+
+                // converts user to playable state before storing them
+                const newUser = convertUser(res.data)
+                setUser(newUser)
+                sessionStorage.setItem('user', JSON.stringify(newUser))
             })
             history.push('/my-account')
         })

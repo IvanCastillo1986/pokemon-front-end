@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { auth } from '../../../firebase'
 import { UserContext } from "../../../UserContext"
 import { createRandomPokemonIds } from '../../../Helper/createRandomPokemonIds'
+import { convertUser } from '../../../Helper/convertUser'
 import axios from 'axios'
 
 import './Register.css'
@@ -43,15 +44,10 @@ export default function Register() {
             // here we not only create the user, but also send the 5 random pokeIds array to create deck
             axios.post(`${API}/users`, [newUser, createRandomPokemonIds(5)])
             .then(res => {
-                const user = {
-                    currentUser: res.data.user,
-                    currentPokemon: res.data.userPokemon,
-                    currentItems: [res.data.userItems]
-                }
+                const user = convertUser(res.data)
                 
                 sessionStorage.setItem("user", JSON.stringify(user))
-                const sessionUser = JSON.parse(sessionStorage.getItem("user"))
-                setUser(sessionUser)
+                setUser(user)
             })
             .catch(err => console.log('error adding user:', err))
 
