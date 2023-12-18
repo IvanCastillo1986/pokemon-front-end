@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react'
 import { UserContext } from '../../UserContext'
 import { createRandomPokemonIds } from '../../Helper/createRandomPokemonIds'
 import { addRemainingHp } from '../../Helper/addRemainingHp'
-import { convertUsableItems } from '../../Helper/itemFunctions'
 import axios from 'axios'
 
 import Deck from '../../Components/gameComponents/Deck'
@@ -16,17 +15,19 @@ const API = process.env.REACT_APP_API_URL
 export default function Play() {
     // Here, we will choose the ai player's deck and render all of the game's components.
     // We hand down yourDeck and aiDeck props to manipulate pokemon's state like hp during battles.
-    // During battles, we'll manipulate the UserContext's pokemon exp and lvls
+    // During battles, we'll manipulate the UserContext's pokemon exp and lvls.
     // API calls and changes to UserContext will only be made from Play page and Deck.
-    // Arena component will encapsulate and manipulate all of it's local state relating to the game. 
+    // Arena component will encapsulate and manipulate all of it's local state relating to the game.
     // Table, Bench, and Discard components will be used as Arena's children in the game portion.
     
     const { user, setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
-    const [yourDeck, setYourDeck] = useState(user.currentPokemon)
-    const [yourItems, setYourItems] = useState(user.currentItems)
     const whichComponent = sessionUser.currentUser.has_chosen_starter ? 'arena' : 'deck'
     const [currentComponent, setCurrentComponent] = useState(whichComponent)
+    const [playerIsReadyToPlay, setPlayerIsReadyToPlay] = useState(false)
+    
+    const [yourDeck, setYourDeck] = useState(user.currentPokemon)
+    const [yourItems, setYourItems] = useState(user.currentItems)
 
 
     const handlePlayerReadyToBattle = (component) => {
@@ -42,12 +43,13 @@ export default function Play() {
         }
         axios.put(`${API}/users/${currentUser.uuid}`, updatedUser)
         .then(res => {
-            const user = {
+            console.log(user.currentItems)
+            const readyUser = {
                 currentUser: res.data,
                 currentPokemon: yourDeck,
-                currentItems: currentUser.currentItems
+                currentItems: user.currentItems
             }
-            sessionStorage.setItem('user', JSON.stringify(user))
+            sessionStorage.setItem('user', JSON.stringify(readyUser))
             const sessionUser = JSON.parse(sessionStorage.getItem('user'))
 
             setUser(prevUser => {
@@ -64,6 +66,7 @@ export default function Play() {
 
     function setOpponentDeck() {
         if (yourDeck.length > 5) {
+            // set opponent starter as weakness to your starter
             const yourStarterId = yourDeck[0].pokemon_id
             let enemyStarterId;
 
@@ -82,7 +85,6 @@ export default function Play() {
             const aiDeckArr = []
             // Get 6 pokemon ids:
             const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(5))
-            
             // create array with 6 API promises
             const pokemonApiPromises = randomPokemonIdArr.map(pokemonId => {
                 return axios.get(`${API}/pokemon/${pokemonId}`)
@@ -111,7 +113,7 @@ export default function Play() {
         if (sessionUser) {
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
-                // const userUpdate = {
+                // userUpdate = {
                     //     currentUser: res.data.user,
                     //     currentPokemon: res.data.userPokemon,
                     //     currentItems: convertUsableItems(res.data.userItems)
@@ -134,8 +136,10 @@ export default function Play() {
         <div className='Play'>
             {currentComponent === 'deck' &&
             sessionStorage.getItem('currentComponent') !== 'arena' 
+            // playerIsReadyToPlay &&
                 ?
                 <Deck 
+                    setPlayerIsReadyToPlay={setPlayerIsReadyToPlay}
                     handlePlayerReadyToBattle={handlePlayerReadyToBattle}
                     yourDeck={yourDeck}
                     setYourDeck={setYourDeck}

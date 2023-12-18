@@ -9,44 +9,64 @@ const API = process.env.REACT_APP_API_URL
 
 
 // This component let's player choose their starter Pokemon
-export default function Deck({ handlePlayerReadyToBattle, yourDeck, setYourDeck }) {
+export default function Deck({ setPlayerIsReadyToPlay, handlePlayerReadyToBattle, yourDeck, setYourDeck }) {
 
     const { user, setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [starterPokemon, setStarterPokemon] = useState({})
 
-    // This handleClick let's the player choose their starter Pokemon, no longer making AI Pokemon call
-    const handleClick = async (e) => {
+
+    const getStarterId = (e) => {
         let starterId;
+        let clickedBtn = e.target.className;
 
-        switch(e.target.className) {
-            case 'Grass-btn':
-                starterId = 1
-                break;
-            case 'Fire-btn':
-                starterId = 4
-                break;
-            case 'Water-btn':
-                starterId = 7
-                break;
+        if (clickedBtn === 'Grass-btn') {
+            starterId = 1;
+        } else if (clickedBtn === 'Fire-btn') {
+            starterId = 4;
+        } else {
+            starterId = 7;
         }
+        
+        return starterId;
+    }
 
-        // make API call to add starter to user's deck
-        const starterDeckProperties = await axios.post(`${API}/decks`, [JSON.parse(sessionStorage.getItem('user')).currentUser.uuid, starterId])
-        .then(res => res.data)
+    const addStarterToDeck = async (starterId) => {
+        // // make API call to add starter to user's deck
+        // const starterDeckProperties = await axios.post(`${API}/decks`, [JSON.parse(sessionStorage.getItem('user')).currentUser.uuid, starterId])
+        // .then(res => res.data)
 
-        // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
-        const starterPokemonPlusDeckProperties = await axios.get(`${API}/pokemon/${starterId}`)
+        // // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
+        // const starterPokemonPlusDeckProperties = await axios.get(`${API}/pokemon/${starterId}`)
+        // .then(res => {
+        //     const starterPokemon = res.data
+        //     return {...starterPokemon, ...starterDeckProperties}
+        // })
+
+        const starterInDeck = await axios.post(
+            `${API}/decks?getPokeInfo=true`, 
+            { uuid: sessionUser.currentUser.uuid, pokemonId: starterId })
         .then(res => {
-            const starterPokemon = res.data
-            return {...starterPokemon, ...starterDeckProperties}
+            console.log(res.data)
+            return res.data
         })
         
         // spread both deck and pokemon response into one object, so that pokemon also has exp and lvl
-        setStarterPokemon({...starterPokemonPlusDeckProperties})
+        setStarterPokemon({...starterInDeck})
+        // console.log('starterPokemonPlusDeckProperties:', starterPokemonPlusDeckProperties)
         
-        // add starterPokemon to our Play page yourDeck state, with 6 Pokemon
-        const fullDeck = [starterPokemonPlusDeckProperties].concat(yourDeck)
+        // add starterPokemon to our Play page yourDeck state, which currently has 5 Pokemon
+        const fullDeck = [starterInDeck].concat(yourDeck)
+        return fullDeck
+    }
+    
+
+    // This handleClick let's the player choose their starter Pokemon
+    const handleClick = async (e) => {
+        const starterId = getStarterId(e)
+        
+        const fullDeck = await addStarterToDeck(starterId)
+
         setYourDeck(fullDeck)
 
         // add the starter Pokemon to user Context and sessionStorage

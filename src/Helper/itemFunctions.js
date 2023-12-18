@@ -38,7 +38,6 @@ const convertUsableItems = (itemsArr) => {
         }
         
     }
-    console.log('convertedItems:', convertedItems)
 
     // if item in output array is empty, remove from array
     for (let i = 0; i < convertedItems.length; i++) {
