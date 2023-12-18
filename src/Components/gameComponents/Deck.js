@@ -9,7 +9,7 @@ const API = process.env.REACT_APP_API_URL
 
 
 // This component let's player choose their starter Pokemon
-export default function Deck({ setPlayerIsReadyToPlay, handlePlayerReadyToBattle, yourDeck, setYourDeck }) {
+export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
 
     const { user, setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
@@ -31,29 +31,19 @@ export default function Deck({ setPlayerIsReadyToPlay, handlePlayerReadyToBattle
         return starterId;
     }
 
+    // Make API call to add starter to user's deck
     const addStarterToDeck = async (starterId) => {
-        // // make API call to add starter to user's deck
-        // const starterDeckProperties = await axios.post(`${API}/decks`, [JSON.parse(sessionStorage.getItem('user')).currentUser.uuid, starterId])
-        // .then(res => res.data)
 
-        // // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
-        // const starterPokemonPlusDeckProperties = await axios.get(`${API}/pokemon/${starterId}`)
-        // .then(res => {
-        //     const starterPokemon = res.data
-        //     return {...starterPokemon, ...starterDeckProperties}
-        // })
-
+        // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
         const starterInDeck = await axios.post(
             `${API}/decks?getPokeInfo=true`, 
-            { uuid: sessionUser.currentUser.uuid, pokemonId: starterId })
+            { uuid: user.currentUser.uuid, pokemonId: starterId })
         .then(res => {
-            console.log(res.data)
             return res.data
         })
         
         // spread both deck and pokemon response into one object, so that pokemon also has exp and lvl
         setStarterPokemon({...starterInDeck})
-        // console.log('starterPokemonPlusDeckProperties:', starterPokemonPlusDeckProperties)
         
         // add starterPokemon to our Play page yourDeck state, which currently has 5 Pokemon
         const fullDeck = [starterInDeck].concat(yourDeck)
@@ -75,10 +65,38 @@ export default function Deck({ setPlayerIsReadyToPlay, handlePlayerReadyToBattle
 
         setUser(userAfterPicking)
         sessionStorage.setItem('user', JSON.stringify(userAfterPicking))
-
-        // this adds currentComponent to sessionStorage, so that a new player can't refresh for infinite starters during select
-        sessionStorage.setItem('currentComponent', 'arena')
     };
+
+    const handlePlayerReadyToBattle = () => {
+        // update user in both API and UserContext to has_chosen_starter = true
+        const updatedUser = {
+            email: user.email,
+            uuid: user.uuid,
+            has_chosen_starter: true,
+            wins: user.wins,
+            losses: user.losses
+        }
+        axios.put(`${API}/users/${user.currentUser.uuid}`, updatedUser)
+        .then(res => {
+            const readyUser = {
+                currentUser: res.data,
+                currentPokemon: yourDeck,
+                currentItems: user.currentItems
+            }
+            
+            sessionStorage.setItem('user', JSON.stringify(readyUser))
+            setUser(() => {
+                return {
+                    currentUser: readyUser.currentUser, 
+                    currentPokemon: readyUser.currentPokemon,
+                    currentItems: readyUser.currentItems
+                }
+            })
+        })
+
+        // Navigates us to Arena component after reading intro
+        setCurrentComponent('arena')
+    }
 
 
     return (
@@ -114,7 +132,7 @@ export default function Deck({ setPlayerIsReadyToPlay, handlePlayerReadyToBattle
                 However, these Pokemon are not as strong as many level 1 or level 2 Pokemon who have already evolved.</p>
                 <p>Click the button below when you're ready to enter the Arena and test out your deck!</p>
                 {/* Link this button to the Arena with deck props, and unmount the Deck component */}
-                <button className='ArenaPromptBtn' onClick={() => handlePlayerReadyToBattle('arena')}>
+                <button className='ArenaPromptBtn' onClick={handlePlayerReadyToBattle}>
                     Go to Arena
                 </button>
                 </>

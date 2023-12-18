@@ -24,45 +24,9 @@ export default function Play() {
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const whichComponent = sessionUser.currentUser.has_chosen_starter ? 'arena' : 'deck'
     const [currentComponent, setCurrentComponent] = useState(whichComponent)
-    const [playerIsReadyToPlay, setPlayerIsReadyToPlay] = useState(false)
     
     const [yourDeck, setYourDeck] = useState(user.currentPokemon)
     const [yourItems, setYourItems] = useState(user.currentItems)
-
-
-    const handlePlayerReadyToBattle = (component) => {
-        // update user in both API and UserContext to has_chosen_starter = true
-        const { currentUser } = sessionUser
-
-        const updatedUser = {
-            email: currentUser.email,
-            uuid: currentUser.uuid,
-            has_chosen_starter: true,
-            wins: currentUser.wins,
-            losses: currentUser.losses
-        }
-        axios.put(`${API}/users/${currentUser.uuid}`, updatedUser)
-        .then(res => {
-            console.log(user.currentItems)
-            const readyUser = {
-                currentUser: res.data,
-                currentPokemon: yourDeck,
-                currentItems: user.currentItems
-            }
-            sessionStorage.setItem('user', JSON.stringify(readyUser))
-            const sessionUser = JSON.parse(sessionStorage.getItem('user'))
-
-            setUser(prevUser => {
-                return {
-                    ...prevUser, 
-                    currentUser: sessionUser.currentUser, 
-                    currentPokemon: sessionUser.currentPokemon,
-                    currentItems: sessionUser.currentItems
-                }
-            })
-        })
-        setCurrentComponent(component)
-    }
 
     function setOpponentDeck() {
         if (yourDeck.length > 5) {
@@ -107,42 +71,40 @@ export default function Play() {
     }
     setOpponentDeck()
 
-
-    useEffect(() => {
-        // on page refresh, store most up-to-date user data (wins/exp/lvl)
+    function refreshPage() {
         if (sessionUser) {
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
                 // userUpdate = {
-                    //     currentUser: res.data.user,
-                    //     currentPokemon: res.data.userPokemon,
-                    //     currentItems: convertUsableItems(res.data.userItems)
-                    // }
-                const userUpdate = convertUser(res.data)
-                console.log('page has refreshed:', userUpdate)
+                //     currentUser: res.data.user, currentPokemon: res.data.userPokemon, currentItems: convertUsableItems(res.data.userItems)
+                // }
+
+                const refreshedUser = convertUser(res.data)
+                console.log('page has refreshed:', refreshedUser)
                 
-                sessionStorage.setItem('user', JSON.stringify(userUpdate))
-                setUser(userUpdate)
+                sessionStorage.setItem('user', JSON.stringify(refreshedUser))
+                setUser(refreshedUser)
             })
         }
         // NOTE: this means every state that needs to persist, needs to begin in this Play component
         
         // this adds currentComponent to sessionStorage, so that a new player can't refresh for infinite starters during select
-        if (yourDeck.length > 5) sessionStorage.setItem('currentComponent', 'arena')
+        if (yourDeck.length > 5) setCurrentComponent('arena')
+    }
+    useEffect(() => {
+        // on page refresh, store most up-to-date user data (wins/exp/lvl)
+        refreshPage()
     }, [])
 
 
     return (
         <div className='Play'>
-            {currentComponent === 'deck' &&
-            sessionStorage.getItem('currentComponent') !== 'arena' 
-            // playerIsReadyToPlay &&
+            {currentComponent === 'deck'
                 ?
                 <Deck 
-                    setPlayerIsReadyToPlay={setPlayerIsReadyToPlay}
-                    handlePlayerReadyToBattle={handlePlayerReadyToBattle}
                     yourDeck={yourDeck}
                     setYourDeck={setYourDeck}
+                    setCurrentComponent={setCurrentComponent}
                 /> 
                 :
                 /*
