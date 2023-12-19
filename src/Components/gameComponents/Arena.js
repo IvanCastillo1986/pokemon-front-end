@@ -3,6 +3,7 @@ import { convertUsableItems, decrementItemQuantity, applyItem } from '../../Help
 
 import Bench from './Bench'
 import Table from './Table'
+import NewTable from './NewTable'
 import Discard from './Discard'
 
 import './Arena.css'

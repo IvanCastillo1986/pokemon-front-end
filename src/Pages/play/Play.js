@@ -61,7 +61,7 @@ export default function Play() {
                 addRemainingHp(resArray)
                 resArray.forEach(res => {
                     const enemyPokemon = res.data
-                    enemyPokemon.remaining_hp = 1
+                    enemyPokemon.remaining_hp = enemyPokemon.hp
                     aiDeckArr.push(enemyPokemon)
                 })
                 // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
