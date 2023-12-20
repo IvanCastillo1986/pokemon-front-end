@@ -21,12 +21,12 @@ const formatName = (name) => {
     return capitalize(name).toUpperCase()
 }
 
-
+console.log('NewTable component')
 
 export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, 
     winner, setWinner, menuType, setMenuType, handleUseItem, myItems, deletedItemIds, handlePokemonSwitch, 
-    handleNewPokemon, discardPile, setDiscardPile
+    handleNewPokemonAfterKO, discardPile, setDiscardPile
 }) {
 
     /* State:
@@ -39,23 +39,27 @@ export default function Table({
     const [script, setScript] = useState("")
     const [deckExpArr, setDeckExpArr] = useState([])
 
+    // assign who attacks first and last
+    const [iMoveFirst, setIMoveFirst] = useState(null)
+    const [fastPokemon, setFastPokemon] = useState(myPokemon.name)
+    const [slowPokemon, setSlowPokemon] = useState(enemyPokemon.name)
+
     const [myHP, setMyHP] = useState(myPokemon.remaining_hp)
     const [enemyHP, setEnemyHP] = useState(enemyPokemon.remaining_hp)
 
     // assign my pokemon and enemy's move
     const [myMove, setMyMove] = useState(null)
     const [enemyMove, setEnemyMove] = useState(null)
+
     function assignMoves(clickedMove) {
         setMyMove(clickedMove)
 
         const enemyMoveIdx = Math.floor(Math.random() * 2)
         enemyMoveIdx === 0 ? setEnemyMove(enemyPokemon.move1) : setEnemyMove(enemyPokemon.move2)
+        console.log('myMove:', myMove)
+        console.log('enemyMove:', enemyMove)
     }
-    
-    // assign who attacks first and last
-    const [iMoveFirst, setIMoveFirst] = useState(null)
-    const [fastPokemon, setFastPokemon] = useState(myPokemon.name)
-    const [slowPokemon, setSlowPokemon] = useState(enemyPokemon.name)
+
     function setAttackOrder() {
         const mySpeed = statFluctuation(myPokemon.speed, .7, 1.3)
         const enemySpeed = statFluctuation(enemyPokemon.speed, .7, 1.3)
@@ -79,30 +83,18 @@ export default function Table({
     const superEffectiveScript = `It's super effective!`
     const notEffectiveScript = `It's not very effective...`
 
+    const myPkmFainted = `${myPokemon.name} fainted!`
+    const enemyPkmFainted = `Enemy ${enemyPokemon.name} fainted!`
+
+    const iPickedPokemonScript = `Go ${capitalize(myPokemon.name).toUpperCase()}!`
+    const enemyPickedPokemonScript = `Pkmn TRAINER BLUE sent out ${capitalize(enemyPokemon.name).toUpperCase()}!`
+
     function applyEffect(atkType, defType) {
         // check if there is weakness or resistance. Returns .5, 1, 1.5
         const effect = typeMultiplier(atkType, defType)
         return effect
     }
-
-    function executeAttack(atkPkm, defPkm) {
-        // check for type effect
-        const effect = applyEffect(atkPkm.type1, defPkm.type1)
-        // calculate the damage
-        const dmg = statFluctuation( Math.round((3 * atkPkm.atk * 5) / defPkm.def * effect) , .8 , 1.2 )
-        // (future animation executed here)
-
-        // Run script
-        // Execute calculated damage on attacked Pokemon's remaining_hp
-        if (iMoveFirst) {
-            setScript(myAtkScript) // set 2000ms
-            setEnemyHP(prevHP => prevHP - dmg)
-        } else {
-            setScript(enemyAtkScript) // set 2000ms
-            setMyHP(prevHP => prevHP - dmg)
-        }
-        
-
+    function ifEffectRunScript(effect) {
         // run script for type effect (if applied)
         if (effect > 1) {
             setScript(superEffectiveScript)
@@ -110,92 +102,125 @@ export default function Table({
             setScript(notEffectiveScript)
         }
     }
+
+    // Execute calculated damage on attacked Pokemon's remaining_hp, run script
+    function pokemonIsAttacked(atkPkm, defPkm) {
+        // check for type effect
+        console.log(atkPkm)
+        const effect = applyEffect(atkPkm.type1, defPkm.type1)
+        // calculate the damage
+        const dmg = statFluctuation( Math.round((3 * atkPkm.atk * 5) / defPkm.def * effect) , .8 , 1.2 )
+        // (future animation executed here)
+        // run script for type effect (if applied)
+        ifEffectRunScript(effect)
+
+        if (iMoveFirst) {
+            setScript(myAtkScript) // set 2000ms
+            setEnemyHP(prevHP => {
+                // see if this works
+                return prevHP - dmg > 0 ? prevHP - dmg : 0
+            })
+        } else {
+            setScript(enemyAtkScript) // set 2000ms
+            setMyHP(prevHP => {
+                // see if this works
+                return prevHP - dmg > 0 ? prevHP - dmg : 0
+            })
+        }
+    }
+    
+    // Checks if defending Pokemon is dead. If true, run script and set in discardPile. Bring out next Pokemon.
+    function ifDeadExecuteKnockout(checkedPkm) {
+        if (checkedPkm.remaining_hp <= 0) {
+            if (myPokemon.name === checkedPkm.name) {
+                // send my pokemon to discard, run script, bring out my next pokemon
+                setDiscardPile(prevDiscardPile => {
+                    return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(enemyPokemon)}
+                })
+                setScript(myPkmFainted)
+                getNewPokemonAfterKO(checkedPkm)
+            } else {
+                // send enemy pokemon to discard, bring out random pokemon
+                setDiscardPile(prevDiscardPile => {
+                    return {...prevDiscardPile, player2Discard: prevDiscardPile.player2Discard.concat(enemyPokemon)}
+                })
+                setScript(enemyPkmFainted)
+                getNewPokemonAfterKO(checkedPkm)
+            }
+        }
+    } // Called in executeTurn
+
+    // sets enemyBench, minus newly chosen Pokemon
+    function populateEnemyBench(newEnemyPkm) {
+        const newEnemyBench = enemyBenchProp.filter(mon => mon.name !== newEnemyPkm.name)
+        setEnemyBench(newEnemyBench)
+    }
+
+    function getNewPokemonAfterKO(deadPkm) {
+        // after KO, gets my new Pokemon or enemy's new Pokemon, and updates bench
+        if (myPokemon.name === deadPkm.name) {
+            setMenuType('newPokemon')
+        } else {
+            // getRandomEnemyPokemon() {
+                const randomIdx = Math.floor(Math.random() * enemyBenchProp.length)
+                const newEnemyPokemon = enemyBenchProp[randomIdx]
+                setEnemyPokemon(newEnemyPokemon)
+                setScript(enemyPickedPokemonScript)
+            // }
+            
+            // Now, switch the enemy bench with the new bench minus KO'd Pokemon (my bench populated from handleNewPokemon())
+            populateEnemyBench(newEnemyPokemon)
+        }
+    }
+
+    // ToDo: see if return from setHP works after dmg, otherwise, calculate it outside of setHP
+    // To be called twice in useEffect. One for defending slowPokemon input, and one for fastPokemon
+    function executeTurn(atkPkm, defPkm) {
+        // Each of these functions executes for each Pokemon's turn in useEffect
+        pokemonIsAttacked(atkPkm, defPkm)
+        ifDeadExecuteKnockout(defPkm)
+        getNewPokemonAfterKO(defPkm)
+    } // Called in useEffect
+    
+
     /* State:
         user, script, myMove, enemyMove, iMoveFirst, fastPokemon, slowPokemon
+
+        ToDo:  For every setScript, add the time to add to total in order to render in proper order
     */
+    
+
     /* 
         DONE
         Step 1:  After move is clicked, assign the moves to state. 
         DONE
         Step 2:  Decide who goes first. Check both pokemon's speed. Set fastPkm, slowPkm in state.
-
-        Step 3a:  Use first move. Calculate dmg. Check for resistance/weakness effect. Run script Execute changes to hp. 
+        DONE
+        Step 3a:  First pokemon turn. Calculate dmg. Check for resistance/weakness effect. Run script Execute changes to hp. 
+        DONE
+        Step 3b:  Check if Pokemon has died. Check if remaining_hp < 1.
+        DONE
+        Step 3c:  Run pkmFainted script. Send to discardPile. Also trigger event that switches to the next Pokemon.
+        DONE
+        Step 3d:  Function that allows me to switch to next Pokemon.
+        DONE
+        Step 3e:  Function that brings out the enemy's next random Pokemon.
         
-        Step 4a:  Check if Pokemon has died. Check if remaining_hp < 1.
-        Step 4b:  Run pokemonHasDied script.
         
-        Step 5:  Use second move. Calculate dmg. Check for resistance/weakness effect. Run script Execute changes to hp. 
+        
+        DONE
+        Step 4a:  Second pokemon turn. Calculate dmg. Check for resistance/weakness effect. Run script Execute changes to hp. 
+        DONE
+        Step 4b:  Check if Pokemon has died. Check if remaining_hp < 1.
+        DONE
+        Step 4c:  Run pkmFainted script. Also trigger event that switches to the next Pokemon.
 
-        Step 6a:  Check if Pokemon has died. Check if remaining_hp < 1.
-        Step 6b:  Run pokemonHasDied script.
     */
-
-    
-    // apply the typeMultiplier in case a Pokemon's attack type is strong or weak
-    // let firstEffect = typeMultiplier(firstPkm.type1, secondPkm.type1)
-    // let secondEffect = typeMultiplier(secondPkm.type1, firstPkm.type1)
-
-    // calculate damage
-    // let firstDmg = statFluctuation( Math.round((3 * firstPkm.atk * 5) / secondPkm.def * firstEffect), .8, 1.2 )
-    // let secondDmg = statFluctuation( Math.round((3 * secondPkm.atk * 5) / firstPkm.def * secondEffect), .8, 1.2 )
-
-    // let time = 2000
-    //     setTimeout(() => setScript(`${firstPkmName} used ${firstPkmMove}!`), time)
-    // time += 2000
-    // if (firstEffect > 1) {
-    //     setTimeout(() => setScript(`${firstPkmMove} is super effective!`), time)
-    //     time += 2000
-    // } else if (firstEffect < 1) {
-    //     setTimeout(() => setScript(`${firstPkmMove} is not very effective!`), time)
-    //     time += 2000
-    // }
-
-    
-    // setTimeout(() => {
-    //     setScript(`${firstPkmName} does ${firstDmg} damage!`)
-    //     // subtract damage from remaining hp
-    //     if (firstPkm === myPokemon) {
-    //         // if a Pokemon dies
-    //         if (enemyPokemon.remaining_hp - firstDmg <= 0) {
-    //             clearFutureTimeouts()
-    //             clearTimeout(mainMenuTimeout)
-
-    //             setDiscardPile(prevDiscardPile => {
-    //                 return {...prevDiscardPile, player2Discard: prevDiscardPile.player2Discard.concat(enemyPokemon)}
-    //             })
-    //             setEnemyPokemon({...enemyPokemon, remaining_hp: 0})
-    //             setWinner({player: 1, pokemon: myPokemon})
-    //         } else {
-    //             setEnemyPokemon({...enemyPokemon, remaining_hp: enemyPokemon.remaining_hp - firstDmg})
-    //         }
-    //     } else {
-    //         if (myPokemon.remaining_hp - firstDmg <= 0){
-    //             clearFutureTimeouts()
-    //             clearTimeout(mainMenuTimeout)
-
-    //             setDiscardPile(prevDiscardPile => {
-    //                 return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(myPokemon)}
-    //             })
-    //             setMyPokemon({...myPokemon, remaining_hp: 0})
-    //             setWinner({player: 2, pokemon: enemyPokemon})
-    //         } else {
-    //             setMyPokemon({...myPokemon, remaining_hp: myPokemon.remaining_hp - firstDmg})
-    //         }
-    //     }
-    // }, time) 
-    // time += 2000
-    
-    // secondMoveTimeout = setTimeout(() => setScript(`${secondPkmName} used ${secondPkmMove}!`), time)
-    // time += 2000
-
-
-
-
-
 
     
     useEffect(() => {
         setAttackOrder()
+        executeTurn(fastPokemon, slowPokemon)
     }, [])
 
     function newCombatFunc (clickedMove) {
@@ -205,21 +230,6 @@ export default function Table({
 
         // assign who attacks first, assign moves to each pkm
         const enemyMove = setEnemyMove()
-
-        // if (enemyAttacksFirst(myPokemon.speed, enemyPokemon.speed)) {
-        //     firstPkm = enemyPokemon; secondPkm = myPokemon;
-        //     firstPkmMove = enemyMove
-        //     secondPkmMove = clickedMove
-            
-        //     setScript('Enemy attacks first')
-        // } else {
-        //     firstPkm = myPokemon; secondPkm = enemyPokemon;
-        //     firstPkmMove = clickedMove
-        //     secondPkmMove = enemyMove
-
-        //     setScript('You attack first')
-        // }
-
 
         // uppercase pokemonNames and moveNames for script
         const firstPkmName = formatName(firstPkm.name)
@@ -529,7 +539,7 @@ export default function Table({
     return (
         <div className='Table'>
             <div className='player1Table'>
-                <p className='hp-display'>HP: {myPokemon.remaining_hp}/{myPokemon.hp}</p>
+                <p className='hp-display'>HP: {myHP}/{myPokemon.hp}</p>
                 <BattleCard pokemon={myPokemon} />
             </div>
             
@@ -554,10 +564,10 @@ export default function Table({
                 
                 {menuType === 'fight' &&
                 <div className='fightMenu'>
-                    <span onClick={() => setMyMove(myPokemon.move1)}>
+                    <span onClick={() => assignMoves(myPokemon.move1)}>
                         {capitalize(myPokemon.move1)}
                     </span>
-                    <span onClick={() => setMyMove(myPokemon.move2)}>
+                    <span onClick={() => assignMoves(myPokemon.move2)}>
                         {capitalize(myPokemon.move2)}
                     </span>
 
@@ -586,7 +596,7 @@ export default function Table({
                     <span>Which Pokemon would you like to use next?</span>
                     <div className='switchOptions'>
                         {myBenchProp.map((mon, i) => {
-                            return <span onClick={handleNewPokemon} key={i}>{mon.name}</span>
+                            return <span onClick={handleNewPokemonAfterKO} key={i}>{mon.name}</span>
                         })}
                     </div>
                 </div>
@@ -595,7 +605,7 @@ export default function Table({
 
 
             <div className='player2Table'>
-            <p className='hp-display'>HP: {enemyPokemon.remaining_hp}/{enemyPokemon.hp}</p>
+            <p className='hp-display'>HP: {enemyHP}/{enemyPokemon.hp}</p>
                 <BattleCard pokemon={enemyPokemon} />
             </div>
         </div>

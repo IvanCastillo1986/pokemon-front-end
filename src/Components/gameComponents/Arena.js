@@ -86,7 +86,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         setMenuType('main')
     }
 
-    const handleNewPokemon = (e) => {
+    const handleNewPokemonAfterKO = (e) => {
         const clickedPokemon = e.target.textContent
         const switchedBenchPokemon = myBench.find(mon => mon.name === clickedPokemon)
 
@@ -157,7 +157,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     winner={winner} setWinner={setWinner} 
                     menuType={menuType} setMenuType={setMenuType}
                     handleUseItem={handleUseItem} myItems={myItems} deletedItemIds={deletedItemIds}
-                    handlePokemonSwitch={handlePokemonSwitch} handleNewPokemon={handleNewPokemon}
+                    handlePokemonSwitch={handlePokemonSwitch} handleNewPokemonAfterKO={handleNewPokemonAfterKO}
                     discardPile={discardPile} setDiscardPile={setDiscardPile}
                 />
 
