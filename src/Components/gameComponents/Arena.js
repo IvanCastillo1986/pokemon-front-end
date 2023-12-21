@@ -151,7 +151,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     <h2>Player 2</h2>
                 </div>
 
-                <Table myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
+                <NewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
                     enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
                     myBenchProp={myBench} enemyBenchProp={enemyBench}  setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 

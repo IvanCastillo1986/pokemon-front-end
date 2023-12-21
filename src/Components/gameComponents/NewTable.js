@@ -43,7 +43,6 @@ export default function Table({
     const [iMoveFirst, setIMoveFirst] = useState(null)
     const [fastPokemon, setFastPokemon] = useState(myPokemon.name)
     const [slowPokemon, setSlowPokemon] = useState(enemyPokemon.name)
-
     const [myHP, setMyHP] = useState(myPokemon.remaining_hp)
     const [enemyHP, setEnemyHP] = useState(enemyPokemon.remaining_hp)
 
@@ -52,29 +51,32 @@ export default function Table({
     const [enemyMove, setEnemyMove] = useState(null)
 
     function assignMoves(clickedMove) {
-        setMyMove(clickedMove)
+        setMyMove(() => clickedMove)
 
         const enemyMoveIdx = Math.floor(Math.random() * 2)
-        enemyMoveIdx === 0 ? setEnemyMove(enemyPokemon.move1) : setEnemyMove(enemyPokemon.move2)
-        console.log('myMove:', myMove)
-        console.log('enemyMove:', enemyMove)
+        const randomEnemyMove = enemyMoveIdx === 0 ? enemyPokemon.move1 : enemyPokemon.move2
+        setEnemyMove(() => randomEnemyMove)
+        return myMove
     }
-
-    function setAttackOrder() {
+    
+    function assignAttackOrder() {
+        let fastPkm, slowPkm
         const mySpeed = statFluctuation(myPokemon.speed, .7, 1.3)
         const enemySpeed = statFluctuation(enemyPokemon.speed, .7, 1.3)
 
         // assign who attacks first
         if (mySpeed > enemySpeed) {
-            setIMoveFirst(true)
-            setFastPokemon(myPokemon)
-            setSlowPokemon(enemyPokemon)
+            setIMoveFirst(() => true, fastPkm = enemyPokemon, slowPkm = enemyPokemon)
+            setFastPokemon(() => myPokemon)
+            setSlowPokemon(() => enemyPokemon)
         } else {
-            setIMoveFirst(false)
-            setFastPokemon(enemyPokemon)
-            setSlowPokemon(myPokemon)
+            setIMoveFirst(() => false, fastPkm = enemyPokemon, slowPkm = myPokemon)
+            setFastPokemon(() => enemyPokemon)
+            setSlowPokemon(() => myPokemon)
         }
+        return { fastPkm, slowPkm }
     }
+
 
 
     const myAtkScript = `${myPokemon.name} used ${myMove}!`
@@ -103,31 +105,7 @@ export default function Table({
         }
     }
 
-    // Execute calculated damage on attacked Pokemon's remaining_hp, run script
-    function pokemonIsAttacked(atkPkm, defPkm) {
-        // check for type effect
-        console.log(atkPkm)
-        const effect = applyEffect(atkPkm.type1, defPkm.type1)
-        // calculate the damage
-        const dmg = statFluctuation( Math.round((3 * atkPkm.atk * 5) / defPkm.def * effect) , .8 , 1.2 )
-        // (future animation executed here)
-        // run script for type effect (if applied)
-        ifEffectRunScript(effect)
-
-        if (iMoveFirst) {
-            setScript(myAtkScript) // set 2000ms
-            setEnemyHP(prevHP => {
-                // see if this works
-                return prevHP - dmg > 0 ? prevHP - dmg : 0
-            })
-        } else {
-            setScript(enemyAtkScript) // set 2000ms
-            setMyHP(prevHP => {
-                // see if this works
-                return prevHP - dmg > 0 ? prevHP - dmg : 0
-            })
-        }
-    }
+    
     
     // Checks if defending Pokemon is dead. If true, run script and set in discardPile. Bring out next Pokemon.
     function ifDeadExecuteKnockout(checkedPkm) {
@@ -151,7 +129,7 @@ export default function Table({
     } // Called in executeTurn
 
     // sets enemyBench, minus newly chosen Pokemon
-    function populateEnemyBench(newEnemyPkm) {
+    function updateEnemyBench(newEnemyPkm) {
         const newEnemyBench = enemyBenchProp.filter(mon => mon.name !== newEnemyPkm.name)
         setEnemyBench(newEnemyBench)
     }
@@ -169,19 +147,53 @@ export default function Table({
             // }
             
             // Now, switch the enemy bench with the new bench minus KO'd Pokemon (my bench populated from handleNewPokemon())
-            populateEnemyBench(newEnemyPokemon)
+            updateEnemyBench(newEnemyPokemon)
         }
+    }
+
+    // Execute calculated damage on attacked Pokemon's remaining_hp, run script
+    function pokemonIsAttacked(atkPkm, defPkm) {
+        // check for type effect
+        const effect = applyEffect(atkPkm.type1, defPkm.type1)
+        // calculate the damage
+        const dmg = statFluctuation( Math.round((3 * atkPkm.atk * 5) / defPkm.def * effect) , .8 , 1.2 )
+        const hpAfterDmg = defPkm.remaining_hp - dmg > 0 ? defPkm.remaining_hp - dmg : 0
+        // (future animation executed here)
+        // run script for type effect (if applied)
+        console.log('hpBeforeDmg:', defPkm.remaining_hp)
+        console.log('dmg:', dmg)
+        console.log('hpAfterDmg:', hpAfterDmg)
+        ifEffectRunScript(effect)
+
+        if (iMoveFirst) {
+            setScript(myAtkScript) // set 2000ms
+            setEnemyHP(prevHP => {
+                return hpAfterDmg
+            })
+        } else {
+            setScript(enemyAtkScript) // set 2000ms
+            setMyHP(prevHP => {
+                return hpAfterDmg
+            })
+        }
+        console.log(`${atkPkm.name} has attacked for ${dmg} damage`)
     }
 
     // ToDo: see if return from setHP works after dmg, otherwise, calculate it outside of setHP
     // To be called twice in useEffect. One for defending slowPokemon input, and one for fastPokemon
     function executeTurn(atkPkm, defPkm) {
-        // Each of these functions executes for each Pokemon's turn in useEffect
         pokemonIsAttacked(atkPkm, defPkm)
-        ifDeadExecuteKnockout(defPkm)
-        getNewPokemonAfterKO(defPkm)
-    } // Called in useEffect
-    
+        // ifDeadExecuteKnockout(defPkm)
+        // getNewPokemonAfterKO(defPkm)
+    }
+
+    function handleClickMoveBtn(move) {
+        assignMoves(move) // should return enemy's moves. DONE WORKING PROPERLY
+        const { fastPkm, slowPkm } = assignAttackOrder() // should return which Pokemon attacks first and last. DONE WORKING PROPERLY
+        executeTurn(fastPkm, slowPkm) // should perform all of the things resulting from atk:  updating hp
+        executeTurn(slowPkm, fastPkm)
+    }
+
 
     /* State:
         user, script, myMove, enemyMove, iMoveFirst, fastPokemon, slowPokemon
@@ -217,11 +229,7 @@ export default function Table({
 
     */
 
-    
-    useEffect(() => {
-        setAttackOrder()
-        executeTurn(fastPokemon, slowPokemon)
-    }, [])
+
 
     function newCombatFunc (clickedMove) {
         let firstPkm, secondPkm, firstPkmMove, secondPkmMove
@@ -499,7 +507,7 @@ export default function Table({
             setTimeout(() => setScript(`${capitalize(winner.pokemon.name).toUpperCase()} has won the match`), 2000)
         }
         } // pokemonDies() closes
-        pokemonDies()
+        // pokemonDies()
     }, [winner])
 
 
@@ -564,10 +572,10 @@ export default function Table({
                 
                 {menuType === 'fight' &&
                 <div className='fightMenu'>
-                    <span onClick={() => assignMoves(myPokemon.move1)}>
+                    <span onClick={() => handleClickMoveBtn(myPokemon.move1)}>
                         {capitalize(myPokemon.move1)}
                     </span>
-                    <span onClick={() => assignMoves(myPokemon.move2)}>
+                    <span onClick={() => handleClickMoveBtn(myPokemon.move2)}>
                         {capitalize(myPokemon.move2)}
                     </span>
 
