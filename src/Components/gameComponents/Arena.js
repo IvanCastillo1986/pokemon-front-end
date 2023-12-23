@@ -33,6 +33,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     const [enemyBench, setEnemyBench] = useState([])
     const [showIntro, setShowIntro] = useState(true)
     const [menuType, setMenuType] = useState('main')
+    const [script, setScript] = useState("")
     const [winner, setWinner] = useState(null)
     const [discardPile, setDiscardPile] = useState({ player1Discard: [], player2Discard: [] })
     
@@ -45,6 +46,24 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             window.document.body.style.backgroundColor = ''
         }
     }, [])
+
+    const handleChangeScript = (currentScriptArr) => {
+        let time = 0
+        setMenuType('script')
+        console.log(currentScriptArr)
+
+        // will run scriptArr, starting with first index, and increment script time by 2000ms on each el
+        setScript(currentScriptArr[0])
+        for (let i = 1; i < currentScriptArr.length; i++) {
+            time += 2000
+            setTimeout(() => setScript(currentScriptArr[i]), time)
+        }
+        
+        setTimeout(() => {
+            setMenuType('main')
+            setScript('')
+        }, time + 2000)
+    }
 
     // This function chooses the first Pokemon to battle on click
     function handleInitialClick(e) {
@@ -60,10 +79,19 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         setMyPokemon(myCurrentPokemon)
         setMyBench(bench)
 
-        setEnemyPokemon(opponentDeck[0])
-        setEnemyBench(opponentDeck.slice(1))
-
+        const enemyPokemon = opponentDeck[0]
+        const enemyBench = [...opponentDeck]
+        setEnemyPokemon(enemyPokemon)
+        setEnemyBench(enemyBench)
+        
         setShowIntro(false)
+
+        const scriptArr = [
+            `ᵖₖᵐₙ TRAINER RED wants to battle!`,
+            `ᵖₖᵐₙ TRAINER RED sent out ${enemyPokemon.name.toUpperCase()}!`,
+            `Go! ${myCurrentPokemon.name.toUpperCase()}!`
+        ]
+        handleChangeScript(scriptArr)
     }
 
     const handlePokemonSwitch = (e) => {
@@ -83,7 +111,8 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         // old Pokemon retains current remaining_hp
         setMyPokemon(switchedBenchPokemon)
         setMyBench(myNewBench)
-        setMenuType('main')
+
+        handleChangeScript([`Go! ${switchedBenchPokemon.name.toUpperCase()}!`])
     }
 
     const handleNewPokemonAfterKO = (e) => {
@@ -153,12 +182,13 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
 
                 <NewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
                     enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
-                    myBenchProp={myBench} enemyBenchProp={enemyBench}  setEnemyBench={setEnemyBench}
+                    myBenchProp={myBench} enemyBenchProp={enemyBench} setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 
-                    menuType={menuType} setMenuType={setMenuType}
+                    menuType={menuType} setMenuType={setMenuType} script={script} setScript={setScript}
                     handleUseItem={handleUseItem} myItems={myItems} deletedItemIds={deletedItemIds}
                     handlePokemonSwitch={handlePokemonSwitch} handleNewPokemonAfterKO={handleNewPokemonAfterKO}
                     discardPile={discardPile} setDiscardPile={setDiscardPile}
+                    handleChangeScript={handleChangeScript}
                 />
 
                 <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />

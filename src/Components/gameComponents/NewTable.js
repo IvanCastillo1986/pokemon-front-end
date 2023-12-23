@@ -3,6 +3,7 @@ import { UserContext } from '../../UserContext'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'
+import Script from './Script'
 
 import { capitalize } from '../../Helper/capitalize'
 import { typeMultiplier } from '../../Helper/typeMultiplier'
@@ -11,35 +12,28 @@ import { convertUsableItems, randomItem } from '../../Helper/itemFunctions'
 const API = process.env.REACT_APP_API_URL
 
 
-// NOTE: Pokemon's initial state is being set in Arena
+
 // HELPER FUNCTIONS. WILL MOVE TO HELPER FILE LATER
-// randomize the stat between two different values (ex: speed = dmg * .7 and 1.3)
 const statFluctuation = (stat, minVal, maxVal) => {
+    // randomize the stat between two different values (ex: speed = dmg * .7 and 1.3)
     return Math.floor((Math.random() * (maxVal - minVal) + minVal) * stat)
 }
 const formatName = (name) => {
     return capitalize(name).toUpperCase()
 }
 
-console.log('NewTable component')
 
 export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, 
-    winner, setWinner, menuType, setMenuType, handleUseItem, myItems, deletedItemIds, handlePokemonSwitch, 
-    handleNewPokemonAfterKO, discardPile, setDiscardPile
+    winner, setWinner, menuType, setMenuType, script, setScript, handleUseItem, myItems, deletedItemIds, 
+    handlePokemonSwitch, handleNewPokemonAfterKO, discardPile, setDiscardPile, handleChangeScript
 }) {
-
-    /* State:
-        user, script, myMove, enemyMove, iMoveFirst, fastPokemon, slowPokemon
-    */
 
 
     const { user, setUser } = useContext(UserContext)
 
-    const [script, setScript] = useState("")
     const [deckExpArr, setDeckExpArr] = useState([])
 
-    // assign my pokemon and enemy's move
     const [myMove, setMyMove] = useState(null)
     const [enemyMove, setEnemyMove] = useState(null)
 
@@ -67,14 +61,9 @@ export default function Table({
         } else {
             fastPkm = {...enemyPokemon}
             slowPkm = {...myPokemon}
-            // setIMoveFirst(() => false, fastPkm = {...enemyPokemon}, slowPkm = {...myPokemon})
-            // setFastPokemon(() => enemyPokemon)
-            // setSlowPokemon(() => myPokemon)
         }
         return { fastPkm, slowPkm }
     }
-
-
 
     const myAtkScript = `${myPokemon.name} used ${myMove}!`
     const enemyAtkScript = `Enemy ${enemyPokemon.name} used ${enemyMove}!`
@@ -85,8 +74,8 @@ export default function Table({
     const myPkmFainted = `${myPokemon.name} fainted!`
     const enemyPkmFainted = `Enemy ${enemyPokemon.name} fainted!`
 
-    const iPickedPokemonScript = `Go ${capitalize(myPokemon.name).toUpperCase()}!`
-    const enemyPickedPokemonScript = `Pkmn TRAINER BLUE sent out ${capitalize(enemyPokemon.name).toUpperCase()}!`
+    const iPickedPokemonScript = `Go ${myPokemon.name.toUpperCase()}!`
+    const enemyPickedPokemonScript = `Pkmn TRAINER BLUE sent out ${enemyPokemon.name.toUpperCase()}!`
 
     function applyEffect(atkType, defType) {
         // check if there is weakness or resistance. Returns .5, 1, 1.5
@@ -108,26 +97,8 @@ export default function Table({
         setEnemyBench(newEnemyBench)
     }
 
-    function getNewPokemonAfterKO(deadPkm) {
-        // after KO, gets my new Pokemon or enemy's new Pokemon, and updates bench
-        if (myPokemon.name === deadPkm.name) {
-            setMenuType('newPokemon')
-        } else {
-            // getRandomEnemyPokemon() {
-                const randomIdx = Math.floor(Math.random() * enemyBenchProp.length)
-                const newEnemyPokemon = enemyBenchProp[randomIdx]
-                setEnemyPokemon(newEnemyPokemon)
-                setScript(enemyPickedPokemonScript)
-            // }
-            
-            // Now, switch the enemy bench with the new bench minus KO'd Pokemon (my bench populated from handleNewPokemon())
-            updateEnemyBench(newEnemyPokemon)
-        }
-    }
-
     // Execute calculated damage on attacked Pokemon's remaining_hp, run script
     function pokemonIsAttacked(atkPkm, defPkm) {
-        // check who attacks first
         let iMoveFirst = myPokemon.name === atkPkm.name ? true : false
 
         // check for type effect
@@ -138,10 +109,12 @@ export default function Table({
 
         let hpAfterDmg
         if (iMoveFirst) {
-            setScript(myAtkScript)
+            // setScript(myAtkScript)
+            handleChangeScript([myAtkScript])
             hpAfterDmg = enemyPokemon.remaining_hp - dmg > 0 ? enemyPokemon.remaining_hp - dmg : 0
         } else {
-            setScript(enemyAtkScript)
+            // setScript(enemyAtkScript)
+            handleChangeScript([enemyAtkScript])
             hpAfterDmg = myPokemon.remaining_hp - dmg > 0 ? myPokemon.remaining_hp - dmg : 0
         }
         
@@ -155,17 +128,19 @@ export default function Table({
             setMyPokemon(prevPkm => ({...prevPkm, remaining_hp: defPkm.remaining_hp}))
         }
 
-        return { atkgPkm: atkPkm, defgPkm: defPkm }
+        return defPkm
     }
 
     // Checks if defending Pokemon is dead. If true, run script and set in discardPile. Bring out next Pokemon.
-    // ** I might have to move this function up to Arena to get setPokemon re-rendered
     function ifDeadExecuteKnockout(checkedPkm) {
-        if (checkedPkm.remaining_hp <= 0) {
-            if (myPokemon.name === checkedPkm.name) {
+        // checks if pokemon is dead, adds to discard pile, executes getNewPokemonAfterKO()
+        const isPokemonDead = checkedPkm.remaining_hp <= 0 ? true : false
+        const imDead = checkedPkm.name == myPokemon.name ? true : false
+
+        if (isPokemonDead) {
+            if (imDead) {
                 // send my pokemon to discard, run script, bring out my next pokemon
                 setDiscardPile(prevDiscardPile => {
-                    console.log('pokemon was just knocked out:', )
                     return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(enemyPokemon)}
                 })
                 setScript(myPkmFainted)
@@ -181,26 +156,39 @@ export default function Table({
         }
     }
 
+    function getNewPokemonAfterKO(deadPkm) {
+        // after KO, gets my new Pokemon or enemy's new Pokemon, and updates bench
+        const imDead = myPokemon.name == deadPkm.name ? true : false
+        
+        if (imDead) {
+            setMenuType('newPokemonAfterKO')
+            setScript(iPickedPokemonScript)
+        } else {
+            const randomIdx = Math.floor(Math.random() * enemyBenchProp.length)
+            const newEnemyPokemon = enemyBenchProp[randomIdx]
+            setEnemyPokemon(newEnemyPokemon)
+            setScript(enemyPickedPokemonScript)
+            
+            // Now, switch the enemy bench with the new bench minus KO'd Pokemon (my bench populated from handleNewPokemon())
+            updateEnemyBench(newEnemyPokemon)
+        }
+    }
+
     // To be called twice in useEffect. One for defending slowPokemon input, and one for fastPokemon
     function executeTurn(atkPkm, defPkm) {
-        const { atkgPkm, defgPkm } = pokemonIsAttacked(atkPkm, defPkm)
-        // ifDeadExecuteKnockout(defgPkm)
-        // getNewPokemonAfterKO(defPkm)
+        const defgPkm = pokemonIsAttacked(atkPkm, defPkm)
+        ifDeadExecuteKnockout(defgPkm)
     }
 
     function handleClickMoveBtn(move) {
-        // console.log('------------------')
         assignMoves(move) // should return enemy's moves. DONE WORKING PROPERLY
-        const { fastPkm, slowPkm } = assignAttackOrder() // should return which Pokemon attacks first and last. DONE WORKING PROPERLY
-        // console.log(`fastPkm: ${fastPkm.name}, slowPkm: ${slowPkm.name}`)
-        executeTurn(fastPkm, slowPkm) // should perform all of the things resulting from atk:  updating hp
-        // executeTurn(slowPkm, fastPkm)
+        const { fastPkm, slowPkm } = assignAttackOrder() // return which Pokemon attacks first and last. DONE WORKING PROPERLY
+        executeTurn(fastPkm, slowPkm) // perform everything resulting from atk, updating hp, dying, etc. DONE WORKING PROPERLY
+        executeTurn(slowPkm, fastPkm)
     }
 
 
-    /* State:
-        user, script, myMove, enemyMove, iMoveFirst, fastPokemon, slowPokemon
-
+    /* 
         ToDo:  For every setScript, add the time to add to total in order to render in proper order
     */
     
@@ -556,13 +544,15 @@ export default function Table({
             
             <div className='screen'>
 
-                {menuType === 'script' &&
-                <div className='script'>
-                    <p>{script}</p>
-                </div>
 
-                // <Script />
+                {menuType === 'script' &&
+                    <Script script={script} />
                 }
+                {/* {menuType === 'switch-pokemon' &&
+                    <div className='script'>
+                        Go! {myPokemon.name.toUpperCase()}
+                    </div>
+                } */}
 
                 {menuType === 'main' &&
                 <div className='mainTable'>
@@ -602,7 +592,7 @@ export default function Table({
                     renderItemMenu()
                 }
 
-                {menuType === 'newPokemon' &&
+                {menuType === 'newPokemonAfterKO' &&
                 <div className='switchMenu'>
                     <span>Which Pokemon would you like to use next?</span>
                     <div className='switchOptions'>
