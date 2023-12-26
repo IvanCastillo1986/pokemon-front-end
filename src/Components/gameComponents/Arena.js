@@ -4,6 +4,7 @@ import { convertUsableItems, decrementItemQuantity, applyItem } from '../../Help
 import Bench from './Bench'
 import Table from './Table'
 import NewTable from './NewTable'
+import NewNewTable from './NewNewTable'
 import Discard from './Discard'
 
 import './Arena.css'
@@ -47,22 +48,17 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         }
     }, [])
 
-    const handleChangeScript = (currentScriptArr) => {
-        let time = 0
+    const handleChangeScript = async (currentScriptArr) => {
         setMenuType('script')
-        console.log(currentScriptArr)
 
         // will run scriptArr, starting with first index, and increment script time by 2000ms on each el
-        setScript(currentScriptArr[0])
-        for (let i = 1; i < currentScriptArr.length; i++) {
-            time += 2000
-            setTimeout(() => setScript(currentScriptArr[i]), time)
+        for (let i = 0; i < currentScriptArr.length; i++) {
+
+            setScript(currentScriptArr[i])
+            await new Promise(res => setTimeout(res, 2000))
         }
         
-        setTimeout(() => {
-            setMenuType('main')
-            setScript('')
-        }, time + 2000)
+        setMenuType('main')
     }
 
     // This function chooses the first Pokemon to battle on click
@@ -80,7 +76,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         setMyBench(bench)
 
         const enemyPokemon = opponentDeck[0]
-        const enemyBench = [...opponentDeck]
+        const enemyBench = [...opponentDeck].slice(1)
         setEnemyPokemon(enemyPokemon)
         setEnemyBench(enemyBench)
         
@@ -180,7 +176,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     <h2>Player 2</h2>
                 </div>
 
-                <NewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
+                <NewNewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
                     enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
                     myBenchProp={myBench} enemyBenchProp={enemyBench} setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 
