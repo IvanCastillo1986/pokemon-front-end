@@ -23,7 +23,7 @@ const formatName = (name) => {
 }
 
 
-export default function Table({ 
+export default function Table2({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBenchProp, enemyBenchProp, setEnemyBench, 
     winner, setWinner, menuType, setMenuType, script, setScript, handleUseItem, myItems, deletedItemIds, 
     handlePokemonSwitch, handleNewPokemonAfterKO, discardPile, setDiscardPile, handleChangeScript
@@ -36,8 +36,6 @@ export default function Table({
 
     const [myMove, setMyMove] = useState(null)
     const [enemyMove, setEnemyMove] = useState(null)
-
-    const [triggerAttack, setTriggerAttack] = useState(0)
 
     function assignMoves(clickedMove) {
         setMyMove(() => clickedMove)
@@ -84,14 +82,14 @@ export default function Table({
         const effect = typeMultiplier(atkType, defType)
         return effect
     }
-    async function ifEffectRunScript(effect) {
+    function ifEffectRunScript(effect) {
         // run script for type effect (if applied)
         if (effect > 1) {
-            console.log('a move was used and it has typeEffect')
-            await handleChangeScript([superEffectiveScript])
+            // setScript(superEffectiveScript)
+            handleChangeScript(superEffectiveScript)
         } else if (effect < 1) {
-            console.log('a move was used and it has typeEffect')
-            await handleChangeScript([notEffectiveScript])
+            // setScript(notEffectiveScript)
+            handleChangeScript(notEffectiveScript)
         }
     }
 
@@ -113,14 +111,16 @@ export default function Table({
 
         let hpAfterDmg
         if (iMoveFirst) {
+            // setScript(myAtkScript)
             await handleChangeScript([`${myPokemon.name} used ${myMove}!`])
             hpAfterDmg = enemyPokemon.remaining_hp - dmg > 0 ? enemyPokemon.remaining_hp - dmg : 0
         } else {
+            // setScript(enemyAtkScript)
             await handleChangeScript([`Enemy ${enemyPokemon.name} used ${enemyMove}!`])
             hpAfterDmg = myPokemon.remaining_hp - dmg > 0 ? myPokemon.remaining_hp - dmg : 0
         }
         
-        await ifEffectRunScript(effect)
+        // ifEffectRunScript(effect)
         
         defPkm.remaining_hp = hpAfterDmg
 
@@ -145,14 +145,16 @@ export default function Table({
                 setDiscardPile(prevDiscardPile => {
                     return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(enemyPokemon)}
                 })
-                handleChangeScript([myPkmFainted])
+                handleChangeScript(myPkmFainted)
+                // setScript(myPkmFainted)
                 getNewPokemonAfterKO(checkedPkm)
             } else {
                 // send enemy pokemon to discard, bring out random pokemon
                 setDiscardPile(prevDiscardPile => {
                     return {...prevDiscardPile, player2Discard: prevDiscardPile.player2Discard.concat(enemyPokemon)}
                 })
-                handleChangeScript([enemyPkmFainted])
+                handleChangeScript(enemyPkmFainted)
+                // setScript(enemyPkmFainted)
                 getNewPokemonAfterKO(checkedPkm)
             }
         }
@@ -164,12 +166,14 @@ export default function Table({
         
         if (imDead) {
             setMenuType('newPokemonAfterKO')
-            handleChangeScript([iPickedPokemonScript])
+            // setScript(iPickedPokemonScript)
+            handleChangeScript(iPickedPokemonScript)
         } else {
             const randomIdx = Math.floor(Math.random() * enemyBenchProp.length)
             const newEnemyPokemon = enemyBenchProp[randomIdx]
             setEnemyPokemon(newEnemyPokemon)
-            handleChangeScript([enemyPickedPokemonScript])
+            // setScript(enemyPickedPokemonScript)
+            handleChangeScript(enemyPickedPokemonScript)
             
             // Now, switch the enemy bench with the new bench minus KO'd Pokemon (my bench populated from handleNewPokemon())
             updateEnemyBench(newEnemyPokemon)
@@ -178,8 +182,8 @@ export default function Table({
 
     // To be called twice in useEffect. One for defending slowPokemon input, and one for fastPokemon
     async function executeTurn(atkPkm, defPkm, myMove, enemyMove) {
+        console.log(myMove, enemyMove)
         const defgPkm = await pokemonIsAttacked(atkPkm, defPkm, myMove, enemyMove)
-        console.log(defgPkm)
         ifDeadExecuteKnockout(defgPkm)
     }
 
@@ -187,7 +191,7 @@ export default function Table({
         const { myMove, enemyMove } = assignMoves(move) // should return enemy's moves. DONE WORKING PROPERLY
         const { fastPkm, slowPkm } = assignAttackOrder() // return which Pokemon attacks first and last. DONE WORKING PROPERLY
         await executeTurn(fastPkm, slowPkm, myMove, enemyMove) // perform everything resulting from atk, updating hp, dying, etc. DONE WORKING PROPERLY
-        await executeTurn(slowPkm, fastPkm, myMove, enemyMove)
+        executeTurn(slowPkm, fastPkm, myMove, enemyMove)
     }
 
 

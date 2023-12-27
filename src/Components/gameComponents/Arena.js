@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { convertUsableItems, decrementItemQuantity, applyItem } from '../../Helper/itemFunctions'
 
 import Bench from './Bench'
-import Table from './Table'
 import NewTable from './NewTable'
-import NewNewTable from './NewNewTable'
 import Discard from './Discard'
 
 import './Arena.css'
@@ -64,7 +62,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     // This function chooses the first Pokemon to battle on click
     function handleInitialClick(e) {
         // match the clicked button name with the pokemon in deck
-        const myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.textContent)
+        let myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.textContent)
         
         // find the idx of chosen pokemon in deck
         const idx = yourDeck.findIndex(mon => mon.name === myCurrentPokemon.name)
@@ -72,6 +70,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         // remove this pokemon from the rest of pokemon in bench
         const bench = yourDeck.filter((pokemon, i) => i !== idx)
         
+        myCurrentPokemon.remaining_hp = 1
         setMyPokemon(myCurrentPokemon)
         setMyBench(bench)
 
@@ -111,18 +110,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         handleChangeScript([`Go! ${switchedBenchPokemon.name.toUpperCase()}!`])
     }
 
-    const handleNewPokemonAfterKO = (e) => {
-        const clickedPokemon = e.target.textContent
-        const switchedBenchPokemon = myBench.find(mon => mon.name === clickedPokemon)
-
-        const myNewBench = myBench.filter(mon => {
-            return mon.name !== switchedBenchPokemon.name
-        })
-
-        setMyPokemon(switchedBenchPokemon)
-        setMyBench(myNewBench)
-        setMenuType('main')
-    }
 
     const handleUseItem = (item, myPokemon) => {
         // This function not only decrements quantity from myItems[] item onClick,
@@ -176,13 +163,13 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     <h2>Player 2</h2>
                 </div>
 
-                <NewNewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
+                <NewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
                     enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
-                    myBenchProp={myBench} enemyBenchProp={enemyBench} setEnemyBench={setEnemyBench}
+                    myBench={myBench} setMyBench={setMyBench} enemyBench={enemyBench} setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 
                     menuType={menuType} setMenuType={setMenuType} script={script} setScript={setScript}
                     handleUseItem={handleUseItem} myItems={myItems} deletedItemIds={deletedItemIds}
-                    handlePokemonSwitch={handlePokemonSwitch} handleNewPokemonAfterKO={handleNewPokemonAfterKO}
+                    handlePokemonSwitch={handlePokemonSwitch}
                     discardPile={discardPile} setDiscardPile={setDiscardPile}
                     handleChangeScript={handleChangeScript}
                 />
