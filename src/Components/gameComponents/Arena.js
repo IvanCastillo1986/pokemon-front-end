@@ -36,6 +36,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     const [winner, setWinner] = useState(null)
     const [discardPile, setDiscardPile] = useState({ player1Discard: [], player2Discard: [] })
     
+    
     // This changes theme and scrolls to top of page on component mount
     useEffect(() => {
         window.document.body.style.backgroundColor = '#8bac0f'
@@ -60,6 +61,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     }
 
     // This function chooses the first Pokemon to battle on click
+    // Also sets the bench for each player
     function handleInitialClick(e) {
         // match the clicked button name with the pokemon in deck
         let myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.textContent)
@@ -98,7 +100,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         
         // Will pull newPokemon from the bench
         // Will add oldPokemon to the bench
-
         const myNewBench = myBench.filter(mon => mon.name !== switchedBenchPokemon.name)
         myNewBench.push(oldPokemon)
 
@@ -134,6 +135,12 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     const handleLevelUp = () => {
         // recieves pokemon, checks if it has received enough experience, level up or do nothing
     }
+
+    // useEffect(() => {
+    //     if (Object.keys(discardPile.player1Discard).length || Object.keys(discardPile.player1Discard).length) {
+    //         setShowDiscard
+    //     }
+    // }, [showDiscardPile])
 
 
 
@@ -176,8 +183,8 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
 
                 <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />
                 
-                {winner &&
-                // When a Pokemon in Table dies, put them in deadMon state, so that their name renders here
+                {(Object.keys(discardPile.player1Discard).length > 0 || Object.keys(discardPile.player2Discard).length) > 0 &&
+                // When a Pokemon in Table dies and they're placed in discardPile, this renders <Discard />
                 <Discard discardPile={discardPile} />
                 }
             </div>

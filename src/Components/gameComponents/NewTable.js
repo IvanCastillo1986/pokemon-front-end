@@ -176,7 +176,7 @@ export default function NewTable({
     }
 
 
-    // To be called twice in useEffect. One for defending slowPokemon input, and one for fastPokemon
+    // To be called twice. One for defending slowPokemon input, and one for fastPokemon
     async function executeTurn(atkPkm, defPkm, myMove, enemyMove) {
         const defgPkm = await pokemonIsAttacked(atkPkm, defPkm, myMove, enemyMove)
         const pokemonHasDied = await ifDeadExecuteKnockout(defgPkm)
@@ -249,8 +249,6 @@ export default function NewTable({
                         </div>
                     )})}
                     </div>
-                    {/* Each item's structure:
-                    {item_id: 1, bagIdArr: [6,5,2], item_name: "potion", quantity: 3} */}
                 <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
             </div>
         } else {
