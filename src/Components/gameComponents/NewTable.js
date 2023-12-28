@@ -26,13 +26,12 @@ const formatName = (name) => {
 export default function NewTable({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBench, setMyBench, enemyBench, setEnemyBench, 
     winner, setWinner, menuType, setMenuType, script, handleUseItem, myItems, deletedItemIds, 
-    handlePokemonSwitch, handleChoosePokemonAfterKO, discardPile, setDiscardPile, handleChangeScript
+    handlePokemonSwitch, setDiscardPile, handleChangeScript,
+    handleAddToSharedExp, handleRemoveFromSharedExp, giveExp
 }) {
 
 
     const { user, setUser } = useContext(UserContext)
-
-    const [deckExpArr, setDeckExpArr] = useState([])
 
     const [myMove, setMyMove] = useState(null)
     const [enemyMove, setEnemyMove] = useState(null)
@@ -107,10 +106,11 @@ export default function NewTable({
 
         let hpAfterDmg
         if (iMoveFirst) {
-            await handleChangeScript([`${myPokemon.name} used ${myMove.toUpperCase()}!`])
+            handleAddToSharedExp(myPokemon.id)
+            await handleChangeScript([`${myPokemon.name.toUpperCase()} used ${myMove.toUpperCase()}!`])
             hpAfterDmg = enemyPokemon.remaining_hp - dmg > 0 ? enemyPokemon.remaining_hp - dmg : 0
         } else {
-            await handleChangeScript([`Enemy ${enemyPokemon.name} used ${enemyMove.toUpperCase()}!`])
+            await handleChangeScript([`Enemy ${enemyPokemon.name.toUpperCase()} used ${enemyMove.toUpperCase()}!`])
             hpAfterDmg = myPokemon.remaining_hp - dmg > 0 ? myPokemon.remaining_hp - dmg : 0
         }
         
@@ -157,9 +157,11 @@ export default function NewTable({
                 setDiscardPile(prevDiscardPile => {
                     return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(checkedPkm)}
                 })
+                handleRemoveFromSharedExp(myPokemon.id)
                 await handleChangeScript([`${myPokemon.name.toUpperCase()} fainted!`])
                 setMenuType('newPokemonAfterKO')
             } else {
+                giveExp(20)
                 // send enemy pokemon to discard, bring out random pokemon
                 setDiscardPile(prevDiscardPile => {
                     return {...prevDiscardPile, player2Discard: prevDiscardPile.player2Discard.concat(checkedPkm)}
@@ -169,7 +171,6 @@ export default function NewTable({
                 const newEnemyPokemon = getNewEnemyPkm()
                 updateEnemyBench(newEnemyPokemon)
                 await handleChangeScript([`ᵖₖᵐₙ TRAINER BLUE sent out ${newEnemyPokemon.name.toUpperCase()}!`])
-                
             }
             return true
         }
@@ -299,8 +300,8 @@ export default function NewTable({
                 <div className='switchMenu'>
                     <span>Which Pokemon would you like to switch to?</span>
                     <div className='switchOptions'>
-                        {myBench.map((mon, i) => {
-                            return <span onClick={handlePokemonSwitch} key={i}>{capitalize(mon.name)}</span>
+                        {myBench.map((pokemon, i) => {
+                            return <span onClick={handlePokemonSwitch} key={i}>{pokemon.name.toUpperCase()}</span>
                         })}
                     </div>
                     <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
@@ -315,8 +316,8 @@ export default function NewTable({
                 <div className='switchMenu'>
                     <span>Which Pokemon would you like to use next?</span>
                     <div className='switchOptions'>
-                        {myBench.map((mon, i) => {
-                            return <span onClick={(e) => handleClickPokemonAfterKO(e)} key={i}>{mon.name}</span>
+                        {myBench.map((pokemon, i) => {
+                            return <span onClick={(e) => handleClickPokemonAfterKO(e)} key={i}>{pokemon.name}</span>
                         })}
                     </div>
                 </div>

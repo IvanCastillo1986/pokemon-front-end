@@ -35,6 +35,40 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     const [script, setScript] = useState("")
     const [winner, setWinner] = useState(null)
     const [discardPile, setDiscardPile] = useState({ player1Discard: [], player2Discard: [] })
+    const [sharedExpIds, setSharedExpIds] = useState(new Set(/*{4, 1}*/))
+    const [exp, setExp] = useState({/* 6: 10, 2: 10, 3: 30 */})
+
+
+    function handleAddToSharedExp(deckId) {
+        setSharedExpIds((prevExpIds) => {
+            prevExpIds.add(deckId)
+            return prevExpIds
+        })
+    }
+    function handleRemoveFromSharedExp(deckId) {
+        const newSharedExpIds = [...sharedExpIds].filter(pokemon => pokemon.id === deckId)
+        setSharedExpIds(new Set(newSharedExpIds))
+    }
+    function giveExp(totalExp) {
+        const expForEach = totalExp / sharedExpIds.size
+        const newExp = {...exp}
+        
+        for (const id of sharedExpIds) {
+            if (newExp[id]) newExp[id] += expForEach
+            else newExp[id] = expForEach
+        }
+        setExp(newExp)
+
+        setSharedExpIds(new Set())
+    }
+    /* 
+        ToDo:
+        Now that we have populated exp{} state after winning match, send exp items to decks Update route
+    */
+    function declareWinner() {
+        // setScript to player who won
+        // make decks API calls for exp won
+    }
     
     
     // This changes theme and scrolls to top of page on component mount
@@ -54,11 +88,13 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         for (let i = 0; i < currentScriptArr.length; i++) {
 
             setScript(currentScriptArr[i])
-            await new Promise(res => setTimeout(res, 2000))
+            await new Promise(res => setTimeout(res, 1000))
         }
         
         setMenuType('main')
     }
+
+
 
     // This function chooses the first Pokemon to battle on click
     // Also sets the bench for each player
@@ -94,9 +130,9 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     const handlePokemonSwitch = (e) => {
         // save current Pokemon, so that it retains remaining_hp when sent to bench
         const oldPokemon = myPokemon
-        
+
         // set newly clicked Pokemon to variable, which will later get passed into setMyPokemon
-        const switchedBenchPokemon = myBench.find(mon => mon.name === e.target.textContent)
+        const switchedBenchPokemon = myBench.find(mon => mon.name.toUpperCase() === e.target.textContent)
         
         // Will pull newPokemon from the bench
         // Will add oldPokemon to the bench
@@ -136,12 +172,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         // recieves pokemon, checks if it has received enough experience, level up or do nothing
     }
 
-    // useEffect(() => {
-    //     if (Object.keys(discardPile.player1Discard).length || Object.keys(discardPile.player1Discard).length) {
-    //         setShowDiscard
-    //     }
-    // }, [showDiscardPile])
-
 
 
     return (
@@ -174,11 +204,13 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
                     myBench={myBench} setMyBench={setMyBench} enemyBench={enemyBench} setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner} 
-                    menuType={menuType} setMenuType={setMenuType} script={script} setScript={setScript}
+                    menuType={menuType} setMenuType={setMenuType} script={script}
                     handleUseItem={handleUseItem} myItems={myItems} deletedItemIds={deletedItemIds}
                     handlePokemonSwitch={handlePokemonSwitch}
-                    discardPile={discardPile} setDiscardPile={setDiscardPile}
-                    handleChangeScript={handleChangeScript}
+                    setDiscardPile={setDiscardPile}
+                    handleChangeScript={handleChangeScript} 
+                    handleAddToSharedExp={handleAddToSharedExp} handleRemoveFromSharedExp={handleRemoveFromSharedExp}
+                    giveExp={giveExp}
                 />
 
                 <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />
