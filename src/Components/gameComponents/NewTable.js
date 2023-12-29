@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { UserContext } from '../../UserContext'
 import axios from 'axios'
 
@@ -25,9 +25,9 @@ const formatName = (name) => {
 
 export default function NewTable({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBench, setMyBench, enemyBench, setEnemyBench, 
-    winner, setWinner, menuType, setMenuType, script, handleUseItem, myItems, deletedItemIds, 
-    handlePokemonSwitch, setDiscardPile, handleChangeScript,
-    handleAddToSharedExp, handleRemoveFromSharedExp, giveExp
+    menuType, setMenuType, script, handleUseItem, myItems, deletedItemIds, handlePokemonSwitch, 
+    setDiscardPile, handleChangeScript, runExpScript, handleAddToSharedExp, handleRemoveFromSharedExp, 
+    giveExp
 }) {
 
 
@@ -161,12 +161,14 @@ export default function NewTable({
                 await handleChangeScript([`${myPokemon.name.toUpperCase()} fainted!`])
                 setMenuType('newPokemonAfterKO')
             } else {
-                giveExp(20)
                 // send enemy pokemon to discard, bring out random pokemon
                 setDiscardPile(prevDiscardPile => {
                     return {...prevDiscardPile, player2Discard: prevDiscardPile.player2Discard.concat(checkedPkm)}
                 })
                 await handleChangeScript([`Enemy ${enemyPokemon.name.toUpperCase()} fainted!`])
+                // POKEMON gained 3728 EXP. Points!
+                const expForEach = await runExpScript(20)
+                giveExp(expForEach)
 
                 const newEnemyPokemon = getNewEnemyPkm()
                 updateEnemyBench(newEnemyPokemon)

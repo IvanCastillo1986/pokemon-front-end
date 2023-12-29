@@ -39,6 +39,19 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     const [exp, setExp] = useState({/* 6: 10, 2: 10, 3: 30 */})
 
 
+    // This changes theme and scrolls to top of page on component mount
+    useEffect(() => {
+        window.document.body.style.backgroundColor = '#8bac0f'
+        window.scrollTo(0, 0)
+
+        return () => {
+            window.document.body.style.backgroundColor = ''
+        }
+    }, [])
+
+
+
+    // These functions handle manipulation of exp
     function handleAddToSharedExp(deckId) {
         setSharedExpIds((prevExpIds) => {
             prevExpIds.add(deckId)
@@ -49,37 +62,51 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         const newSharedExpIds = [...sharedExpIds].filter(pokemon => pokemon.id === deckId)
         setSharedExpIds(new Set(newSharedExpIds))
     }
-    function giveExp(totalExp) {
-        const expForEach = totalExp / sharedExpIds.size
+    function calculateSharedExp(totExp) {
+        return Math.floor(totExp / sharedExpIds.size)
+    }
+    function getPokeNamesFromId() {
+        // takes in the sharedExpIds, iterates through it, and returns an array with each Pokemon's name.
+        const namesArr = []
+        sharedExpIds.forEach((id) => {
+            yourDeck.forEach(pokemon => {
+                if (pokemon.id === id) namesArr.push(pokemon.name)
+            })
+        })
+        return namesArr
+    }
+    async function runExpScript(totalExp) {
+        const expForEach = calculateSharedExp(totalExp)
+
+        const pokeNames = getPokeNamesFromId(sharedExpIds)
+        const gainExpScriptArr = pokeNames.map(pokeName => `${pokeName} gained ${expForEach} EXP. Points!`)
+        await handleChangeScript(gainExpScriptArr)
+
+        return expForEach // this gets passed to giveExp, since we caluclated it here
+    }
+    function giveExp(expForEach) {
         const newExp = {...exp}
         
         for (const id of sharedExpIds) {
             if (newExp[id]) newExp[id] += expForEach
             else newExp[id] = expForEach
         }
-        setExp(newExp)
 
+        setExp(newExp)
         setSharedExpIds(new Set())
     }
-    /* 
-        ToDo:
-        Now that we have populated exp{} state after winning match, send exp items to decks Update route
-    */
+/* 
+    ToDo:
+    After each Pokemon is knocked out, run the gainExp script
+    Now that we have populated exp{} state after winning match, send exp items to decks Update route
+*/
+    const gainExp = `SQUIRTLE gained 20 EXP. Points!`
+    const trainerDefeated = `ᵖₖᵐₙ TRAINER RED was defeated!`
+    const winItem = `You got *wonItem* for winning!`
     function declareWinner() {
         // setScript to player who won
         // make decks API calls for exp won
     }
-    
-    
-    // This changes theme and scrolls to top of page on component mount
-    useEffect(() => {
-        window.document.body.style.backgroundColor = '#8bac0f'
-        window.scrollTo(0, 0)
-
-        return () => {
-            window.document.body.style.backgroundColor = ''
-        }
-    }, [])
 
     const handleChangeScript = async (currentScriptArr) => {
         setMenuType('script')
@@ -208,7 +235,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     handleUseItem={handleUseItem} myItems={myItems} deletedItemIds={deletedItemIds}
                     handlePokemonSwitch={handlePokemonSwitch}
                     setDiscardPile={setDiscardPile}
-                    handleChangeScript={handleChangeScript} 
+                    handleChangeScript={handleChangeScript} runExpScript={runExpScript}
                     handleAddToSharedExp={handleAddToSharedExp} handleRemoveFromSharedExp={handleRemoveFromSharedExp}
                     giveExp={giveExp}
                 />
