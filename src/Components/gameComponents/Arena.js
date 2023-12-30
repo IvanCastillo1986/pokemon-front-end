@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { convertUsableItems, decrementItemQuantity, applyItem } from '../../Helper/itemFunctions'
+import React, { useState, useEffect, useContext } from 'react'
+import { decrementItemQuantity, applyItem, randomItem } from '../../Helper/itemFunctions'
+import axios from 'axios'
 
 import Bench from './Bench'
 import NewTable from './NewTable'
 import Discard from './Discard'
 
 import './Arena.css'
+import { UserContext } from '../../UserContext'
+
+const API = process.env.REACT_APP_API_URL
 
 
 
@@ -23,6 +27,8 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     <Bench>
     <Discard>
     */
+
+    const {user, setUser} = useContext(UserContext)
 
     const [myPokemon, setMyPokemon] = useState({})
     const [myBench, setMyBench] = useState([])
@@ -66,7 +72,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         return Math.floor(totExp / sharedExpIds.size)
     }
     function getPokeNamesFromId() {
-        // takes in the sharedExpIds, iterates through it, and returns an array with each Pokemon's name.
         const namesArr = []
         sharedExpIds.forEach((id) => {
             yourDeck.forEach(pokemon => {
@@ -82,7 +87,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         const gainExpScriptArr = pokeNames.map(pokeName => `${pokeName} gained ${expForEach} EXP. Points!`)
         await handleChangeScript(gainExpScriptArr)
 
-        return expForEach // this gets passed to giveExp, since we caluclated it here
+        return expForEach // this gets passed to giveExp, since we calculated it here
     }
     function giveExp(expForEach) {
         const newExp = {...exp}
@@ -92,21 +97,68 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             else newExp[id] = expForEach
         }
 
-        setExp(newExp)
+        // console.log('exp state at end of match should be updated and total to 120:', newExp)
+
+        setExp(() => newExp)
         setSharedExpIds(new Set())
     }
 /* 
     ToDo:
-    After each Pokemon is knocked out, run the gainExp script
-    Now that we have populated exp{} state after winning match, send exp items to decks Update route
+    Now that we have populated exp{} state after winning match, send data to /user Update route
+
+    Add items to back-end, update front-end, and run scripts
 */
-    const gainExp = `SQUIRTLE gained 20 EXP. Points!`
-    const trainerDefeated = `ᵖₖᵐₙ TRAINER RED was defeated!`
-    const winItem = `You got *wonItem* for winning!`
-    function declareWinner() {
-        // setScript to player who won
-        // make decks API calls for exp won
+    const gainExpScript = `SQUIRTLE gained 20 EXP. Points!`
+    const trainerDefeatedScript = `ᵖₖᵐₙ TRAINER RED was defeated!`
+    const winItemScript = `You got *wonItem* for winning!`
+    const {currentUser} = user
+    const winningUser = {
+        email: currentUser.email,
+        uuid: currentUser.uuid,
+        has_chosen_starter: true,
+        wins: currentUser.wins + 1,
+        losses: currentUser.losses
     }
+    // ToDo: running declareWinner because the useEffect renders before we start game. 
+    // Change this by setting check bench condition in <NewTable />
+    async function declareWinner(winner) {
+        // console.log('running declareWinner')
+        // check if any benches are empty
+        if (winner === 'player1') {
+            // ToDo: play the scripts, make the api calls, then setMenu to playerWonMenu
+            // setScripts to player who won
+            await handleChangeScript([gainExpScript, trainerDefeatedScript])
+            
+            // setMenu to prevent further displaying of anything else
+            setMenuType('playerWonMenu')
+            // console.log('playerWonMenu should be triggered')
+            
+            // ToDo: make user API calls for exp won, items used, random item won, and games won/lost in stats
+            // axios.put(`${API}/user/${user.currentUser.uuid}?getPokemon=true`, winningUser)
+        } else if (myBench.length < 1) {
+            // I lost 
+            setMenuType('playerLostMenu')
+            // console.log('playerLostMenu should be triggered')
+        }
+    }
+
+    // FROM OLD TABLE
+    // update user and return updated user, updated items, with query to get that user's updated pokemon as well
+    // axios.put(`${API}/users/${currentUser.uuid}?getPokemon=true`, winningUser)
+    //     .then(res => {
+    //         const newSessionUser = {
+    //             currentUser: res.data.updatedUser,
+    //             currentPokemon: res.data.updatedUserPokemon,
+    //             currentItems: convertUsableItems(res.data.updatedItems)
+    //         }
+    //         sessionStorage.setItem('user', JSON.stringify(newSessionUser))
+    //         setUser(newSessionUser)
+    //         console.log('newSessionUser after winning:', newSessionUser)
+    //     }).catch(err => console.log('error updating winning user:', err.message))
+
+
+
+
 
     const handleChangeScript = async (currentScriptArr) => {
         setMenuType('script')
@@ -115,7 +167,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         for (let i = 0; i < currentScriptArr.length; i++) {
 
             setScript(currentScriptArr[i])
-            await new Promise(res => setTimeout(res, 1000))
+            await new Promise(res => setTimeout(res, 500))
         }
         
         setMenuType('main')
@@ -237,7 +289,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     setDiscardPile={setDiscardPile}
                     handleChangeScript={handleChangeScript} runExpScript={runExpScript}
                     handleAddToSharedExp={handleAddToSharedExp} handleRemoveFromSharedExp={handleRemoveFromSharedExp}
-                    giveExp={giveExp}
+                    giveExp={giveExp} declareWinner={declareWinner}
                 />
 
                 <Bench myBenchProp={myBench} enemyBenchProp={enemyBench} />

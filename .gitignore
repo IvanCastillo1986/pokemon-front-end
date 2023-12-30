@@ -2,6 +2,7 @@
 
 test.js
 /src/TestComponent.js
+/src/Unused/
 
 # dependencies
 /node_modules

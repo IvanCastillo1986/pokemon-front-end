@@ -1,13 +1,10 @@
-import React, { useState, useContext } from 'react'
-import { UserContext } from '../../UserContext'
-import axios from 'axios'
+import React, { useState } from 'react'
 
 import BattleCard from './BattleCard'
 import Script from './Script'
 
 import { capitalize } from '../../Helper/capitalize'
 import { typeMultiplier } from '../../Helper/typeMultiplier'
-import { convertUsableItems, randomItem } from '../../Helper/itemFunctions'
 
 const API = process.env.REACT_APP_API_URL
 
@@ -27,15 +24,11 @@ export default function NewTable({
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBench, setMyBench, enemyBench, setEnemyBench, 
     menuType, setMenuType, script, handleUseItem, myItems, deletedItemIds, handlePokemonSwitch, 
     setDiscardPile, handleChangeScript, runExpScript, handleAddToSharedExp, handleRemoveFromSharedExp, 
-    giveExp
+    giveExp, declareWinner
 }) {
-
-
-    const { user, setUser } = useContext(UserContext)
 
     const [myMove, setMyMove] = useState(null)
     const [enemyMove, setEnemyMove] = useState(null)
-
 
 
     function assignMoves(clickedMove) {
@@ -128,7 +121,6 @@ export default function NewTable({
     }
 
 
-
     // this gets clicked, then the rest of the function 
     async function handleClickPokemonAfterKO(e) {
         
@@ -152,6 +144,7 @@ export default function NewTable({
         const imDead = checkedPkm.name == myPokemon.name ? true : false
 
         if (isPokemonDead) {
+            
             if (imDead) {
                 // send my pokemon to discard, run script, bring out my next pokemon
                 setDiscardPile(prevDiscardPile => {
@@ -159,7 +152,21 @@ export default function NewTable({
                 })
                 handleRemoveFromSharedExp(myPokemon.id)
                 await handleChangeScript([`${myPokemon.name.toUpperCase()} fainted!`])
-                setMenuType('newPokemonAfterKO')
+                /*
+                ToDo:
+                    if condition to check if user won
+                    function to check bench, interrupt flow, then trigger winner.
+                    Call declareWinner() here. 
+                */
+                
+                console.log('myBench in ifDeadExecuteKnockout', myBench)
+                if (myBench.length < 1) {
+                    // if player lost
+                    // setMenuType('playerLostMenu')
+                    declareWinner('player2')
+                } else {
+                    setMenuType('newPokemonAfterKO')
+                }
             } else {
                 // send enemy pokemon to discard, bring out random pokemon
                 setDiscardPile(prevDiscardPile => {
@@ -169,11 +176,18 @@ export default function NewTable({
                 // POKEMON gained 3728 EXP. Points!
                 const expForEach = await runExpScript(20)
                 giveExp(expForEach)
-
-                const newEnemyPokemon = getNewEnemyPkm()
-                updateEnemyBench(newEnemyPokemon)
-                await handleChangeScript([`ᵖₖᵐₙ TRAINER BLUE sent out ${newEnemyPokemon.name.toUpperCase()}!`])
+                console.log('enemyBench in ifDeadExecuteKnockout', enemyBench)
+                if (enemyBench.length < 1) {
+                    // if enemy lost
+                    // setMenuType('playerWonMenu')
+                    declareWinner('player1')
+                } else {   
+                    const newEnemyPokemon = getNewEnemyPkm()
+                    updateEnemyBench(newEnemyPokemon)
+                    await handleChangeScript([`ᵖₖᵐₙ TRAINER BLUE sent out ${newEnemyPokemon.name.toUpperCase()}!`])
+                }
             }
+
             return true
         }
     }
@@ -269,8 +283,8 @@ export default function NewTable({
                 <BattleCard pokemon={myPokemon} />
             </div>
             
-            <div className='screen'>
 
+            <div className='screen'>
 
                 {menuType === 'script' &&
                     <Script script={script} />
@@ -324,11 +338,27 @@ export default function NewTable({
                     </div>
                 </div>
                 }
-            </div>
+
+                {menuType === 'playerWonMenu' &&
+                <div className='playerWonMenu'>
+                    {/* after scripts are done running, set this menu to display */}
+                    <h1>You've won the match</h1>
+                </div>
+                }
+
+                {menuType === 'playerLostMenu' &&
+                <div className='playerLostMenu'>
+                    {/* after scripts are done running, set this menu to display */}
+                    <h1>You've lost the match</h1>
+                </div>
+                }
+
+            </div> 
+            {/* end screen div */}
 
 
             <div className='player2Table'>
-            <p className='hp-display'>HP: {enemyPokemon.remaining_hp}/{enemyPokemon.hp}</p>
+                <p className='hp-display'>HP: {enemyPokemon.remaining_hp}/{enemyPokemon.hp}</p>
                 <BattleCard pokemon={enemyPokemon} />
             </div>
         </div>
