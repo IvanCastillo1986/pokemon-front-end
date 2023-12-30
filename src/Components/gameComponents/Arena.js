@@ -179,16 +179,16 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     // Also sets the bench for each player
     function handleInitialClick(e) {
         // match the clicked button name with the pokemon in deck
-        let myCurrentPokemon = yourDeck.find(mon => mon.name === e.target.textContent)
+        let myClickedPokemon = yourDeck.find(mon => mon.name === e.target.textContent)
         
         // find the idx of chosen pokemon in deck
-        const idx = yourDeck.findIndex(mon => mon.name === myCurrentPokemon.name)
+        const idx = yourDeck.findIndex(mon => mon.name === myClickedPokemon.name)
 
         // remove this pokemon from the rest of pokemon in bench
         const bench = yourDeck.filter((pokemon, i) => i !== idx)
         
-        myCurrentPokemon.remaining_hp = 1
-        setMyPokemon(myCurrentPokemon)
+        // myClickedPokemon.remaining_hp = 1
+        setMyPokemon(myClickedPokemon)
         setMyBench(bench)
 
         const enemyPokemon = opponentDeck[0]
@@ -201,7 +201,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         const scriptArr = [
             `ᵖₖᵐₙ TRAINER RED wants to battle!`,
             `ᵖₖᵐₙ TRAINER RED sent out ${enemyPokemon.name.toUpperCase()}!`,
-            `Go! ${myCurrentPokemon.name.toUpperCase()}!`
+            `Go! ${myClickedPokemon.name.toUpperCase()}!`
         ]
         handleChangeScript(scriptArr)
     }
@@ -279,10 +279,10 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     <h2>Player 2</h2>
                 </div>
 
-                <NewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon} 
-                    enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon} 
+                <NewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon}
+                    enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon}
                     myBench={myBench} setMyBench={setMyBench} enemyBench={enemyBench} setEnemyBench={setEnemyBench}
-                    winner={winner} setWinner={setWinner} 
+                    winner={winner} setWinner={setWinner}
                     menuType={menuType} setMenuType={setMenuType} script={script}
                     handleUseItem={handleUseItem} myItems={myItems} deletedItemIds={deletedItemIds}
                     handlePokemonSwitch={handlePokemonSwitch}

@@ -73,12 +73,12 @@ export default function NewTable({
     function getNewEnemyPkm() {
         const randomIdx = Math.floor(Math.random() * enemyBench.length)
         const newEnemyPokemon = enemyBench[randomIdx]
-        setEnemyPokemon(newEnemyPokemon)
+        setEnemyPokemon(() => newEnemyPokemon)
         return newEnemyPokemon
     }
     function updateEnemyBench(newEnemyPkm) {
-        const newEnemyBench = enemyBench.filter(mon => mon.name !== newEnemyPkm.name)
-        setEnemyBench(newEnemyBench)
+        const newEnemyBench = enemyBench.filter(mon => mon.id !== newEnemyPkm.id)
+        setEnemyBench(() => newEnemyBench)
     }
 
 
@@ -89,7 +89,7 @@ export default function NewTable({
 
     // Execute calculated damage on attacked Pokemon's remaining_hp, run script
     async function pokemonIsAttacked(atkPkm, defPkm, myMove, enemyMove) {
-        let iMoveFirst = myPokemon.name === atkPkm.name ? true : false
+        let iMoveFirst = myPokemon.id === atkPkm.id ? true : false
 
         // check for type effect
         const effect = applyEffect(atkPkm.type1, defPkm.type1)
@@ -139,9 +139,12 @@ export default function NewTable({
 
     // Checks if defending Pokemon is dead. If true, run script and update discardPile. Bring out next Pokemon.
     async function ifDeadExecuteKnockout(checkedPkm) {
+        console.log('checkedPokemon in ifDeadExecuteKnockout', checkedPkm)
         // checks if pokemon is dead, adds to discard pile, executes getNewPokemonAfterKO()
         const isPokemonDead = checkedPkm.remaining_hp <= 0 ? true : false
-        const imDead = checkedPkm.name == myPokemon.name ? true : false
+        // THIS WILL NEVER BE TRUE
+        const imDead = checkedPkm.id === myPokemon.id ? true : false
+        // console.log('checkedPkm === myPokemon', checkedPkm === myPokemon)
 
         if (isPokemonDead) {
             
@@ -203,6 +206,10 @@ export default function NewTable({
     async function handleClickMoveBtn(move) {
         const { myMove, enemyMove } = assignMoves(move) // should return enemy's moves
         const { fastPkm, slowPkm } = assignAttackOrder() // return which Pokemon attacks first and last
+        // console.log('fastPkm:', fastPkm)
+        // console.log('slowPkm:', slowPkm)
+        console.log('slowPkm === fastPkm:', slowPkm.id === fastPkm.id)
+
         const pokemonHasDied = await executeTurn(fastPkm, slowPkm, myMove, enemyMove) // perform everything resulting from atk, updating hp, dying, etc.
         if (!pokemonHasDied) { // if defending Pokemon is not dead, THEN executeTurn for slowPkm
             await executeTurn(slowPkm, fastPkm, myMove, enemyMove)

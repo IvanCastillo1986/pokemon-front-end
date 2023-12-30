@@ -49,7 +49,7 @@ export default function Play() {
             const aiDeckArr = []
             // Get 6 pokemon ids:
             // const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(5))  // CHANGE THIS BACK
-            const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(0))
+            const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(5))
             // create array with 6 API promises
             const pokemonApiPromises = randomPokemonIdArr.map(pokemonId => {
                 return axios.get(`${API}/pokemon/${pokemonId}`)
@@ -63,7 +63,10 @@ export default function Play() {
                 resArray.forEach(res => {
                     const enemyPokemon = res.data
                     enemyPokemon.remaining_hp = enemyPokemon.hp
+                    enemyPokemon.pokemon_id = enemyPokemon.id
+                    enemyPokemon.id += 2000
                     aiDeckArr.push(enemyPokemon)
+                    // enemyPokemon will now have .remaining_hp, .pokemon_id, and .id += 2000 (to prevent accidental comparisons)
                 })
                 // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
                 sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
