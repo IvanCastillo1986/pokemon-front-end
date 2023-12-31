@@ -97,16 +97,27 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             else newExp[id] = expForEach
         }
 
-        // console.log('exp state at end of match should be updated and total to 120:', newExp)
-
         setExp(() => newExp)
         setSharedExpIds(new Set())
     }
 /* 
     ToDo:
-    Now that we have populated exp{} state after winning match, send data to /user Update route
+    Now that we have populated exp{} state after winning match, send data to /user Update route.
 
-    Add items to back-end, update front-end, and run scripts
+    Make call to user.put with updated status:
+    win/loss  DONE
+    updated Pokemon exp in decks
+        send updated exp item to back-end route for processing
+        How to do this?
+        * either transform the exp object in front-end, or in back-end
+        * exp = {
+            "1": 6,
+            "2": 6,
+            "6": 6
+        }
+    updated items
+        win one random item after match
+
 */
     const gainExpScript = `SQUIRTLE gained 20 EXP. Points!`
     const trainerDefeatedScript = `ᵖₖᵐₙ TRAINER RED was defeated!`
@@ -119,10 +130,23 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         wins: currentUser.wins + 1,
         losses: currentUser.losses
     }
-    // ToDo: running declareWinner because the useEffect renders before we start game. 
+    /*
+    This should return with:
+    { updatedUser, updatedUserPokemon, updatedItems }
+
+    Transform the exp object in front-end, or in back-end:
+    exp = {
+        "1": 6,
+        "2": 6,
+        "6": 6
+    }
+
+    Step 1: Write routes 
+        Decide if I'm sending deckEntries as an exp array[] or object{}
+    */
+
     // Change this by setting check bench condition in <NewTable />
     async function declareWinner(winner) {
-        // console.log('running declareWinner')
         // check if any benches are empty
         if (winner === 'player1') {
             // ToDo: play the scripts, make the api calls, then setMenu to playerWonMenu
@@ -131,14 +155,15 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             
             // setMenu to prevent further displaying of anything else
             setMenuType('playerWonMenu')
-            // console.log('playerWonMenu should be triggered')
             
             // ToDo: make user API calls for exp won, items used, random item won, and games won/lost in stats
-            // axios.put(`${API}/user/${user.currentUser.uuid}?getPokemon=true`, winningUser)
+            axios.put(`${API}/users/${user.currentUser.uuid}?matchEnd=true`, {user: winningUser, deckEntries: exp})
+            .then(res => {
+                console.log(res.data)
+            }).catch(err => console.log(err.message))
         } else if (myBench.length < 1) {
             // I lost 
             setMenuType('playerLostMenu')
-            // console.log('playerLostMenu should be triggered')
         }
     }
 

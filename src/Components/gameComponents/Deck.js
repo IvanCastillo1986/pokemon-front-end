@@ -15,7 +15,6 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [starterPokemon, setStarterPokemon] = useState({})
 
-
     const getStarterId = (e) => {
         let starterId;
         let clickedBtn = e.target.className;
@@ -69,30 +68,30 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
 
     const handlePlayerReadyToBattle = () => {
         // update user in both API and UserContext to has_chosen_starter = true
+        const {currentUser, currentItems } = user
+
         const updatedUser = {
-            email: user.email,
-            uuid: user.uuid,
+            email: currentUser.email,
+            uuid: currentUser.uuid,
             has_chosen_starter: true,
-            wins: user.wins,
-            losses: user.losses
+            wins: currentUser.wins,
+            losses: currentUser.losses
         }
-        axios.put(`${API}/users/${user.currentUser.uuid}`, updatedUser)
+
+        axios.put(`${API}/users/${currentUser.uuid}`, { user: updatedUser })
         .then(res => {
+            
             const readyUser = {
                 currentUser: res.data,
                 currentPokemon: yourDeck,
-                currentItems: user.currentItems
+                currentItems
             }
-            
+
             sessionStorage.setItem('user', JSON.stringify(readyUser))
             setUser(() => {
-                return {
-                    currentUser: readyUser.currentUser, 
-                    currentPokemon: readyUser.currentPokemon,
-                    currentItems: readyUser.currentItems
-                }
+                return readyUser
             })
-        })
+        }).catch(err => console.log(err.message))
 
         // Navigates us to Arena component after reading intro
         setCurrentComponent('arena')

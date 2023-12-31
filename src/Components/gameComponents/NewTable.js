@@ -139,12 +139,9 @@ export default function NewTable({
 
     // Checks if defending Pokemon is dead. If true, run script and update discardPile. Bring out next Pokemon.
     async function ifDeadExecuteKnockout(checkedPkm) {
-        console.log('checkedPokemon in ifDeadExecuteKnockout', checkedPkm)
         // checks if pokemon is dead, adds to discard pile, executes getNewPokemonAfterKO()
         const isPokemonDead = checkedPkm.remaining_hp <= 0 ? true : false
-        // THIS WILL NEVER BE TRUE
         const imDead = checkedPkm.id === myPokemon.id ? true : false
-        // console.log('checkedPkm === myPokemon', checkedPkm === myPokemon)
 
         if (isPokemonDead) {
             
@@ -162,7 +159,6 @@ export default function NewTable({
                     Call declareWinner() here. 
                 */
                 
-                console.log('myBench in ifDeadExecuteKnockout', myBench)
                 if (myBench.length < 1) {
                     // if player lost
                     // setMenuType('playerLostMenu')
@@ -179,7 +175,7 @@ export default function NewTable({
                 // POKEMON gained 3728 EXP. Points!
                 const expForEach = await runExpScript(20)
                 giveExp(expForEach)
-                console.log('enemyBench in ifDeadExecuteKnockout', enemyBench)
+
                 if (enemyBench.length < 1) {
                     // if enemy lost
                     // setMenuType('playerWonMenu')
@@ -206,9 +202,6 @@ export default function NewTable({
     async function handleClickMoveBtn(move) {
         const { myMove, enemyMove } = assignMoves(move) // should return enemy's moves
         const { fastPkm, slowPkm } = assignAttackOrder() // return which Pokemon attacks first and last
-        // console.log('fastPkm:', fastPkm)
-        // console.log('slowPkm:', slowPkm)
-        console.log('slowPkm === fastPkm:', slowPkm.id === fastPkm.id)
 
         const pokemonHasDied = await executeTurn(fastPkm, slowPkm, myMove, enemyMove) // perform everything resulting from atk, updating hp, dying, etc.
         if (!pokemonHasDied) { // if defending Pokemon is not dead, THEN executeTurn for slowPkm
