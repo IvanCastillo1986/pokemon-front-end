@@ -161,7 +161,6 @@ export default function NewTable({
                 
                 if (myBench.length < 1) {
                     // if player lost
-                    // setMenuType('playerLostMenu')
                     declareWinner('player2')
                 } else {
                     setMenuType('newPokemonAfterKO')
@@ -174,12 +173,11 @@ export default function NewTable({
                 await handleChangeScript([`Enemy ${enemyPokemon.name.toUpperCase()} fainted!`])
                 // POKEMON gained 3728 EXP. Points!
                 const expForEach = await runExpScript(20)
-                giveExp(expForEach)
+                const newExpObj = giveExp(expForEach)
 
                 if (enemyBench.length < 1) {
                     // if enemy lost
-                    // setMenuType('playerWonMenu')
-                    declareWinner('player1')
+                    declareWinner('player1', newExpObj)
                 } else {   
                     const newEnemyPokemon = getNewEnemyPkm()
                     updateEnemyBench(newEnemyPokemon)

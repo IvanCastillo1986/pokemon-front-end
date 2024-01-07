@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { decrementItemQuantity, applyItem, randomItem } from '../../Helper/itemFunctions'
+import { decrementItemQuantity, applyItem, randomItem, convertUsableItems } from '../../Helper/itemFunctions'
 import axios from 'axios'
 
 import Bench from './Bench'
@@ -98,8 +98,53 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         }
 
         setExp(() => newExp)
-        setSharedExpIds(new Set())
+        setSharedExpIds(() => new Set())
+
+        return newExp
     }
+
+    const trainerDefeatedScript = `ᵖₖᵐₙ TRAINER RED was defeated!`
+    const winItemScript = `You got *wonItem* for winning!`
+    
+    const {currentUser} = user
+    const winningUser = {
+        email: currentUser.email,
+        uuid: currentUser.uuid,
+        has_chosen_starter: true,
+        wins: currentUser.wins + 1,
+        losses: currentUser.losses
+    }
+
+    // Change this by setting check bench condition in <NewTable />
+    async function declareWinner(winner, expObj) {
+        // check if any benches are empty
+        if (winner === 'player1') {
+            // ToDo: play the scripts, make the api calls, then setMenu to playerWonMenu
+            // setScripts to player who won
+            await handleChangeScript([
+                `ᵖₖᵐₙ TRAINER RED was defeated!`,
+            ])
+            
+            // setMenu to prevent further displaying of anything else
+            setMenuType('playerWonMenu')
+            // ToDo: make user API calls for exp won, items used, random item won, and games won/lost in stats
+            axios.put(`${API}/users/${user.currentUser.uuid}?matchEnd=true`, {user: winningUser, gainedExpObj: expObj})
+            .then(res => {
+                const updatedUser = {
+                    currentUser: res.data.updatedUser,
+                    currentPokemon: res.data.updatedUserPokemon,
+                    currentItems: convertUsableItems(res.data.updatedItems),
+                }
+                
+                setUser(() => updatedUser)
+                sessionStorage.setItem('user', JSON.stringify(updatedUser))
+            }).catch(err => console.log(err.message))
+        } else if (myBench.length < 1) {
+            // I lost 
+            setMenuType('playerLostMenu')
+        }
+    }
+
 /* 
     ToDo:
     Now that we have populated exp{} state after winning match, send data to /user Update route.
@@ -119,53 +164,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         win one random item after match
 
 */
-    const gainExpScript = `SQUIRTLE gained 20 EXP. Points!`
-    const trainerDefeatedScript = `ᵖₖᵐₙ TRAINER RED was defeated!`
-    const winItemScript = `You got *wonItem* for winning!`
-    const {currentUser} = user
-    const winningUser = {
-        email: currentUser.email,
-        uuid: currentUser.uuid,
-        has_chosen_starter: true,
-        wins: currentUser.wins + 1,
-        losses: currentUser.losses
-    }
-    /*
-    This should return with:
-    { updatedUser, updatedUserPokemon, updatedItems }
-
-    Transform the exp object in front-end, or in back-end:
-    exp = {
-        "1": 6,
-        "2": 6,
-        "6": 6
-    }
-
-    Step 1: Write routes 
-        Decide if I'm sending deckEntries as an exp array[] or object{}
-    */
-
-    // Change this by setting check bench condition in <NewTable />
-    async function declareWinner(winner) {
-        // check if any benches are empty
-        if (winner === 'player1') {
-            // ToDo: play the scripts, make the api calls, then setMenu to playerWonMenu
-            // setScripts to player who won
-            await handleChangeScript([gainExpScript, trainerDefeatedScript])
-            
-            // setMenu to prevent further displaying of anything else
-            setMenuType('playerWonMenu')
-            
-            // ToDo: make user API calls for exp won, items used, random item won, and games won/lost in stats
-            axios.put(`${API}/users/${user.currentUser.uuid}?matchEnd=true`, {user: winningUser, deckEntries: exp})
-            .then(res => {
-                console.log(res.data)
-            }).catch(err => console.log(err.message))
-        } else if (myBench.length < 1) {
-            // I lost 
-            setMenuType('playerLostMenu')
-        }
-    }
 
     // FROM OLD TABLE
     // update user and return updated user, updated items, with query to get that user's updated pokemon as well
