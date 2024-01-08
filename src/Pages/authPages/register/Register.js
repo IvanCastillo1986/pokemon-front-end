@@ -38,9 +38,6 @@ export default function Register() {
                 has_chosen_starter: false
             }
 
-            // Also add a starter potion to new user's bag
-            // bags.post("${API}/bags", bagItem)
-
             // here we not only create the user, but also send the 5 random pokeIds array to create deck
             axios.post(`${API}/users`, [newUser, createRandomPokemonIds(5)])
             .then(res => {

@@ -90,18 +90,36 @@ const applyItem = (item, pokemon) => {
     }
 }
 
-
+const itemLegend = {
+    1: 'potion',
+    2: 'super potion',
+    3: 'lemonade',
+    4: 'ether'
+}
 // Returns a number from 1 to numOfItems
-const randomItem = (numOfItems) => {
+const randomItemNameAndId = (numOfItems) => {
     const min = 0
     const max = numOfItems
+    const id = Math.ceil(Math.random() * (max - min) + min)
 
-    return Math.ceil(Math.random() * (max - min) + min)
+    const wonItemName = itemLegend[id]
+    console.log(id)
+    console.log(wonItemName)
+
+    return { wonItemName: itemLegend[id], wonItemId: id}
+}
+
+function createBagIdsFromGame(currentItems) {
+    const bagIdsFromGame = []
+    currentItems.forEach(item => {
+        item.bagIdArr.forEach(id => bagIdsFromGame.push(id))
+    })
+    return bagIdsFromGame
 }
 
 
 
-module.exports = { convertUsableItems, decrementItemQuantity, applyItem, randomItem }
+module.exports = { convertUsableItems, decrementItemQuantity, applyItem, randomItemNameAndId, createBagIdsFromGame }
 
 // console.log(applyItem(
 //     {

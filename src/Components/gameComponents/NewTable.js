@@ -89,7 +89,7 @@ export default function NewTable({
 
     // Execute calculated damage on attacked Pokemon's remaining_hp, run script
     async function pokemonIsAttacked(atkPkm, defPkm, myMove, enemyMove) {
-        let iMoveFirst = myPokemon.id === atkPkm.id ? true : false
+        let iMoveNow = myPokemon.id === atkPkm.id ? true : false
 
         // check for type effect
         const effect = applyEffect(atkPkm.type1, defPkm.type1)
@@ -98,7 +98,7 @@ export default function NewTable({
         // (future animation executed here)
 
         let hpAfterDmg
-        if (iMoveFirst) {
+        if (iMoveNow) {
             handleAddToSharedExp(myPokemon.id)
             await handleChangeScript([`${myPokemon.name.toUpperCase()} used ${myMove.toUpperCase()}!`])
             hpAfterDmg = enemyPokemon.remaining_hp - dmg > 0 ? enemyPokemon.remaining_hp - dmg : 0
@@ -111,7 +111,7 @@ export default function NewTable({
         
         defPkm.remaining_hp = hpAfterDmg
 
-        if (iMoveFirst) {
+        if (iMoveNow) {
             setEnemyPokemon(prevPkm => ({...prevPkm, remaining_hp: defPkm.remaining_hp}))
         } else {
             setMyPokemon(prevPkm => ({...prevPkm, remaining_hp: defPkm.remaining_hp}))
@@ -150,15 +150,12 @@ export default function NewTable({
                 setDiscardPile(prevDiscardPile => {
                     return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(checkedPkm)}
                 })
+                
                 handleRemoveFromSharedExp(myPokemon.id)
                 await handleChangeScript([`${myPokemon.name.toUpperCase()} fainted!`])
-                /*
-                ToDo:
-                    if condition to check if user won
-                    function to check bench, interrupt flow, then trigger winner.
-                    Call declareWinner() here. 
-                */
                 
+                // if condition to check if user won
+                // function to check bench, interrupt flow, then trigger winner.
                 if (myBench.length < 1) {
                     // if player lost
                     declareWinner('player2')
