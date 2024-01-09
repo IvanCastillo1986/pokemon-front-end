@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
 import BattleCard from './BattleCard'
-import Script from './Script'
+import Menu from './Menu'
 
-import { capitalize } from '../../Helper/capitalize'
 import { typeMultiplier } from '../../Helper/typeMultiplier'
+import { handleAddToSharedExp, handleRemoveFromSharedExp, expRequiredForLvlUp } from '../../Helper/expFunctions'
 
 const API = process.env.REACT_APP_API_URL
 
@@ -15,16 +15,17 @@ const statFluctuation = (stat, minVal, maxVal) => {
     // randomize the stat between two different values (ex: speed = dmg * .7 and 1.3)
     return Math.floor((Math.random() * (maxVal - minVal) + minVal) * stat)
 }
-const formatName = (name) => {
-    return capitalize(name).toUpperCase()
+
+export function changeMenu(currentMenu) {
+    return currentMenu
 }
 
 
-export default function NewTable({ 
+export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBench, setMyBench, enemyBench, setEnemyBench, 
-    menuType, setMenuType, script, handleUseItem, myItems, deletedItemIds, handlePokemonSwitch, 
-    setDiscardPile, handleChangeScript, runExpScript, handleAddToSharedExp, handleRemoveFromSharedExp, 
-    giveExp, declareWinner
+    menuType, setMenuType, script, handleUseItem, myItems, handlePokemonSwitch, 
+    setDiscardPile, handleChangeScript, runExpScript, 
+    giveExp, declareWinner, sharedExpIds, setSharedExpIds
 }) {
 
     const [myMove, setMyMove] = useState(null)
@@ -99,7 +100,7 @@ export default function NewTable({
 
         let hpAfterDmg
         if (iMoveNow) {
-            handleAddToSharedExp(myPokemon.id)
+            setSharedExpIds(handleAddToSharedExp(myPokemon.id, sharedExpIds))
             await handleChangeScript([`${myPokemon.name.toUpperCase()} used ${myMove.toUpperCase()}!`])
             hpAfterDmg = enemyPokemon.remaining_hp - dmg > 0 ? enemyPokemon.remaining_hp - dmg : 0
         } else {
@@ -151,7 +152,7 @@ export default function NewTable({
                     return {...prevDiscardPile, player1Discard: prevDiscardPile.player1Discard.concat(checkedPkm)}
                 })
                 
-                handleRemoveFromSharedExp(myPokemon.id)
+                setSharedExpIds(handleRemoveFromSharedExp(myPokemon.id, sharedExpIds))
                 await handleChangeScript([`${myPokemon.name.toUpperCase()} fainted!`])
                 
                 // if condition to check if user won
@@ -204,72 +205,8 @@ export default function NewTable({
         }
     }
 
-
-    /* 
-        ToDo:  For every setScript, add the time to add to total in order to render in proper order
-    */
-    
-
-    /* 
-        DONE
-        Step 1:  After move is clicked, assign the moves to state. 
-        DONE
-        Step 2:  Decide who goes first. Check both pokemon's speed. Set fastPkm, slowPkm in state.
-        DONE
-        Step 3a:  First pokemon turn. Calculate dmg. Check for resistance/weakness effect. Run script Execute changes to hp. 
-        DONE
-        Step 3b:  Check if Pokemon has died. Check if remaining_hp < 1.
-        DONE
-        Step 3c:  Run pkmFainted script. Send to discardPile. Also trigger event that switches to the next Pokemon.
-        DONE
-        Step 3d:  Function that allows me to switch to next Pokemon.
-        DONE
-        Step 3e:  Function that brings out the enemy's next random Pokemon.
-        
-        
-        
-        DONE
-        Step 4a:  Second pokemon turn. Calculate dmg. Check for resistance/weakness effect. Run script Execute changes to hp. 
-        DONE
-        Step 4b:  Check if Pokemon has died. Check if remaining_hp < 1.
-        DONE
-        Step 4c:  Run pkmFainted script. Also trigger event that switches to the next Pokemon.
-
-    */
-
-
-
    
-    const menuClick = (menuType) => {
-        setMenuType(menuType)
-    }
-
-    const renderItemMenu = () => {
-        if (myItems.length > 0) {
-            return <div className='itemMenu'>
-                <span className='prompt'>Which item would you like to use?</span>
-                    <div className='itemsContainer'>
-                    {myItems.map((item) => {
-                        return (
-                        <div className='itemOption' key={item.item_name}>
-                            <span 
-                                className='name' onClick={() => handleUseItem(item, myPokemon)}
-                            >
-                                {item.item_name}
-                            </span>
-                            <span className='quantity'> x {item.quantity}</span>
-                        </div>
-                    )})}
-                    </div>
-                <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
-            </div>
-        } else {
-            return <div className='noItemsDiv'>
-                <span>You are out of items</span>
-                <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
-            </div>
-        }
-    }
+    
 
     return (
         <div className='Table'>
@@ -278,79 +215,12 @@ export default function NewTable({
                 <BattleCard pokemon={myPokemon} />
             </div>
             
-
-            <div className='screen'>
-
-                {menuType === 'script' &&
-                    <Script script={script} />
-                }
-
-                {menuType === 'main' &&
-                <div className='mainTable'>
-                    <span className='fight' onClick={() => menuClick('fight')}>FIGHT</span>
-                    <span className='switch' onClick={() => menuClick('switch')}>SWITCH</span>
-                    <span className='item' onClick={() => menuClick('item')}>ITEM</span>
-                    <span className='defend'>DEFEND</span>
-                </div> 
-                }
-                
-                {menuType === 'fight' &&
-                <div className='fightMenu'>
-                    <span onClick={() => handleClickMoveBtn(myPokemon.move1)}>
-                        {capitalize(myPokemon.move1)}
-                    </span>
-                    <span onClick={() => handleClickMoveBtn(myPokemon.move2)}>
-                        {capitalize(myPokemon.move2)}
-                    </span>
-
-                    <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
-                </div>
-                }
-
-                {menuType === 'switch' &&
-                <div className='switchMenu'>
-                    <span>Which Pokemon would you like to switch to?</span>
-                    <div className='switchOptions'>
-                        {myBench.map((pokemon, i) => {
-                            return <span onClick={handlePokemonSwitch} key={i}>{pokemon.name.toUpperCase()}</span>
-                        })}
-                    </div>
-                    <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
-                </div>
-                }
-
-                {menuType === 'item' && 
-                    renderItemMenu()
-                }
-
-                {menuType === 'newPokemonAfterKO' &&
-                <div className='switchMenu'>
-                    <span>Which Pokemon would you like to use next?</span>
-                    <div className='switchOptions'>
-                        {myBench.map((pokemon, i) => {
-                            return <span onClick={(e) => handleClickPokemonAfterKO(e)} key={i}>{pokemon.name}</span>
-                        })}
-                    </div>
-                </div>
-                }
-
-                {menuType === 'playerWonMenu' &&
-                <div className='playerWonMenu'>
-                    {/* after scripts are done running, set this menu to display */}
-                    <h1>You've won the match</h1>
-                </div>
-                }
-
-                {menuType === 'playerLostMenu' &&
-                <div className='playerLostMenu'>
-                    {/* after scripts are done running, set this menu to display */}
-                    <h1>You've lost the match</h1>
-                </div>
-                }
-
-            </div> 
-            {/* end screen div */}
-
+            <Menu 
+                menuType={menuType} setMenuType={setMenuType}
+                script={script} myItems={myItems} handleUseItem={handleUseItem} myPokemon={myPokemon} 
+                handleClickMoveBtn={handleClickMoveBtn} myBench={myBench} 
+                handlePokemonSwitch={handlePokemonSwitch} handleClickPokemonAfterKO={handleClickPokemonAfterKO}
+            />
 
             <div className='player2Table'>
                 <p className='hp-display'>HP: {enemyPokemon.remaining_hp}/{enemyPokemon.hp}</p>

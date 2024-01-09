@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { decrementItemQuantity, applyItem, randomItemNameAndId, convertUsableItems, createBagIdsFromGame } from '../../Helper/itemFunctions'
+import { calculateSharedExp, getPokeNamesFromId, expRequiredForLvlUp } from '../../Helper/expFunctions'
 import axios from 'axios'
 
 import Bench from './Bench'
-import NewTable from './NewTable'
+import Table from './Table'
 import Discard from './Discard'
 
 import './Arena.css'
@@ -56,35 +57,12 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     }, [])
 
 
-
-    // These functions handle manipulation of exp
-    function handleAddToSharedExp(deckId) {
-        setSharedExpIds((prevExpIds) => {
-            prevExpIds.add(deckId)
-            return prevExpIds
-        })
-    }
-    function handleRemoveFromSharedExp(deckId) {
-        const newSharedExpIds = [...sharedExpIds].filter(id => id !== deckId)
-        setSharedExpIds(new Set(newSharedExpIds))
-    }
-    function calculateSharedExp(totExp) {
-        return Math.floor(totExp / sharedExpIds.size)
-    }
-    function getPokeNamesFromId() {
-        const namesArr = []
-        sharedExpIds.forEach((id) => {
-            yourDeck.forEach(pokemon => {
-                if (pokemon.id === id) namesArr.push(pokemon.name)
-            })
-        })
-        return namesArr
-    }
+    // handles the exp manipulation
     async function runExpScript(totalExp) {
-        const expForEach = calculateSharedExp(totalExp)
+        const expForEach = calculateSharedExp(totalExp, sharedExpIds)
 
-        const pokeNames = getPokeNamesFromId(sharedExpIds)
-        const gainExpScriptArr = pokeNames.map(pokeName => `${pokeName} gained ${expForEach} EXP. Points!`)
+        const pokeNames = getPokeNamesFromId(sharedExpIds, yourDeck)
+        const gainExpScriptArr = pokeNames.map(pokeName => `${pokeName.toUpperCase()} gained ${expForEach} EXP. Points!`)
         await handleChangeScript(gainExpScriptArr)
 
         return expForEach // this gets passed to giveExp, since we calculated it here
@@ -102,9 +80,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
 
         return newExp
     }
-
-    const trainerDefeatedScript = `ᵖₖᵐₙ TRAINER RED was defeated!`
-    const winItemScript = `You got *wonItem* for winning!`
     
     const {currentUser} = user
     const winningUser = {
@@ -115,33 +90,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         losses: currentUser.losses
     }
 
-    /*
-        ToDo: update Items used. Then add random item.
-        Scripts for items and winRandomItem
-        
-        {
-        "item_name": "potion",
-        "effect": "heal",
-        "hp_restored": 20,
-        "pp_restored": null,
-        "item_desc": "Restores 20 hp",
-        "user_id": "7XzFvOUVS4eQHGI8ClxNbN7qY7b2",
-        "item_id": 1,
-        "quantity": 1,
-        "bagIdArr": [
-            1, 2
-        ]
-        }
-    */
-    /*
-        ToDo:
-        create wonItem. Pass it to back-end.
-    */
 
-    
-    
-
-    // Change this by setting check bench condition in <NewTable />
     async function declareWinner(winner, expObj) {
         // check if any benches are empty
         if (winner === 'player1') {
@@ -155,7 +104,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             // setScripts to player who won
             await handleChangeScript([
                 `ᵖₖᵐₙ TRAINER RED was defeated!`,
-                `You have recieved a ${wonItemName.toUpperCase()}`
+                `You have won a ${wonItemName.toUpperCase()}!`
             ])
 
             // setMenu to prevent further displaying of anything else
@@ -267,9 +216,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         setMyPokemon(effectedPokemon)
     }
 
-    const handleLevelUp = () => {
-        // recieves pokemon, checks if it has received enough experience, level up or do nothing
-    }
 
 
 
@@ -299,7 +245,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     <h2>Player 2</h2>
                 </div>
 
-                <NewTable myPokemon={myPokemon} setMyPokemon={setMyPokemon}
+                <Table myPokemon={myPokemon} setMyPokemon={setMyPokemon}
                     enemyPokemon={enemyPokemon} setEnemyPokemon={setEnemyPokemon}
                     myBench={myBench} setMyBench={setMyBench} enemyBench={enemyBench} setEnemyBench={setEnemyBench}
                     winner={winner} setWinner={setWinner}
@@ -307,8 +253,8 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     handleUseItem={handleUseItem} myItems={myItems} deletedItemIds={deletedItemIds}
                     handlePokemonSwitch={handlePokemonSwitch}
                     setDiscardPile={setDiscardPile}
+                    sharedExpIds={sharedExpIds} setSharedExpIds={setSharedExpIds}
                     handleChangeScript={handleChangeScript} runExpScript={runExpScript}
-                    handleAddToSharedExp={handleAddToSharedExp} handleRemoveFromSharedExp={handleRemoveFromSharedExp}
                     giveExp={giveExp} declareWinner={declareWinner}
                 />
 
