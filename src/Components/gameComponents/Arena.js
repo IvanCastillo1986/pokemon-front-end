@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { decrementItemQuantity, applyItem, randomItemNameAndId, convertUsableItems, createBagIdsFromGame } from '../../Helper/itemFunctions'
-import { calculateSharedExp, getPokeNamesFromId, expRequiredForLvlUp } from '../../Helper/expFunctions'
+import { calculateSharedExp, getPokeNamesFromId } from '../../Helper/expFunctions'
+import { getNewLvlFromExp } from '../../Helper/lvlUpFunctions'
 import axios from 'axios'
 
 import Bench from './Bench'
@@ -43,7 +44,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     const [winner, setWinner] = useState(null)
     const [discardPile, setDiscardPile] = useState({ player1Discard: [], player2Discard: [] })
     const [sharedExpIds, setSharedExpIds] = useState(new Set(/*{4, 1}*/))
-    const [exp, setExp] = useState({/* 6: 10, 2: 10, 3: 30 */})
+    const [exp, setExp] = useState([/* {id: 6, exp: 10}, {id: 2, exp: 10}, {id: 3, exp: 30} */])
 
 
     // This changes theme and scrolls to top of page on component mount
@@ -58,7 +59,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
 
 
     // handles the exp manipulation
-    async function runExpScript(totalExp) {
+    async function shareExpAndRunScript(totalExp) {
         const expForEach = calculateSharedExp(totalExp, sharedExpIds)
 
         const pokeNames = getPokeNamesFromId(sharedExpIds, yourDeck)
@@ -68,17 +69,19 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         return expForEach // this gets passed to giveExp, since we calculated it here
     }
     function giveExp(expForEach) {
-        const newExp = {...exp}
-        
-        for (const id of sharedExpIds) {
-            if (newExp[id]) newExp[id] += expForEach
-            else newExp[id] = expForEach
-        }
+        // this function iterates sharedExpIds set, and creates a new expObj{} object to push into exp[] array
+        const newExpArr = [...exp]
 
-        setExp(() => newExp)
+        for (const id of sharedExpIds) {
+            const newExpObj = { id: id, exp: expForEach }
+            newExpArr.push(newExpObj)
+        }
+        
+
+        setExp(() => newExpArr)
         setSharedExpIds(() => new Set())
 
-        return newExp
+        return newExpArr
     }
     
     const {currentUser} = user
@@ -91,9 +94,27 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
     }
 
 
-    async function declareWinner(winner, expObj) {
-        // check if any benches are empty
+    async function declareWinner(winner, expArr) {
         if (winner === 'player1') {
+            const deckArrToUpdate = [...expArr]
+
+            for (const expObj of deckArrToUpdate) {
+                // find the Pokemon with expObj.id
+                const matchingPokemon = yourDeck.find(pokemon => pokemon.id == expObj.id)
+            
+                // add the Pokemon's exp to expObj.exp
+                expObj.exp += matchingPokemon.exp
+                // calculate if the lvl matches
+                const newLvl = getNewLvlFromExp(expObj.exp)
+                if (newLvl == matchingPokemon.lvl) {
+                    // if it does, add current Pokemon's lvl to expObj
+                    expObj.lvl = matchingPokemon.lvl
+                } else {
+                    // else, add new higher lvl to expObj
+                    expObj.lvl = newLvl
+                    await handleChangeScript([`${matchingPokemon.name.toUpperCase()} grew to level ${newLvl}!`])
+                }
+            }
 
             // creates item that player wins end of match
             const { wonItemId, wonItemName } = randomItemNameAndId(4)
@@ -111,7 +132,8 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             setMenuType('playerWonMenu')
             // make user API calls for exp won, items used, random item won, and games won/lost in stats
             axios.put(`${API}/users/${user.currentUser.uuid}?matchEnd=true`, 
-                {user: winningUser, gainedExpObj: expObj, bagIdsFromGame, wonItemId}
+                // {user: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
+                {user: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
             ).then(res => {
                 
                 const updatedUser = {
@@ -141,7 +163,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         
         setMenuType('main')
     }
-
 
 
     // This function chooses the first Pokemon to battle on click
@@ -254,7 +275,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     handlePokemonSwitch={handlePokemonSwitch}
                     setDiscardPile={setDiscardPile}
                     sharedExpIds={sharedExpIds} setSharedExpIds={setSharedExpIds}
-                    handleChangeScript={handleChangeScript} runExpScript={runExpScript}
+                    handleChangeScript={handleChangeScript} shareExpAndRunScript={shareExpAndRunScript}
                     giveExp={giveExp} declareWinner={declareWinner}
                 />
 

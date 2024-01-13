@@ -48,8 +48,8 @@ export default function Play() {
 
             const aiDeckArr = []
             // Get 6 pokemon ids:
-            // const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(5))  // CHANGE THIS BACK
-            const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(0))
+            // const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(5)) // NORMAL GAME
+            const randomPokemonIdArr = [enemyStarterId].concat(createRandomPokemonIds(0)) // 1 ENEMY
             // create array with 6 API promises
             const pokemonApiPromises = randomPokemonIdArr.map(pokemonId => {
                 return axios.get(`${API}/pokemon/${pokemonId}`)

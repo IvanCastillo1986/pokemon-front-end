@@ -16,28 +16,19 @@ const statFluctuation = (stat, minVal, maxVal) => {
     return Math.floor((Math.random() * (maxVal - minVal) + minVal) * stat)
 }
 
-export function changeMenu(currentMenu) {
-    return currentMenu
-}
 
 
 export default function Table({ 
     myPokemon, enemyPokemon, setMyPokemon, setEnemyPokemon, myBench, setMyBench, enemyBench, setEnemyBench, 
     menuType, setMenuType, script, handleUseItem, myItems, handlePokemonSwitch, 
-    setDiscardPile, handleChangeScript, runExpScript, 
+    setDiscardPile, handleChangeScript, shareExpAndRunScript, 
     giveExp, declareWinner, sharedExpIds, setSharedExpIds
 }) {
 
-    const [myMove, setMyMove] = useState(null)
-    const [enemyMove, setEnemyMove] = useState(null)
-
 
     function assignMoves(clickedMove) {
-        setMyMove(() => clickedMove)
-
         const enemyMoveIdx = Math.floor(Math.random() * 2)
         const randomEnemyMove = enemyMoveIdx === 0 ? enemyPokemon.move1 : enemyPokemon.move2
-        setEnemyMove(() => randomEnemyMove)
         return { myMove: clickedMove, enemyMove: randomEnemyMove }
     }
     function assignAttackOrder() {
@@ -170,12 +161,13 @@ export default function Table({
                 })
                 await handleChangeScript([`Enemy ${enemyPokemon.name.toUpperCase()} fainted!`])
                 // POKEMON gained 3728 EXP. Points!
-                const expForEach = await runExpScript(20)
-                const newExpObj = giveExp(expForEach)
+                const expForEach = await shareExpAndRunScript(20)
+                const newExpArr = giveExp(expForEach)
+                console.log('newExpArr in Table:', newExpArr)
 
                 if (enemyBench.length < 1) {
                     // if enemy lost
-                    declareWinner('player1', newExpObj)
+                    declareWinner('player1', newExpArr)
                 } else {   
                     const newEnemyPokemon = getNewEnemyPkm()
                     updateEnemyBench(newEnemyPokemon)

@@ -22,14 +22,9 @@ function getPokeNamesFromId(expIds, playerDeck) {
     return namesArr
 }
 
-const lvl = 5
-function expRequiredForLvlUp(lvl) {
-  return Math.floor(Math.pow((lvl + 1), 3) / 5)
-}
 
-console.log(expRequiredForLvlUp(lvl))
+
 
 module.exports = { 
-    handleAddToSharedExp, handleRemoveFromSharedExp, calculateSharedExp, getPokeNamesFromId, 
-    expRequiredForLvlUp 
+    handleAddToSharedExp, handleRemoveFromSharedExp, calculateSharedExp, getPokeNamesFromId
 }
