@@ -10,15 +10,9 @@ function getNewLvlFromExp(currentExp) {
   return level - 1;
 }
 
-const currentExperience = 1165;
-const pokemonLevel = getNewLvlFromExp(currentExperience);
-console.log(`The Pokemon is at level ${pokemonLevel} with ${currentExperience} experience.`);
-
-
-/* 
-Decide how much each stat will increase (some stats might not even increase. Research this)
-    
-*/
+// const currentExperience = 1165;
+// const pokemonLevel = getNewLvlFromExp(currentExperience);
+// console.log(`The Pokemon is at level ${pokemonLevel} with ${currentExperience} experience.`);
 
 
 

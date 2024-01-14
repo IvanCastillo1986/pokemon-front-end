@@ -9,6 +9,7 @@ import Arena from '../../Components/gameComponents/Arena'
 
 import './Play.css'
 import { convertUser } from '../../Helper/convertUser'
+import { assignDVs, calculateRaisedStats } from '../../Helper/statsFunctions'
 const API = process.env.REACT_APP_API_URL
 
 
@@ -59,15 +60,22 @@ export default function Play() {
             Promise.all(pokemonApiPromises)
             .then(resArray => {
                 // add remaining_hp property to enemy's deck
-                addRemainingHp(resArray)
+                // addRemainingHp(resArray) // CHANGE THIS BACK HERE
                 resArray.forEach(res => {
                     const enemyPokemon = res.data
                     enemyPokemon.remaining_hp = enemyPokemon.hp
                     enemyPokemon.pokemon_id = enemyPokemon.id
                     enemyPokemon.id += 2000
+                    enemyPokemon.lvl = 1
                     aiDeckArr.push(enemyPokemon)
                     // enemyPokemon will now have .remaining_hp, .pokemon_id, and .id += 2000 (to prevent accidental comparisons)
                 })
+
+                // console.log('aiDeckArr before changing', aiDeckArr)
+                raiseEnemyPokemonStats(aiDeckArr)
+                addRemainingHp(aiDeckArr)
+                // console.log('aiDeckArr after changing', aiDeckArr)
+
                 // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
                 sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
             }).catch(err => console.log(err))
@@ -75,8 +83,19 @@ export default function Play() {
     }
     setOpponentDeck()
 
+    function raiseEnemyPokemonStats(opponentDeck) {
+        const pokemonDVs = opponentDeck.map(pokemon => assignDVs(pokemon))
+
+        opponentDeck.forEach((pokemon) => {
+            const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
+            calculateRaisedStats(pokemon, matchingDvObj)
+        })
+    }
+
+
     function refreshPage() {
         if (sessionUser) {
+            
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
                 // userUpdate = {

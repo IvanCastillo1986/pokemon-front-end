@@ -1,6 +1,7 @@
 // this file imports the Helper functions to update user/items when changes are made
 // import { convertUsableItems } from "./itemFunctions"
 const { convertUsableItems } = require("./itemFunctions")
+const { assignDVs, calculateRaisedStats } = require("./statsFunctions")
 
 {/* FROM API: res.data = {user, userPokemon, userItems}
     const user = { 
@@ -20,6 +21,15 @@ const convertUser = (user) => {
 
     // apply all changes to user properties here
     newUser.currentItems = convertUsableItems(newUser.currentItems)
+
+    // create new array with DVs object (with deckId) for each Pokemon. Also assign hpDV.
+    const pokemonDVs = newUser.currentPokemon.map(pokemon => assignDVs(pokemon))
+    
+    // use pokemonDVs and lvl to calculate each Pokemon's current stats with raisePokemonStats([...userPokemon])
+    newUser.currentPokemon.forEach((pokemon) => {
+        const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
+        calculateRaisedStats(pokemon, matchingDvObj)
+    })
     
     return newUser
 }

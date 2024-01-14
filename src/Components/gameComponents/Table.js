@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
+import { typeMultiplier } from '../../Helper/typeMultiplier'
+import { handleAddToSharedExp, handleRemoveFromSharedExp, expRequiredForLvlUp } from '../../Helper/expFunctions'
+import { calculateDmg, applyEffect } from '../../Helper/combatFunctions'
 
 import BattleCard from './BattleCard'
 import Menu from './Menu'
 
-import { typeMultiplier } from '../../Helper/typeMultiplier'
-import { handleAddToSharedExp, handleRemoveFromSharedExp, expRequiredForLvlUp } from '../../Helper/expFunctions'
 
 const API = process.env.REACT_APP_API_URL
 
@@ -47,11 +48,6 @@ export default function Table({
         return { fastPkm, slowPkm }
     }
 
-    function applyEffect(atkType, defType) {
-        // check if there is weakness or resistance. Returns .5, 1, 1.5
-        const effect = typeMultiplier(atkType, defType)
-        return effect
-    }
     async function ifEffectRunScript(effect) {
         // run script for type effect (if applied)
         if (effect > 1) {
@@ -86,7 +82,8 @@ export default function Table({
         // check for type effect
         const effect = applyEffect(atkPkm.type1, defPkm.type1)
         // calculate the damage
-        const dmg = statFluctuation( Math.round((3 * atkPkm.atk * 5) / defPkm.def * effect) , .8 , 1.2 )
+        // const dmg = statFluctuation( Math.round((3 * atkPkm.atk * 5) / defPkm.def * effect) , .8 , 1.2 )
+        const dmg = Math.ceil(calculateDmg(atkPkm, defPkm) * effect)
         // (future animation executed here)
 
         let hpAfterDmg

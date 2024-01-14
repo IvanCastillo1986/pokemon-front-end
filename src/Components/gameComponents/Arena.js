@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { decrementItemQuantity, applyItem, randomItemNameAndId, convertUsableItems, createBagIdsFromGame } from '../../Helper/itemFunctions'
 import { calculateSharedExp, getPokeNamesFromId } from '../../Helper/expFunctions'
 import { getNewLvlFromExp } from '../../Helper/lvlUpFunctions'
+import { convertUser } from '../../Helper/convertUser'
 import axios from 'axios'
 
 import Bench from './Bench'
@@ -141,6 +142,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                     currentPokemon: res.data.updatedUserPokemon,
                     currentItems: convertUsableItems(res.data.updatedItems),
                 }
+                convertUser(updatedUser)
                 
                 setUser(() => updatedUser)
                 sessionStorage.setItem('user', JSON.stringify(updatedUser))
