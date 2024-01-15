@@ -84,18 +84,18 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
 
         return newExpArr
     }
-    
-    const {currentUser} = user
-    const winningUser = {
-        email: currentUser.email,
-        uuid: currentUser.uuid,
-        has_chosen_starter: true,
-        wins: currentUser.wins + 1,
-        losses: currentUser.losses
-    }
 
 
     async function declareWinner(winner, expArr) {
+        const {currentUser} = user
+        const winningUser = {
+            email: currentUser.email,
+            uuid: currentUser.uuid,
+            has_chosen_starter: true,
+            wins: currentUser.wins + 1,
+            losses: currentUser.losses
+        }
+
         if (winner === 'player1') {
             const deckArrToUpdate = [...expArr]
 
@@ -132,21 +132,21 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             // setMenu to prevent further displaying of anything else
             setMenuType('playerWonMenu')
             // make user API calls for exp won, items used, random item won, and games won/lost in stats
-            axios.put(`${API}/users/${user.currentUser.uuid}?matchEnd=true`, 
+            axios.put(`${API}/users/${winningUser.uuid}?matchEnd=true`, 
                 // {user: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
-                {user: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
+                {userToUpdate: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
             ).then(res => {
-                
-                const updatedUser = {
-                    currentUser: res.data.updatedUser,
-                    currentPokemon: res.data.updatedUserPokemon,
-                    currentItems: convertUsableItems(res.data.updatedItems),
-                }
-                convertUser(updatedUser)
+                // const updatedUser = {
+                //     currentUser: res.data.user,
+                //     currentPokemon: res.data.userPokemon,
+                //     currentItems: convertUsableItems(res.data.userItems),
+                // }
+                const updatedUser = convertUser(res.data)
+                console.log('updatedUser after conversion:', updatedUser)
                 
                 setUser(() => updatedUser)
                 sessionStorage.setItem('user', JSON.stringify(updatedUser))
-            }).catch(err => console.log(err.message))
+            }).catch(err => console.log(err))
         } else if (myBench.length < 1) {
             // I lost 
             setMenuType('playerLostMenu')

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { UserContext } from '../../UserContext'
+import { raisePokemonStats } from '../../Helper/statsFunctions'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'
@@ -41,11 +42,18 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
             return res.data
         })
         
+        // add starterPokemon to our Play page yourDeck state, which currently has 5 Pokemon
+        const fullDeck = [starterInDeck].concat(yourDeck)
+        const pokemonDVs = raisePokemonStats(fullDeck)
+
+        // send DVs to back-end Create route here
+        axios.post(`${API}/dvs`, pokemonDVs)
+        .then(res => console.log('DVs successfully added:', res.data))
+        .catch(err => console.log('Error adding DVs:', err.message))
+        
         // spread both deck and pokemon response into one object, so that pokemon also has exp and lvl
         setStarterPokemon({...starterInDeck})
         
-        // add starterPokemon to our Play page yourDeck state, which currently has 5 Pokemon
-        const fullDeck = [starterInDeck].concat(yourDeck)
         return fullDeck
     }
     

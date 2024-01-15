@@ -34,7 +34,7 @@ export default function LogIn() {
                 //     currentPokemon: res.data.userPokemon,
                 //     currentItems: convertUsableItems(res.data.userItems)
                 // }
-
+                console.log('user at LogIn.js:', res.data)
                 // converts user to playable state before storing them
                 const newUser = convertUser(res.data)
                 setUser(newUser)

@@ -160,7 +160,6 @@ export default function Table({
                 // POKEMON gained 3728 EXP. Points!
                 const expForEach = await shareExpAndRunScript(20)
                 const newExpArr = giveExp(expForEach)
-                console.log('newExpArr in Table:', newExpArr)
 
                 if (enemyBench.length < 1) {
                     // if enemy lost

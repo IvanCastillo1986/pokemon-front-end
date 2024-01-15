@@ -1,7 +1,7 @@
 // this file imports the Helper functions to update user/items when changes are made
 // import { convertUsableItems } from "./itemFunctions"
 const { convertUsableItems } = require("./itemFunctions")
-const { assignDVs, calculateRaisedStats } = require("./statsFunctions")
+const { assignDVs, calculateRaisedStats, raisePokemonStats } = require("./statsFunctions")
 
 {/* FROM API: res.data = {user, userPokemon, userItems}
     const user = { 
@@ -12,6 +12,7 @@ const { assignDVs, calculateRaisedStats } = require("./statsFunctions")
 */}
 // this function takes in the API call user, and returns the new user with conversions applied
 const convertUser = (user) => {
+    console.log('user in convertUser:', user)
     
     const newUser = {
         currentUser: {...user.user},
@@ -23,14 +24,16 @@ const convertUser = (user) => {
     newUser.currentItems = convertUsableItems(newUser.currentItems)
 
     // create new array with DVs object (with deckId) for each Pokemon. Also assign hpDV.
-    const pokemonDVs = newUser.currentPokemon.map(pokemon => assignDVs(pokemon))
+    // const pokemonDVs = newUser.currentPokemon.map(pokemon => assignDVs(pokemon))
     
     // use pokemonDVs and lvl to calculate each Pokemon's current stats with raisePokemonStats([...userPokemon])
-    newUser.currentPokemon.forEach((pokemon) => {
-        const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
-        calculateRaisedStats(pokemon, matchingDvObj)
-    })
-    
+    // newUser.currentPokemon.forEach((pokemon) => {
+    //     const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
+    //     calculateRaisedStats(pokemon, matchingDvObj)
+    // })
+
+    raisePokemonStats(newUser.currentPokemon)
+
     return newUser
 }
 

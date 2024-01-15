@@ -9,7 +9,7 @@ import Arena from '../../Components/gameComponents/Arena'
 
 import './Play.css'
 import { convertUser } from '../../Helper/convertUser'
-import { assignDVs, calculateRaisedStats } from '../../Helper/statsFunctions'
+import { raisePokemonStats } from '../../Helper/statsFunctions'
 const API = process.env.REACT_APP_API_URL
 
 
@@ -72,7 +72,7 @@ export default function Play() {
                 })
 
                 // console.log('aiDeckArr before changing', aiDeckArr)
-                raiseEnemyPokemonStats(aiDeckArr)
+                raisePokemonStats(aiDeckArr)
                 addRemainingHp(aiDeckArr)
                 // console.log('aiDeckArr after changing', aiDeckArr)
 
@@ -83,15 +83,6 @@ export default function Play() {
     }
     setOpponentDeck()
 
-    function raiseEnemyPokemonStats(opponentDeck) {
-        const pokemonDVs = opponentDeck.map(pokemon => assignDVs(pokemon))
-
-        opponentDeck.forEach((pokemon) => {
-            const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
-            calculateRaisedStats(pokemon, matchingDvObj)
-        })
-    }
-
 
     function refreshPage() {
         if (sessionUser) {
@@ -101,6 +92,7 @@ export default function Play() {
                 // userUpdate = {
                 //     currentUser: res.data.user, currentPokemon: res.data.userPokemon, currentItems: convertUsableItems(res.data.userItems)
                 // }
+                console.log('user in Play.js', res.data)
 
                 const refreshedUser = convertUser(res.data)
                 console.log('page has refreshed:', refreshedUser)

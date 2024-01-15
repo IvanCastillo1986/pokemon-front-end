@@ -49,8 +49,19 @@ const calculateRaisedStats = (pokemon, dvs) => {
     pokemon.speed = raiseStat(pokemon.speed, dvs.speedDV, pokemon.lvl)
 }
 
+function raisePokemonStats(deck) {
+    const pokemonDVs = deck.map(pokemon => assignDVs(pokemon))
+
+    deck.forEach((pokemon) => {
+        const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
+        calculateRaisedStats(pokemon, matchingDvObj)
+    })
+
+    return pokemonDVs
+}
+
 // When a Pokemon is first assigned when the player registers, a DV is created for each stat.
 // This DV (random val from 0-15) is then saved in the back-end.
 // The statRaise is based on that stat's hard-coded DV.
 
-module.exports = { randomNum, statFluctuation, assignDVs, assignHpDV, calculateRaisedStats }
+module.exports = { randomNum, statFluctuation, assignDVs, assignHpDV, calculateRaisedStats, raisePokemonStats }

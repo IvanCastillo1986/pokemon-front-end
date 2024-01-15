@@ -103,7 +103,6 @@ const randomItemNameAndId = (numOfItems) => {
     const id = Math.ceil(Math.random() * (max - min) + min)
 
     const wonItemName = itemLegend[id]
-    console.log(id)
     console.log(wonItemName)
 
     return { wonItemName: itemLegend[id], wonItemId: id}

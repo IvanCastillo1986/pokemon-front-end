@@ -41,10 +41,8 @@ export default function Register() {
             // here we not only create the user, but also send the 5 random pokeIds array to create deck
             axios.post(`${API}/users`, [newUser, createRandomPokemonIds(5)])
             .then(res => {
+                console.log('user in Register.js', res.data)
                 const user = convertUser(res.data)
-
-                // send DVs to back-end Create route here
-                //  axios.post(`${API}/dvs`, pokemonDVs)
                 
                 sessionStorage.setItem("user", JSON.stringify(user))
                 setUser(user)
