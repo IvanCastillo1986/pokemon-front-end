@@ -105,7 +105,7 @@ const randomItemNameAndId = (numOfItems) => {
     const wonItemName = itemLegend[id]
     console.log(wonItemName)
 
-    return { wonItemName: itemLegend[id], wonItemId: id}
+    return { wonItemName, wonItemId: id}
 }
 
 function createBagIdsFromGame(currentItems) {

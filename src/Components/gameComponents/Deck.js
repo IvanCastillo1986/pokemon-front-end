@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react'
 import { UserContext } from '../../UserContext'
-import { raisePokemonStats } from '../../Helper/statsFunctions'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'
@@ -31,7 +30,7 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
         return starterId;
     }
 
-    // Make API call to add starter to user's deck
+    // Make API call to add starter to user's deck, and creates DVs for full deck
     const addStarterToDeck = async (starterId) => {
 
         // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
@@ -44,15 +43,9 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
         
         // add starterPokemon to our Play page yourDeck state, which currently has 5 Pokemon
         const fullDeck = [starterInDeck].concat(yourDeck)
-        const pokemonDVs = raisePokemonStats(fullDeck)
 
-        // send DVs to back-end Create route here
-        axios.post(`${API}/dvs`, pokemonDVs)
-        .then(res => console.log('DVs successfully added:', res.data))
-        .catch(err => console.log('Error adding DVs:', err.message))
-        
         // spread both deck and pokemon response into one object, so that pokemon also has exp and lvl
-        setStarterPokemon({...starterInDeck})
+        setStarterPokemon(starterInDeck)
         
         return fullDeck
     }
@@ -78,7 +71,7 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
         // update user in both API and UserContext to has_chosen_starter = true
         const {currentUser, currentItems } = user
 
-        const updatedUser = {
+        const userToUpdate = {
             email: currentUser.email,
             uuid: currentUser.uuid,
             has_chosen_starter: true,
@@ -86,20 +79,19 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
             losses: currentUser.losses
         }
 
-        axios.put(`${API}/users/${currentUser.uuid}`, { user: updatedUser })
+        axios.put(`${API}/users/${currentUser.uuid}`, { userToUpdate })
         .then(res => {
-            
-            const readyUser = {
+            const updatedUser = {
                 currentUser: res.data,
                 currentPokemon: yourDeck,
                 currentItems
             }
 
-            sessionStorage.setItem('user', JSON.stringify(readyUser))
+            sessionStorage.setItem('user', JSON.stringify(updatedUser))
             setUser(() => {
-                return readyUser
+                return updatedUser
             })
-        }).catch(err => console.log(err.message))
+        }).catch(err => console.log(err))
 
         // Navigates us to Arena component after reading intro
         setCurrentComponent('arena')

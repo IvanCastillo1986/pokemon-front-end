@@ -9,6 +9,7 @@ const statFluctuation = (stat, minVal, maxVal) => {
     return randomNum(minVal, maxVal) * stat
 }
 
+// THIS ONLY GETS CALLED UPON REGISTERATION PROCESS. MOVE TO BACK-END.
 const assignDVs = (pokemon) => {
     // returns DVs object with random DV values from 0-15
     const pokemonDVs = {
@@ -28,12 +29,13 @@ const assignHpDV = (atkDV, defDV) => {
     return (atkDV % 8) * 2 + (defDV % 8)
 }
 
-
 const raiseStat = (baseStat, dv, level) => {
     const raisedStat = Math.ceil((2 * baseStat + dv) * level / 100 + 5)
     return raisedStat
 }
 
+// This gets called upon refresh, because it uses persisted DVs that will not changed.
+// To implement this function, first call the DVs for corresponding decks from database.
 const calculateRaisedStats = (pokemon, dvs) => {
     /*
         The original formula is:
@@ -49,13 +51,21 @@ const calculateRaisedStats = (pokemon, dvs) => {
     pokemon.speed = raiseStat(pokemon.speed, dvs.speedDV, pokemon.lvl)
 }
 
-function raisePokemonStats(deck) {
-    const pokemonDVs = deck.map(pokemon => assignDVs(pokemon))
-
-    deck.forEach((pokemon) => {
-        const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
-        calculateRaisedStats(pokemon, matchingDvObj)
-    })
+// takes in myDeck and pokemonDV or creates opponentDVs here
+function raisePokemonStats(deck, pokemonDVs) {
+    
+    if (pokemonDVs) {
+        deck.forEach((pokemon) => {
+            const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
+            calculateRaisedStats(pokemon, matchingDvObj)
+        })
+    } else {
+        const opponentDVs = deck.map(pokemon => assignDVs(pokemon))
+        deck.forEach((pokemon) => {
+            const matchingDvObj = opponentDVs.find(dvObj => dvObj.deckId === pokemon.id)
+            calculateRaisedStats(pokemon, matchingDvObj)
+        })
+    }
 
     return pokemonDVs
 }

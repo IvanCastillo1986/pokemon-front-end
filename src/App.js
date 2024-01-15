@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { UserContext } from './UserContext'
+import axios from 'axios'
+import { findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
 
 import './App.css'
 
@@ -19,8 +21,6 @@ import LogOut from './Pages/authPages/logOut/LogOut'
 import Register from './Pages/authPages/register/Register'
 import FourOFour from './Pages/FourOFour'
 
-import axios from 'axios'
-import { findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
 
 
 export default function App() {
@@ -30,6 +30,7 @@ export default function App() {
   // Everytime App or its children render with sessionStorage, we get the user from storage
   const sessionUser = JSON.parse(sessionStorage.getItem('user')) || {}
   const [user, setUser] = useState(sessionUser)
+  
   
   const numOfPokemon = 151;
   useEffect(() => {

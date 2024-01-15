@@ -32,10 +32,10 @@ export default function Play() {
     function setOpponentDeck() {
         if (yourDeck.length > 5) {
             // set opponent starter as weakness to your starter
-            const yourStarterId = yourDeck[0].pokemon_id
+            const yourStarter = yourDeck.find(pkm => pkm.pokemon_id == 1 || pkm.pokemon_id == 4 || pkm.pokemon_id == 7)
             let enemyStarterId;
 
-            switch(yourStarterId) {
+            switch(yourStarter.pokemon_id) {
                 case 1:
                     enemyStarterId = 4
                     break;
@@ -89,17 +89,12 @@ export default function Play() {
             
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
-                // userUpdate = {
-                //     currentUser: res.data.user, currentPokemon: res.data.userPokemon, currentItems: convertUsableItems(res.data.userItems)
-                // }
-                console.log('user in Play.js', res.data)
-
                 const refreshedUser = convertUser(res.data)
                 console.log('page has refreshed:', refreshedUser)
                 
                 sessionStorage.setItem('user', JSON.stringify(refreshedUser))
                 setUser(refreshedUser)
-            })
+            }).catch(err => console.log(err))
         }
         // NOTE: this means every state that needs to persist, needs to begin in this Play component
         

@@ -1,7 +1,6 @@
 import React from 'react'
 
 export const handleChangeScript = async (currentScriptArr, setMenuType, setScript) => {
-    console.log(setMenuType)
     setMenuType('script')
 
     // will run scriptArr, starting with first index, and increment script time by 2000ms on each el

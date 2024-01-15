@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { decrementItemQuantity, applyItem, randomItemNameAndId, convertUsableItems, createBagIdsFromGame } from '../../Helper/itemFunctions'
+import { decrementItemQuantity, applyItem, randomItemNameAndId, createBagIdsFromGame } from '../../Helper/itemFunctions'
 import { calculateSharedExp, getPokeNamesFromId } from '../../Helper/expFunctions'
 import { getNewLvlFromExp } from '../../Helper/lvlUpFunctions'
 import { convertUser } from '../../Helper/convertUser'
@@ -136,11 +136,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                 // {user: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
                 {userToUpdate: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
             ).then(res => {
-                // const updatedUser = {
-                //     currentUser: res.data.user,
-                //     currentPokemon: res.data.userPokemon,
-                //     currentItems: convertUsableItems(res.data.userItems),
-                // }
                 const updatedUser = convertUser(res.data)
                 console.log('updatedUser after conversion:', updatedUser)
                 

@@ -1,7 +1,5 @@
 // this file imports the Helper functions to update user/items when changes are made
-// import { convertUsableItems } from "./itemFunctions"
 const { convertUsableItems } = require("./itemFunctions")
-const { assignDVs, calculateRaisedStats, raisePokemonStats } = require("./statsFunctions")
 
 {/* FROM API: res.data = {user, userPokemon, userItems}
     const user = { 
@@ -12,7 +10,6 @@ const { assignDVs, calculateRaisedStats, raisePokemonStats } = require("./statsF
 */}
 // this function takes in the API call user, and returns the new user with conversions applied
 const convertUser = (user) => {
-    console.log('user in convertUser:', user)
     
     const newUser = {
         currentUser: {...user.user},
@@ -23,16 +20,7 @@ const convertUser = (user) => {
     // apply all changes to user properties here
     newUser.currentItems = convertUsableItems(newUser.currentItems)
 
-    // create new array with DVs object (with deckId) for each Pokemon. Also assign hpDV.
-    // const pokemonDVs = newUser.currentPokemon.map(pokemon => assignDVs(pokemon))
-    
-    // use pokemonDVs and lvl to calculate each Pokemon's current stats with raisePokemonStats([...userPokemon])
-    // newUser.currentPokemon.forEach((pokemon) => {
-    //     const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
-    //     calculateRaisedStats(pokemon, matchingDvObj)
-    // })
-
-    raisePokemonStats(newUser.currentPokemon)
+    // raisePokemonStats(newUser.currentPokemon, pokemonDVs)
 
     return newUser
 }
@@ -41,6 +29,13 @@ const convertUser = (user) => {
 
 // it should be imported in files such as Login.js on signin, Play.js on refresh, and Table.js after user wins
 module.exports = { convertUser }
+
+
+
+
+
+
+
 
 
 // console.log(convertUser({
