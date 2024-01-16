@@ -199,6 +199,7 @@ export default function Table({
     return (
         <div className='Table'>
             <div className='player1Table'>
+                <p className='level-display'>Level: {myPokemon.lvl}</p>
                 <p className='hp-display'>HP: {myPokemon.remaining_hp}/{myPokemon.hp}</p>
                 <BattleCard pokemon={myPokemon} />
             </div>
@@ -211,6 +212,7 @@ export default function Table({
             />
 
             <div className='player2Table'>
+                <p className='level-display'>Level: {enemyPokemon.lvl}</p>
                 <p className='hp-display'>HP: {enemyPokemon.remaining_hp}/{enemyPokemon.hp}</p>
                 <BattleCard pokemon={enemyPokemon} />
             </div>

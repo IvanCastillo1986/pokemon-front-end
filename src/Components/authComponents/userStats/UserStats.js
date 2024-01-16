@@ -31,8 +31,8 @@ export default function UserStats() {
                 {user.currentItems.map(item => {
                     return (
                         <ul key={item.item_id}>
-                            <li>
-                                <p>{item.item_name}</p>
+                            <li className='item'>
+                                <p className='item-name'>{capitalize(item.item_name)}</p>
                                 <p>{item.item_desc}</p>
                                 <p>Quantity: {item.bagIdArr.length}</p>
                             </li>
@@ -47,17 +47,49 @@ export default function UserStats() {
                 {user.currentPokemon.map(pokemon => {
                     return (
                     <div key={pokemon.id}>
-                        <li>
-                            <p className='label'>Name:</p> <p className='content'>{capitalize(pokemon.name)}</p> 
-                            <p className='label'>Type:</p> <p className='content'>{capitalize(pokemon.type1)}{pokemon.type2 && `, ${capitalize(pokemon.type2)}`}</p>
-                            <p className='label'>Moves:</p> <p className='content'>{capitalize(pokemon.move1)}, {capitalize(pokemon.move2)}</p>
-                            <p className='label'>Level:</p> <p className='content'>{pokemon.lvl}</p>
-                            <p className='label'>Exp:</p> <p className='content'>{pokemon.exp}</p>
-                            <span className='label'>Attack:</span> <span className='content'>{pokemon.atk}</span>
-                            <span className='label'>Defense:</span> <span className='content'>{pokemon.def}</span>
-                            <span className='label'>Special Attack:</span> <span className='content'>{pokemon.special_atk}</span>
-                            <span className='label'>Special Defense:</span> <span className='content'>{pokemon.special_def}</span>
-                            <span className='label'>Speed:</span> <span className='content'>{pokemon.speed}</span>
+                        <li className='pokemon'>
+                            <div>
+                                <span className='label'>Name:</span> 
+                                <span className='content'>{capitalize(pokemon.name)}</span> 
+                            </div>
+                            <div>
+                                <span className='label'>Type:</span> 
+                                <span className='content'>{capitalize(pokemon.type1)}</span>
+                                {pokemon.type2 && <span className='content'>{capitalize(pokemon.type2)}</span>}
+                            </div>
+                            <div>
+                                <span className='label'>Moves:</span> 
+                                <span className='content'>{capitalize(pokemon.move1)}</span>
+                                <span className='content'>{capitalize(pokemon.move2)}</span>
+                            </div>
+                            <div>
+                                <span className='label'>Level:</span> 
+                                <span className='content stat-value'>{pokemon.lvl}</span>
+                            </div>
+                            <div>
+                                <span className='label'>Exp:</span> 
+                                <span className='content stat-value'>{pokemon.exp}</span>
+                            </div>
+                            <div>
+                                <span className='label pokemon-stat'>Attack:</span> 
+                                <span className='content stat-value'>{pokemon.atk}</span>
+                            </div>
+                            <div>
+                                <span className='label pokemon-stat'>Defense:</span> 
+                                <span className='content stat-value'>{pokemon.def}</span>
+                            </div>
+                            <div>
+                                <span className='label pokemon-stat'>Special Attack:</span> 
+                                <span className='content stat-value'>{pokemon.special_atk}</span>
+                            </div>
+                            <div>
+                                <span className='label pokemon-stat'>Special Defense:</span> 
+                                <span className='content stat-value'>{pokemon.special_def}</span>
+                            </div>
+                            <div>
+                                <span className='label pokemon-stat'>Speed:</span> 
+                                <span className='content stat-value'>{pokemon.speed}</span>
+                            </div>
                         </li>
                         <hr />
                     </div>)

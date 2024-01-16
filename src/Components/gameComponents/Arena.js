@@ -193,12 +193,14 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         handleChangeScript(scriptArr)
     }
 
-    const handlePokemonSwitch = (e) => {
+    const handlePokemonSwitch = (pokeName) => {
         // save current Pokemon, so that it retains remaining_hp when sent to bench
         const oldPokemon = myPokemon
 
         // set newly clicked Pokemon to variable, which will later get passed into setMyPokemon
-        const switchedBenchPokemon = myBench.find(mon => mon.name.toUpperCase() === e.target.textContent)
+        // const switchedBenchPokemon = myBench.find(mon => mon.name.toUpperCase() === e.target.textContent)
+        const switchedBenchPokemon = myBench.find(mon => mon.name.toUpperCase() === pokeName.toUpperCase())
+        console.log(pokeName)
         
         // Will pull newPokemon from the bench
         // Will add oldPokemon to the bench

@@ -38,6 +38,11 @@
     font-size: 24px;
     margin: 10px;
 }
+.level-display {
+    color:  #e0f8d0;
+    font-size: 24px;
+    margin: 10px;
+}
 .Player1Table {
     display: flex;
     flex-direction: column;   
@@ -55,6 +60,9 @@
     flex-direction: column;
 }
 
+.backBtn {
+    font-weight: bold;
+}
 
 .Table .screen {
     /* background-color: rgb(237, 228, 228); */
@@ -135,36 +143,73 @@
 
 .fightMenu {
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: flex-start;
-    padding-left: 10px;
+    display: grid;
+    margin: 0 7%;
+    grid-template-rows: repeat(5, 1fr);
+    text-align: left;
 }
 .fightMenu > span {
     cursor: pointer;
+}
+.fightMenu .first-move {
+    grid-row: 1 / 2;
+}
+.fightMenu .second-move {
+    grid-row: 2 / 3;
 }
 /* selects all spans except the back button */
 .fightMenu span:not(:last-child) {
     text-transform: uppercase;
 }
+.fightMenu .backBtn {
+    grid-row: 5 / 6;
+}
 
 .switchMenu {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    text-align: left;
+    overflow-y: auto;
+    overflow-x: clip;
 }
-.switchOptions {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+.switchMenu > p {
+    font-size: .9em;
+    margin-top: 20px;
 }
-.switchOptions > span {
-    margin-right: 20px;
+.switchOption {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 18px 18px;
+    border-radius: 3px;
+    padding: 5px 5px;
 }
-.switchOptions > span:hover {
+.switchOption:hover {
     cursor: pointer;
+    background-color: #346856;
 }
+.switchOption > .pokeName {
+    grid-column: 1 / 4;
+    transform: scale(1, 1);
+}
+.switchOption > .L {
+    grid-column: 4 / 5;
+    font-weight: bold;
+    transform: scale(1, .7);
+}
+.switchOption > .lvl {
+    grid-column: 6 / 11;
+    font-weight: bold;
+    transform: scale(1, .7);
+}
+.switchOption > .hp {
+    grid-column: 4 / 11;
+    grid-row: 2 / 3;
+    font-weight: bold;
+    transform: scale(1, .7);
+}
+.switchMenu .backBtn {
+    padding-top: 7px;
+    display: inline-block;
+}
+
 
 .itemMenu .itemsContainer {
     height: 100px;

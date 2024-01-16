@@ -56,7 +56,7 @@ export default function Menu({
             {menuType === 'main' &&
             <div className='mainTable'>
                 <span className='fight' onClick={() => menuClick('fight')}>FIGHT</span>
-                <span className='switch' onClick={() => menuClick('switch')}>SWITCH</span>
+                <span className='switch' onClick={() => menuClick('switch')}>ᵖₖᵐₙ</span>
                 <span className='item' onClick={() => menuClick('item')}>ITEM</span>
                 <span className='defend'>DEFEND</span>
             </div> 
@@ -64,23 +64,27 @@ export default function Menu({
             
             {menuType === 'fight' &&
             <div className='fightMenu'>
-                <span onClick={() => handleClickMoveBtn(myPokemon.move1)}>
+                <span className='first-move' onClick={() => handleClickMoveBtn(myPokemon.move1)}>
                     {capitalize(myPokemon.move1)}
                 </span>
-                <span onClick={() => handleClickMoveBtn(myPokemon.move2)}>
+                <span className='second-move' onClick={() => handleClickMoveBtn(myPokemon.move2)}>
                     {capitalize(myPokemon.move2)}
                 </span>
 
-                <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
+                <span className='backBtn' onClick={() => menuClick('main')}>Back</span>
             </div>
             }
 
             {menuType === 'switch' &&
             <div className='switchMenu'>
-                <span>Which Pokemon would you like to switch to?</span>
+                <p>Bring out which POKEMON?</p>
                 <div className='switchOptions'>
                     {myBench.map((pokemon, i) => {
-                        return <span onClick={handlePokemonSwitch} key={i}>{pokemon.name.toUpperCase()}</span>
+                        return <div className='switchOption' onClick={() => handlePokemonSwitch(pokemon.name)} key={i}>
+                            <span className='pokeName'>{pokemon.name.toUpperCase()}</span> 
+                            <span className='L'>Level</span><span className='lvl'>{pokemon.lvl}</span>
+                            <span className='hp'>{pokemon.remaining_hp}/ {pokemon.hp}</span>
+                        </div>
                     })}
                 </div>
                 <span onClick={() => menuClick('main')} className='backBtn'>Back</span>
@@ -93,10 +97,14 @@ export default function Menu({
 
             {menuType === 'newPokemonAfterKO' &&
             <div className='switchMenu'>
-                <span>Which Pokemon would you like to use next?</span>
+                <p>Bring out which POKEMON?</p>
                 <div className='switchOptions'>
                     {myBench.map((pokemon, i) => {
-                        return <span onClick={(e) => handleClickPokemonAfterKO(e)} key={i}>{pokemon.name}</span>
+                        return <div className='switchOption' onClick={() => handlePokemonSwitch(pokemon.name)} key={i}>
+                            <span className='pokeName'>{pokemon.name.toUpperCase()}</span> 
+                            <span className='L'>:L</span><span className='lvl'>{pokemon.lvl}</span>
+                            <span className='hp'>{pokemon.remaining_hp}/ {pokemon.hp}</span>
+                        </div>
                     })}
                 </div>
             </div>

@@ -20,36 +20,56 @@
 .UserStats p {
     text-align: center;
 }
-.UserStats span {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 .UserStats ul {
     list-style: none;
     padding: 0;
-    margin: 0 8%;
-}
-.UserStats li {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    text-align: left;
-    margin: 40px;
 }
 .UserStats li p {
     margin-bottom: 40px;
 }
-.UserStats li .label {
-    font-weight: bold;
-    margin-left: 30px;
+.UserStats .item {
+    width: 90vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: left;
+    margin: 10px;
 }
-.UserStats li .content {
-
+.UserStats .item-name {
+    font-size: 1.4em;
+    font-weight: bold;
 }
 
 .pokemon-header {
     font-weight: bold;
+}
+.pokemon {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 1fr 1fr;
+    margin: 30px 0 30px 30px;
+}
+.pokemon div {
+    margin-bottom: 10px;
+}
+.pokemon .label {
+    text-align: left;
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: block;
+}
+.pokemon .content {
+    text-align: left;
+    font-size: 1.2em;
+    margin-bottom: 0;
+    display: block;
+}
+.pokemon .pokemon-stat {
+    font-size: 1.2em;
+    margin-top: 5px;
+}
+.pokemon .stat-value {
+    margin-left: 10%;
 }
 
 hr {
