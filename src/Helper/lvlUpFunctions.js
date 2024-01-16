@@ -10,10 +10,6 @@ function getNewLvlFromExp(currentExp) {
   return level - 1;
 }
 
-// const currentExperience = 1165;
-// const pokemonLevel = getNewLvlFromExp(currentExperience);
-// console.log(`The Pokemon is at level ${pokemonLevel} with ${currentExperience} experience.`);
-
 
 
 module.exports = { getNewLvlFromExp };

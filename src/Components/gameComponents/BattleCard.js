@@ -4,9 +4,6 @@ import '../../Pages/Cards.css'
 
 
 export default function BattleCard({ pokemon, battleCardStyle, nameStyle, statStyle, imgStyle }) {
-
-    // Why couldn't I console log this?
-    // console.log(cardStyle.battleCard)
     
 
     return (

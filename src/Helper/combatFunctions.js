@@ -55,7 +55,6 @@ const defPkm = {
     "lvl": 5
 }
 
-// console.log(calculateDmg(atkPkm, defPkm))
 
 
 

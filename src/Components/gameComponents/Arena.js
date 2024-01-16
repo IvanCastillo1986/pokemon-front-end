@@ -137,7 +137,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
                 {userToUpdate: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
             ).then(res => {
                 const updatedUser = convertUser(res.data)
-                console.log('updatedUser after conversion:', updatedUser)
                 
                 setUser(() => updatedUser)
                 sessionStorage.setItem('user', JSON.stringify(updatedUser))
@@ -200,7 +199,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         // set newly clicked Pokemon to variable, which will later get passed into setMyPokemon
         // const switchedBenchPokemon = myBench.find(mon => mon.name.toUpperCase() === e.target.textContent)
         const switchedBenchPokemon = myBench.find(mon => mon.name.toUpperCase() === pokeName.toUpperCase())
-        console.log(pokeName)
         
         // Will pull newPokemon from the bench
         // Will add oldPokemon to the bench

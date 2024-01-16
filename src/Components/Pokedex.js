@@ -68,7 +68,6 @@ export default function Pokedex({ pokemon }) {
 
     const togglePowerOn = () => {
         setIsOn(true)
-        console.log('power is on')
         if (currentPokemon) {
             setDivStyle({
                 backgroundImage: `url(${currentPokemon?.sprites?.other["official-artwork"].front_default})`,
@@ -81,11 +80,9 @@ export default function Pokedex({ pokemon }) {
     }
     const togglePowerOff = () => {
         setIsOn(false)
-        console.log('power is off')
     }
 
     const dPadUp = () => {
-        console.log('clicking up')
 
         if (currentPokemon) { // Assures no bug if pressed during ...Loading
             if (blackBoxY > 0) {
@@ -96,7 +93,6 @@ export default function Pokedex({ pokemon }) {
     }
     const dPadDown = () => {
         let blackBox = blackBoxRef.current
-        console.log('clicking down')
 
         if (currentPokemon) { // Assures no bug if pressed during ...Loading
             if (blackBoxY < blackBox.scrollHeight - blackBox.clientHeight) {
@@ -111,7 +107,6 @@ export default function Pokedex({ pokemon }) {
     // offSet height is 98px (because it's the clientHeight + border)
 
     const dPadRight = () => {
-        console.log('clicking right')
         // we are setting currentPokemon using the same id, because we're retrieving the pokemon[index], and array[idx] starts at 0
         if (currentPokemon) { // Assures no bug if pressed during ...Loading
             if (currentPokemon.id === 151) {
@@ -122,7 +117,6 @@ export default function Pokedex({ pokemon }) {
         }
     }
     const dPadLeft = () => {
-        console.log('clicking left')
 
         if (currentPokemon) {
             if (currentPokemon.id === 1) {

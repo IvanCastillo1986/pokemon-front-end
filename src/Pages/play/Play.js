@@ -71,10 +71,8 @@ export default function Play() {
                     // enemyPokemon will now have .remaining_hp, .pokemon_id, and .id += 2000 (to prevent accidental comparisons)
                 })
 
-                // console.log('aiDeckArr before changing', aiDeckArr)
                 raisePokemonStats(aiDeckArr)
                 addRemainingHp(aiDeckArr)
-                // console.log('aiDeckArr after changing', aiDeckArr)
 
                 // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
                 sessionStorage.setItem('opponentDeck', JSON.stringify(aiDeckArr))
@@ -90,7 +88,6 @@ export default function Play() {
             axios.get(`${API}/users/${sessionUser.currentUser.uuid}`)
             .then(res => {
                 const refreshedUser = convertUser(res.data)
-                console.log('page has refreshed:', refreshedUser)
                 
                 sessionStorage.setItem('user', JSON.stringify(refreshedUser))
                 setUser(refreshedUser)

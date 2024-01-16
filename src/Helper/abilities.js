@@ -13,7 +13,6 @@ function printPokemonAndAbilities(pokemonArr) {
         return currentMon
     })
 }
-// console.log(printPokemonAndAbilities(pokemon))
 
 // This function prints each move, and how many Pokemon has ability => {moveName: numOfPokemon}
 function countAbilities(pokemonArr) {
@@ -27,7 +26,6 @@ function countAbilities(pokemonArr) {
     }
     return abilityCount
 }
-// console.log(countAbilities(pokemon))
 
 
 

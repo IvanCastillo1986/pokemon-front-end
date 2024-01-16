@@ -37,7 +37,6 @@ export default function UserStatus() {
     const handleSignOut = () => {
         signOut(auth)
         .then(() => {
-            console.log('Signed out successfully')
             setUser({})
             sessionStorage.clear()
 
