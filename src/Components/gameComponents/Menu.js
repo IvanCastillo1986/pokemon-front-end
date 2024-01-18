@@ -11,7 +11,7 @@ import Script from './Script'
 
 export default function Menu({
     menuType, setMenuType, script, myItems, handleUseItem, myPokemon, handleClickMoveBtn, myBench, 
-    handlePokemonSwitch, handleClickPokemonAfterKO
+    handlePokemonSwitch
 }) {
 
     const menuClick = (menuType) => {
@@ -83,7 +83,7 @@ export default function Menu({
                         return <div className='switchOption' onClick={() => handlePokemonSwitch(pokemon.name)} key={i}>
                             <span className='pokeName'>{pokemon.name.toUpperCase()}</span> 
                             <span className='L'>Level</span><span className='lvl'>{pokemon.lvl}</span>
-                            <span className='hp'>{pokemon.remaining_hp}/ {pokemon.hp}</span>
+                            <span className='L'>HP</span><span className='lvl'>{pokemon.remaining_hp}/ {pokemon.hp}</span>
                         </div>
                     })}
                 </div>
@@ -103,7 +103,7 @@ export default function Menu({
                         return <div className='switchOption' onClick={() => handlePokemonSwitch(pokemon.name)} key={i}>
                             <span className='pokeName'>{pokemon.name.toUpperCase()}</span> 
                             <span className='L'>:L</span><span className='lvl'>{pokemon.lvl}</span>
-                            <span className='hp'>{pokemon.remaining_hp}/ {pokemon.hp}</span>
+                            <span className='hp'>HP {pokemon.remaining_hp}/ {pokemon.hp}</span>
                         </div>
                     })}
                 </div>
@@ -113,14 +113,14 @@ export default function Menu({
             {menuType === 'playerWonMenu' &&
             <div className='playerWonMenu'>
                 {/* after scripts are done running, set this menu to display */}
-                <h1>You've won the match</h1>
+                <h2>Congrats! You've won the match</h2>
             </div>
             }
 
             {menuType === 'playerLostMenu' &&
             <div className='playerLostMenu'>
                 {/* after scripts are done running, set this menu to display */}
-                <h1>You've lost the match</h1>
+                <h2>You lost. Try using weaknesses and items.</h2>
             </div>
             }
 

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import { UserContext } from '../UserContext'
 import pokeball from '../Images/pokeball.png'
 import pokeball_icon from '../Images/pokeball_icon.png'
 import pokeball_icon_open from '../Images/pokeball_icon_open.png'
@@ -41,6 +42,8 @@ const registeredMenuItems = [
 
 export default function Navbar() {
 
+    const {user} = useContext(UserContext)
+
     const [show, setShow] = useState(false)
     const [signedIn, setSignedIn] = useState(false)
 
@@ -53,7 +56,12 @@ export default function Navbar() {
             <div><Link to="/"><img src={pokeball} style={{height: "100px"}} alt="pokeball" /></Link></div>
             <Link to="/cards">Cards</Link>
             <Link to="/pokedex">Pokedex</Link>
+            
+            {Object.keys(user).length < 6 ? 
+            <Link to="/deck">Play</Link> // this renders <Deck />
+            :
             <Link to="/play">Play</Link>
+            }
             <div className='account-div' onClick={() => setShow(!show)}>
                 <div className='account'>
                     <span>Account</span>

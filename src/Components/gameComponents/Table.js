@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
-import { typeMultiplier } from '../../Helper/typeMultiplier'
-import { handleAddToSharedExp, handleRemoveFromSharedExp, expRequiredForLvlUp } from '../../Helper/expFunctions'
+import React from 'react'
+import { handleAddToSharedExp, handleRemoveFromSharedExp } from '../../Helper/expFunctions'
 import { calculateDmg, applyEffect } from '../../Helper/combatFunctions'
 
 import BattleCard from './BattleCard'
 import Menu from './Menu'
 
-
-const API = process.env.REACT_APP_API_URL
 
 
 

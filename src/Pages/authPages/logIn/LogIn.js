@@ -32,7 +32,8 @@ export default function LogIn() {
                 const newUser = convertUser(res.data)
                 setUser(newUser)
                 sessionStorage.setItem('user', JSON.stringify(newUser))
-            })
+            }).catch(err => console.log('error:', err))
+            
             history.push('/my-account')
         })
         .catch(err => {

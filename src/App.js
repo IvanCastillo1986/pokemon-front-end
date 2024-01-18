@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { UserContext } from './UserContext'
 import axios from 'axios'
 import { findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
@@ -14,6 +14,7 @@ import NavBar from './Layout/Navbar'
 import Home from './Pages/Home'
 import CardsPage from './Pages/CardsPage'
 import Pokedex from './Components/Pokedex'
+import Deck from './Components/gameComponents/Deck'
 import Play from './Pages/play/Play'
 import Account from './Pages/authPages/account/Account'
 import LogIn from './Pages/authPages/logIn/LogIn'
@@ -85,7 +86,25 @@ export default function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
           <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
-          <Route path="/play" render={() => Object.keys(user).length > 0 ? <Play /> : <LogOut />} />
+          <Route path="/deck" render={
+            () => Object.keys(user).length === 0 ? <LogOut /> :
+              // if there are six pokemon, render a redirect
+              user.currentPokemon.length < 6 ? <Deck /> : <Redirect to="/play" />
+          } />
+          
+          <Route path="/play" render={ 
+            () => Object.keys(user).length === 0 ? <LogOut /> : <Play />} 
+          />
+
+          {/* <Route path="/play" render={
+            () => Object.keys(user).length === 0 ? 
+            <LogOut />
+            :
+            Object.keys(user).length === 0 ?
+              <Play /> 
+              :
+              <Deck />
+          } /> */}
           <Route path="/register" render={() => <Register />} />
           <Route path="/login" render={() => <LogIn />} />
           <Route path="/logout" render={() => <LogOut />} />

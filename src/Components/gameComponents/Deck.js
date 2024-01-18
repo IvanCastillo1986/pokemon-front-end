@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { UserContext } from '../../UserContext'
 import axios from 'axios'
 
@@ -9,11 +10,14 @@ const API = process.env.REACT_APP_API_URL
 
 
 // This component let's player choose their starter Pokemon
-export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
+// export default function Deck({ yourDeck, setYourDeck }) {
+export default function Deck({ yourDeck, setYourDeck }) {
 
     const { user, setUser } = useContext(UserContext)
     const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     const [starterPokemon, setStarterPokemon] = useState({})
+
+    const history = useHistory()
 
     const getStarterId = (e) => {
         let starterId;
@@ -32,17 +36,19 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
 
     // Make API call to add starter to user's deck, and creates DVs for full deck
     const addStarterToDeck = async (starterId) => {
-
+        console.log('starterId after clicking:', starterId)
+        const {currentUser, currentPokemon} = user
         // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
         const starterInDeck = await axios.post(
             `${API}/decks?getPokeInfo=true`, 
-            { uuid: user.currentUser.uuid, pokemonId: starterId })
+            { uuid: currentUser.uuid, pokemonId: starterId })
         .then(res => {
+            console.log('starter from API /decks after clicking btn:', res.data)
             return res.data
         })
         
         // add starterPokemon to our Play page yourDeck state, which currently has 5 Pokemon
-        const fullDeck = [starterInDeck].concat(yourDeck)
+        const fullDeck = [starterInDeck].concat(currentPokemon)
 
         // spread both deck and pokemon response into one object, so that pokemon also has exp and lvl
         setStarterPokemon(starterInDeck)
@@ -58,28 +64,16 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
         const fullDeck = await addStarterToDeck(starterId)
 
         setYourDeck(fullDeck)
-
+        console.log('fullDeck after addStarterToDeck:', fullDeck)
         // add the starter Pokemon to user Context and sessionStorage
         const userAfterPicking = {...user}
         userAfterPicking.currentPokemon = fullDeck
+        userAfterPicking.currentUser.has_chosen_starter = true
 
-        setUser(userAfterPicking)
-        sessionStorage.setItem('user', JSON.stringify(userAfterPicking))
-    };
+        const {currentUser, currentItems } = userAfterPicking
 
-    const handlePlayerReadyToBattle = () => {
-        // update user in both API and UserContext to has_chosen_starter = true
-        const {currentUser, currentItems } = user
-
-        const userToUpdate = {
-            email: currentUser.email,
-            uuid: currentUser.uuid,
-            has_chosen_starter: true,
-            wins: currentUser.wins,
-            losses: currentUser.losses
-        }
-
-        axios.put(`${API}/users/${currentUser.uuid}`, { userToUpdate })
+        // Make api call for updatedUser after picking
+        axios.put(`${API}/users/${currentUser.uuid}`, { userToUpdate: currentUser })
         .then(res => {
             const updatedUser = {
                 currentUser: res.data,
@@ -91,11 +85,10 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
             setUser(() => {
                 return updatedUser
             })
+            console.log('finished last call in Deck')
         }).catch(err => console.log(err))
+    };
 
-        // Navigates us to Arena component after reading intro
-        setCurrentComponent('arena')
-    }
 
 
     return (
@@ -131,7 +124,7 @@ export default function Deck({ yourDeck, setYourDeck, setCurrentComponent }) {
                 However, these Pokemon are not as strong as many level 1 or level 2 Pokemon who have already evolved.</p>
                 <p>Click the button below when you're ready to enter the Arena and test out your deck!</p>
                 {/* Link this button to the Arena with deck props, and unmount the Deck component */}
-                <button className='ArenaPromptBtn' onClick={handlePlayerReadyToBattle}>
+                <button className='ArenaPromptBtn' onClick={() => history.push('/play')}>
                     Go to Arena
                 </button>
                 </>

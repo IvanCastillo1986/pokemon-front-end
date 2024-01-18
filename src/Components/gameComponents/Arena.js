@@ -16,7 +16,7 @@ const API = process.env.REACT_APP_API_URL
 
 
 
-export default function Arena({ yourDeck, yourItems, opponentDeck }) {
+export default function Arena({ yourDeck, opponentDeck }) {
     /* 
     This component will recieve the user and AI decks created in Deck component.
     This will be the game's parent component.
@@ -35,7 +35,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
 
     const [myPokemon, setMyPokemon] = useState({})
     const [myBench, setMyBench] = useState([])
-    const [myItems, setMyItems] = useState(yourItems)
+    const [myItems, setMyItems] = useState(user.currentItems)
     const [deletedItemIds, setDeletedItemIds] = useState([])
     const [enemyPokemon, setEnemyPokemon] = useState({})
     const [enemyBench, setEnemyBench] = useState([])
@@ -101,13 +101,13 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
 
             for (const expObj of deckArrToUpdate) {
                 // find the Pokemon with expObj.id
-                const matchingPokemon = yourDeck.find(pokemon => pokemon.id == expObj.id)
+                const matchingPokemon = yourDeck.find(pokemon => pokemon.id === expObj.id)
             
                 // add the Pokemon's exp to expObj.exp
                 expObj.exp += matchingPokemon.exp
                 // calculate if the lvl matches
                 const newLvl = getNewLvlFromExp(expObj.exp)
-                if (newLvl == matchingPokemon.lvl) {
+                if (newLvl === matchingPokemon.lvl) {
                     // if it does, add current Pokemon's lvl to expObj
                     expObj.lvl = matchingPokemon.lvl
                 } else {
@@ -133,13 +133,19 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             setMenuType('playerWonMenu')
             // make user API calls for exp won, items used, random item won, and games won/lost in stats
             axios.put(`${API}/users/${winningUser.uuid}?matchEnd=true`, 
-                // {user: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
                 {userToUpdate: winningUser, bagIdsFromGame, wonItemId, deckArrToUpdate}
             ).then(res => {
                 const updatedUser = convertUser(res.data)
                 
                 setUser(() => updatedUser)
                 sessionStorage.setItem('user', JSON.stringify(updatedUser))
+                
+                // updates the winning Pokemon's current Level for display (and preserves current HP)
+                const myUpdatedPokemon = updatedUser.currentPokemon.find(pokemon => pokemon.name === myPokemon.name)
+                const myCurrentHp = myPokemon.remaining_hp
+                myUpdatedPokemon.remaining_hp = myCurrentHp
+
+                setMyPokemon(myUpdatedPokemon)
             }).catch(err => console.log(err))
         } else if (myBench.length < 1) {
             // I lost 
@@ -154,7 +160,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         for (let i = 0; i < currentScriptArr.length; i++) {
 
             setScript(currentScriptArr[i])
-            await new Promise(res => setTimeout(res, 500))
+            await new Promise(res => setTimeout(res, 1500))
         }
         
         setMenuType('main')
@@ -197,7 +203,6 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
         const oldPokemon = myPokemon
 
         // set newly clicked Pokemon to variable, which will later get passed into setMyPokemon
-        // const switchedBenchPokemon = myBench.find(mon => mon.name.toUpperCase() === e.target.textContent)
         const switchedBenchPokemon = myBench.find(mon => mon.name.toUpperCase() === pokeName.toUpperCase())
         
         // Will pull newPokemon from the bench
@@ -244,7 +249,7 @@ export default function Arena({ yourDeck, yourItems, opponentDeck }) {
             
             <div className='intro'>
                 <h1>Welcome to the Arena</h1>
-                <p>Your opponent's first Pokemon will be {opponentDeck[0].name}.</p>
+                <p>Your opponent's first Pokemon will be {opponentDeck[0]?.name}.</p>
                 <p>Which Pokemon would you like to start the battle with?</p>
                 <div className='buttonDiv'>
                     {yourDeck.map((pokemon) => {
