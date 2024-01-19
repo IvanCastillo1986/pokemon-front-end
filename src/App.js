@@ -75,7 +75,7 @@ export default function App() {
   useEffect(() => {
     sessionStorage.setItem('user', JSON.stringify(user))
   }, [sessionUser])
-
+  // console.log('Deck routing condition {user.currentPokemon.length < 6}:', user.currentPokemon.length < 6)
 
   return (
     <div className='App'>
@@ -85,26 +85,16 @@ export default function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
-          <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
-          <Route path="/deck" render={
-            () => Object.keys(user).length === 0 ? <LogOut /> :
-              // if there are six pokemon, render a redirect
-              user.currentPokemon.length < 6 ? <Deck /> : <Redirect to="/play" />
-          } />
-          
-          <Route path="/play" render={ 
-            () => Object.keys(user).length === 0 ? <LogOut /> : <Play />} 
-          />
-
-          {/* <Route path="/play" render={
+          <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />          
+          <Route path="/play" render={
             () => Object.keys(user).length === 0 ? 
             <LogOut />
             :
-            Object.keys(user).length === 0 ?
+            user.currentPokemon.length > 5 ?
               <Play /> 
               :
               <Deck />
-          } /> */}
+          } />
           <Route path="/register" render={() => <Register />} />
           <Route path="/login" render={() => <LogIn />} />
           <Route path="/logout" render={() => <LogOut />} />

@@ -56,12 +56,8 @@ export default function Navbar() {
             <div><Link to="/"><img src={pokeball} style={{height: "100px"}} alt="pokeball" /></Link></div>
             <Link to="/cards">Cards</Link>
             <Link to="/pokedex">Pokedex</Link>
-            
-            {Object.keys(user).length < 6 ? 
-            <Link to="/deck">Play</Link> // this renders <Deck />
-            :
             <Link to="/play">Play</Link>
-            }
+            
             <div className='account-div' onClick={() => setShow(!show)}>
                 <div className='account'>
                     <span>Account</span>

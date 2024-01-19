@@ -34,11 +34,10 @@ export default function Register() {
             const newUser = {
                 email: userCredentials.user.email,
                 uuid: userCredentials.user.uid,
-                has_chosen_starter: false
             }
 
             // here we not only create the user, but also send the 5 random pokeIds array to create deck
-            axios.post(`${API}/users`, [newUser, createRandomPokemonIds(5)])
+            axios.post(`${API}/users`, newUser)
             .then(res => {
                 const user = convertUser(res.data)
                 

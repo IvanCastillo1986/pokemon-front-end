@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
 import { UserContext } from '../../UserContext'
+import { createRandomPokemonIds } from '../../Helper/createRandomPokemonIds'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'
@@ -10,14 +10,14 @@ const API = process.env.REACT_APP_API_URL
 
 
 // This component let's player choose their starter Pokemon
-// export default function Deck({ yourDeck, setYourDeck }) {
-export default function Deck({ yourDeck, setYourDeck }) {
+export default function Deck() {
 
     const { user, setUser } = useContext(UserContext)
-    const sessionUser = JSON.parse(sessionStorage.getItem('user'))
-    const [starterPokemon, setStarterPokemon] = useState({})
+    // const sessionUser = JSON.parse(sessionStorage.getItem('user'))
 
-    const history = useHistory()
+    const [starterPokemon, setStarterPokemon] = useState({})
+    const [restOfDeck, setRestOfDeck] = useState([])
+
 
     const getStarterId = (e) => {
         let starterId;
@@ -34,50 +34,39 @@ export default function Deck({ yourDeck, setYourDeck }) {
         return starterId;
     }
 
-    // Make API call to add starter to user's deck, and creates DVs for full deck
+    // Make API call to add starter to user's deck, and creates DVs for full deck. Show Intro.
     const addStarterToDeck = async (starterId) => {
-        console.log('starterId after clicking:', starterId)
-        const {currentUser, currentPokemon} = user
-        // make api call to retrieve starter, plus it's user's deck properties ( exp/lvl )
-        const starterInDeck = await axios.post(
-            `${API}/decks?getPokeInfo=true`, 
-            { uuid: currentUser.uuid, pokemonId: starterId })
-        .then(res => {
-            console.log('starter from API /decks after clicking btn:', res.data)
-            return res.data
-        })
-        
-        // add starterPokemon to our Play page yourDeck state, which currently has 5 Pokemon
-        const fullDeck = [starterInDeck].concat(currentPokemon)
+        const userDeckIds = [starterId, ...createRandomPokemonIds(5)]
 
-        // spread both deck and pokemon response into one object, so that pokemon also has exp and lvl
-        setStarterPokemon(starterInDeck)
-        
-        return fullDeck
+        // Make API call to get 6 Pokemon to store in state, returns 6 Pokemon
+        axios.get(`${API}/pokemon`, { params: {userDeckIds: JSON.stringify(userDeckIds)} })
+        .then(res => {
+            const starterInDeck = res.data.find(pokemon => pokemon.id === starterId)
+            const otherPokemon = res.data.filter(pokemon => pokemon.id !== starterId)
+            
+            setStarterPokemon(starterInDeck)
+            setRestOfDeck(otherPokemon)
+        }).catch(err => console.log(err))
     }
     
-
     // This handleClick let's the player choose their starter Pokemon
-    const handleClick = async (e) => {
+    const handleClickStarter = async (e) => {
         const starterId = getStarterId(e)
         
-        const fullDeck = await addStarterToDeck(starterId)
+        await addStarterToDeck(starterId)
+    }
 
-        setYourDeck(fullDeck)
-        console.log('fullDeck after addStarterToDeck:', fullDeck)
-        // add the starter Pokemon to user Context and sessionStorage
-        const userAfterPicking = {...user}
-        userAfterPicking.currentPokemon = fullDeck
-        userAfterPicking.currentUser.has_chosen_starter = true
-
-        const {currentUser, currentItems } = userAfterPicking
+    
+    async function updateUserInBackend() {
+        const {currentUser, currentItems } = user
+        const newDeck = [starterPokemon, ...restOfDeck]
 
         // Make api call for updatedUser after picking
         axios.put(`${API}/users/${currentUser.uuid}`, { userToUpdate: currentUser })
         .then(res => {
             const updatedUser = {
                 currentUser: res.data,
-                currentPokemon: yourDeck,
+                currentPokemon: newDeck,
                 currentItems
             }
 
@@ -85,25 +74,24 @@ export default function Deck({ yourDeck, setYourDeck }) {
             setUser(() => {
                 return updatedUser
             })
-            console.log('finished last call in Deck')
         }).catch(err => console.log(err))
-    };
-
+    }
 
 
     return (
         <div className='Deck'>
             <h1>Hey, welcome to Pokemon Play!</h1>
-            {Object.keys(starterPokemon).length === 0 
+
+            {restOfDeck.length === 0
             ?
                 <>
                 <p>Click a button below to choose your first Pokemon.<br />
                 Your comrade through thick and thin.</p>
                 <p>Which type is your favorite?</p>
                 <div className='Buttons'>
-                    <button className='Grass-btn' onClick={handleClick}>Grass</button>
-                    <button className='Fire-btn' onClick={handleClick}>Fire</button>
-                    <button className='Water-btn' onClick={handleClick}>Water</button>
+                    <button className='Grass-btn' onClick={(e) => handleClickStarter(e)}>Grass</button>
+                    <button className='Fire-btn' onClick={(e) => handleClickStarter(e)}>Fire</button>
+                    <button className='Water-btn' onClick={(e) => handleClickStarter(e)}>Water</button>
                 </div>
                 </>
             :
@@ -113,7 +101,7 @@ export default function Deck({ yourDeck, setYourDeck }) {
                 <BattleCard key={starterPokemon.pokemon_id} pokemon={starterPokemon} />
                 <p>And this is the rest of your deck:</p>
                 <div className='RandomDeck'>
-                    {sessionUser.currentPokemon.map(pokemon => {
+                    {restOfDeck.map(pokemon => {
                         return <BattleCard key={pokemon.id} pokemon={pokemon} />
                     })}
                 </div>
@@ -123,8 +111,8 @@ export default function Deck({ yourDeck, setYourDeck }) {
                 Some Pokemon can not evolve, but these Pokemon are stronger than most other basic-level Pokemon who can evolve.<br/>
                 However, these Pokemon are not as strong as many level 1 or level 2 Pokemon who have already evolved.</p>
                 <p>Click the button below when you're ready to enter the Arena and test out your deck!</p>
-                {/* Link this button to the Arena with deck props, and unmount the Deck component */}
-                <button className='ArenaPromptBtn' onClick={() => history.push('/play')}>
+
+                <button className='ArenaPromptBtn' onClick={updateUserInBackend}>
                     Go to Arena
                 </button>
                 </>

@@ -91,7 +91,6 @@ export default function Arena({ yourDeck, opponentDeck }) {
         const winningUser = {
             email: currentUser.email,
             uuid: currentUser.uuid,
-            has_chosen_starter: true,
             wins: currentUser.wins + 1,
             losses: currentUser.losses
         }
