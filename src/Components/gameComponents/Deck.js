@@ -13,7 +13,6 @@ const API = process.env.REACT_APP_API_URL
 export default function Deck() {
 
     const { user, setUser } = useContext(UserContext)
-    // const sessionUser = JSON.parse(sessionStorage.getItem('user'))
 
     const [starterPokemon, setStarterPokemon] = useState({})
     const [restOfDeck, setRestOfDeck] = useState([])
@@ -50,7 +49,7 @@ export default function Deck() {
     }
     
     // This handleClick let's the player choose their starter Pokemon
-    const handleClickStarter = async (e) => {
+    const handleClickStarterBtn = async (e) => {
         const starterId = getStarterId(e)
         
         await addStarterToDeck(starterId)
@@ -60,17 +59,23 @@ export default function Deck() {
     async function updateUserInBackend() {
         const {currentUser, currentItems } = user
         const newDeck = [starterPokemon, ...restOfDeck]
+        const pokemonIds = newDeck.map(pokemon => pokemon.id)
 
-        // Make api call for updatedUser after picking
-        axios.put(`${API}/users/${currentUser.uuid}`, { userToUpdate: currentUser })
+        // TODO: change this api call so that the Pokemon are stored in decks. Change in back-end with current Pokemon
+
+        console.log(pokemonIds)
+        // Make api call for updatedUser after picking Starter
+        axios.put(`${API}/users/${currentUser.uuid}`, { userToUpdate: currentUser, pokemonIds })
         .then(res => {
             const updatedUser = {
-                currentUser: res.data,
-                currentPokemon: newDeck,
-                currentItems
+                currentUser: res.data.user,
+                currentPokemon: res.data.userPokemon,
+                currentItems: res.data.userItems
             }
+            console.log('updatedUser in <Deck />:', updatedUser)
 
             sessionStorage.setItem('user', JSON.stringify(updatedUser))
+            console.log(JSON.parse(sessionStorage.getItem('user')))
             setUser(() => {
                 return updatedUser
             })
@@ -89,9 +94,9 @@ export default function Deck() {
                 Your comrade through thick and thin.</p>
                 <p>Which type is your favorite?</p>
                 <div className='Buttons'>
-                    <button className='Grass-btn' onClick={(e) => handleClickStarter(e)}>Grass</button>
-                    <button className='Fire-btn' onClick={(e) => handleClickStarter(e)}>Fire</button>
-                    <button className='Water-btn' onClick={(e) => handleClickStarter(e)}>Water</button>
+                    <button className='Grass-btn' onClick={(e) => handleClickStarterBtn(e)}>Grass</button>
+                    <button className='Fire-btn' onClick={(e) => handleClickStarterBtn(e)}>Fire</button>
+                    <button className='Water-btn' onClick={(e) => handleClickStarterBtn(e)}>Water</button>
                 </div>
                 </>
             :

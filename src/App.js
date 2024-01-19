@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 import { UserContext } from './UserContext'
 import axios from 'axios'
 import { findFirstTwoLearnedMoves } from './Helper/convertToBattlePokemon'
@@ -75,7 +75,6 @@ export default function App() {
   useEffect(() => {
     sessionStorage.setItem('user', JSON.stringify(user))
   }, [sessionUser])
-  // console.log('Deck routing condition {user.currentPokemon.length < 6}:', user.currentPokemon.length < 6)
 
   return (
     <div className='App'>

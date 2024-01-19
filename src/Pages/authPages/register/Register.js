@@ -40,6 +40,7 @@ export default function Register() {
             axios.post(`${API}/users`, newUser)
             .then(res => {
                 const user = convertUser(res.data)
+                console.log('user after registering:', user)
                 
                 sessionStorage.setItem("user", JSON.stringify(user))
                 setUser(user)
