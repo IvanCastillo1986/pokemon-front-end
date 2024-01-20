@@ -2,9 +2,10 @@ import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { auth } from '../../../firebase'
 import { UserContext } from "../../../UserContext"
-import { createRandomPokemonIds } from '../../../Helper/createRandomPokemonIds'
 import { convertUser } from '../../../Helper/convertUser'
 import axios from 'axios'
+
+// import NetworkError from "../../NetworkError"
 
 import './Register.css'
 
@@ -23,9 +24,9 @@ export default function Register() {
 
     const history = useHistory()
 
+
     // Make API call to retrieve new user's items
     const register = (e) => {
-        e.preventDefault()
 
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredentials) => {
@@ -36,7 +37,7 @@ export default function Register() {
                 uuid: userCredentials.user.uid,
             }
 
-            // here we not only create the user, but also send the 5 random pokeIds array to create deck
+            // here we not only create the user, 1 currentItem, and empty currentPokemon
             axios.post(`${API}/users`, newUser)
             .then(res => {
                 const user = convertUser(res.data)
@@ -45,15 +46,30 @@ export default function Register() {
                 sessionStorage.setItem("user", JSON.stringify(user))
                 setUser(user)
             })
-            .catch(err => console.log('error adding user:', err))
+            .catch(err => {
+                console.log('error adding user:', err.message)
+            })
 
             history.push("/my-account")
         })
         .catch(err => {
-            console.log('Error in createUserWithEmailAndPassword', err.message)
+            console.log('Error in createUserWithEmailAndPassword', err)
 
             if (err.code.includes('auth/weak-password')) showPasswordTooShort(true)
             if (err.code.includes('auth/email-already-in-use')) showUserAlreadyExists(true)
+        })
+    }
+
+    const handleRegister = (e) => {
+        e.preventDefault()
+
+        // if server is reachable, then register user
+        axios.get(`${API}`)
+        .then(() => {
+            register()
+        }).catch(err => {
+            console.log('Network Error in <Register />:', err)
+            history.push('/network-error')
         })
     }
 
@@ -72,7 +88,7 @@ export default function Register() {
         <div className='Register'>
             <h2>Register</h2>
             
-            <form onSubmit={register}>
+            <form onSubmit={handleRegister}>
                 <input type='email' placeholder='E-mail' value={email} onChange={handleEmailChange} />
                 <input type='password' placeholder='Password' value={password} onChange={handlePasswordChange} />
                 <input type='submit' value='Register' />

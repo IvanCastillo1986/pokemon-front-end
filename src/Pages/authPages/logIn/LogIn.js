@@ -21,8 +21,7 @@ export default function LogIn() {
     const { setUser } = useContext(UserContext)
     const history = useHistory()
 
-    const handleSignIn = async (e) => {
-        e.preventDefault()
+    const signIn = async () => {
         
         await signInWithEmailAndPassword (auth, email, password)
         .then((userCredentials) => {
@@ -40,6 +39,18 @@ export default function LogIn() {
             console.log(`Error in handleSignIn:`, err)
             if (err.code.includes('user-not-found')) showUserUnregistered(true)
             if (err.code.includes('wrong-password')) showWrongPassword(true)
+        })
+    }
+
+    const handleSignIn = (e) => {
+        e.preventDefault()
+
+        axios.get(`${API}`)
+        .then(() => {
+            signIn()
+        }).catch(err => {
+            console.log('Network Error in <LogIn />:', err)
+            history.push('/network-error')
         })
     }
 

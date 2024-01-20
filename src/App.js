@@ -21,6 +21,7 @@ import LogIn from './Pages/authPages/logIn/LogIn'
 import LogOut from './Pages/authPages/logOut/LogOut'
 import Register from './Pages/authPages/register/Register'
 import FourOFour from './Pages/FourOFour'
+import NetworkError from './Pages/NetworkError'
 
 
 
@@ -98,6 +99,7 @@ export default function App() {
           <Route path="/login" render={() => <LogIn />} />
           <Route path="/logout" render={() => <LogOut />} />
           <Route path="/my-account" render={() => <Account />} />
+          <Route path="/network-error" render={() => <NetworkError />} />
           <Route exact path="*" component={FourOFour} />
         </Switch>
       </UserContext.Provider>
