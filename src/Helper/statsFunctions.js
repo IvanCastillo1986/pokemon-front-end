@@ -9,7 +9,7 @@ const statFluctuation = (stat, minVal, maxVal) => {
     return randomNum(minVal, maxVal) * stat
 }
 
-// THIS ONLY GETS CALLED UPON REGISTERATION PROCESS. MOVE TO BACK-END.
+// This is used for the opponent's Pokemon. It's used for user's Pokemon in back-end separately.
 const assignDVs = (pokemon) => {
     // returns DVs object with random DV values from 0-15
     const pokemonDVs = {
@@ -43,21 +43,20 @@ const calculateRaisedStats = (pokemon, dvs) => {
         BUT let's do it without StatExp for now. We can add this later if anything:
         Stat = (2 * BaseStat + DV) * Level / 100 + 5
     */
-    pokemon.hp = raiseStat(pokemon.hp, dvs.hpDV, pokemon.lvl)
-    pokemon.atk = raiseStat(pokemon.atk, dvs.atkDV, pokemon.lvl)
-    pokemon.def = raiseStat(pokemon.def, dvs.defDV, pokemon.lvl)
-    pokemon.special_atk = raiseStat(pokemon.special_atk, dvs.special_atkDV, pokemon.lvl)
-    pokemon.special_def = raiseStat(pokemon.special_def, dvs.special_defDV, pokemon.lvl)
-    pokemon.speed = raiseStat(pokemon.speed, dvs.speedDV, pokemon.lvl)
+    pokemon.hp = raiseStat(pokemon.hp, dvs.hp_dv, pokemon.lvl)
+    pokemon.atk = raiseStat(pokemon.atk, dvs.atk_dv, pokemon.lvl)
+    pokemon.def = raiseStat(pokemon.def, dvs.def_dv, pokemon.lvl)
+    pokemon.special_atk = raiseStat(pokemon.special_atk, dvs.special_atk_dv, pokemon.lvl)
+    pokemon.special_def = raiseStat(pokemon.special_def, dvs.special_def_dv, pokemon.lvl)
+    pokemon.speed = raiseStat(pokemon.speed, dvs.speed_dv, pokemon.lvl)
 }
 
 // takes in myDeck and pokemonDV or creates opponentDVs here
 function raisePokemonStats(deck, pokemonDVs) {
-    
-    if (pokemonDVs) {
+
+    if (deck[0].pokemonDVs) {
         deck.forEach((pokemon) => {
-            const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
-            calculateRaisedStats(pokemon, matchingDvObj)
+            calculateRaisedStats(pokemon, pokemon.pokemonDVs)
         })
     } else {
         const opponentDVs = deck.map(pokemon => assignDVs(pokemon))
@@ -69,6 +68,25 @@ function raisePokemonStats(deck, pokemonDVs) {
 
     return pokemonDVs
 }
+
+
+// function raisePokemonStats(deck, pokemonDVs) {
+//  **old stats raise function    
+//     if (pokemonDVs) {
+//         deck.forEach((pokemon) => {
+//             const matchingDvObj = pokemonDVs.find(dvObj => dvObj.deckId === pokemon.id)
+//             calculateRaisedStats(pokemon, matchingDvObj)
+//         })
+//     } else {
+//         const opponentDVs = deck.map(pokemon => assignDVs(pokemon))
+//         deck.forEach((pokemon) => {
+//             const matchingDvObj = opponentDVs.find(dvObj => dvObj.deckId === pokemon.id)
+//             calculateRaisedStats(pokemon, matchingDvObj)
+//         })
+//     }
+
+//     return pokemonDVs
+// }
 
 // When a Pokemon is first assigned when the player registers, a DV is created for each stat.
 // This DV (random val from 0-15) is then saved in the back-end.

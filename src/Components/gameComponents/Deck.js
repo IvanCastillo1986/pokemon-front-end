@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { UserContext } from '../../UserContext'
-import { createRandomPokemonIds } from '../../Helper/createRandomPokemonIds'
+import { createRandomPokemonIds, getMyStarterId } from '../../Helper/createPokemonFunctions'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'
@@ -18,27 +18,12 @@ export default function Deck() {
     const [restOfDeck, setRestOfDeck] = useState([])
 
 
-    const getStarterId = (e) => {
-        let starterId;
-        let clickedBtn = e.target.className;
-
-        if (clickedBtn === 'Grass-btn') {
-            starterId = 1;
-        } else if (clickedBtn === 'Fire-btn') {
-            starterId = 4;
-        } else {
-            starterId = 7;
-        }
-        
-        return starterId;
-    }
-
     // Make API call to add starter to user's deck, and creates DVs for full deck. Show Intro.
     const addStarterToDeck = async (starterId) => {
-        const userDeckIds = [starterId, ...createRandomPokemonIds(5)]
+        const pokemonIds = [starterId, ...createRandomPokemonIds(5)]
 
         // Make API call to get 6 Pokemon to store in state, returns 6 Pokemon
-        axios.get(`${API}/pokemon`, { params: {userDeckIds: JSON.stringify(userDeckIds)} })
+        axios.get(`${API}/pokemon`, { params: {pokemonIds: JSON.stringify(pokemonIds)} })
         .then(res => {
             const starterInDeck = res.data.find(pokemon => pokemon.id === starterId)
             const otherPokemon = res.data.filter(pokemon => pokemon.id !== starterId)
@@ -50,20 +35,17 @@ export default function Deck() {
     
     // This handleClick let's the player choose their starter Pokemon
     const handleClickStarterBtn = async (e) => {
-        const starterId = getStarterId(e)
+        const starterId = getMyStarterId(e)
         
         await addStarterToDeck(starterId)
     }
 
     
     async function updateUserInBackend() {
-        const {currentUser, currentItems } = user
+        const { currentUser } = user
         const newDeck = [starterPokemon, ...restOfDeck]
         const pokemonIds = newDeck.map(pokemon => pokemon.id)
 
-        // TODO: change this api call so that the Pokemon are stored in decks. Change in back-end with current Pokemon
-
-        console.log(pokemonIds)
         // Make api call for updatedUser after picking Starter
         axios.put(`${API}/users/${currentUser.uuid}`, { userToUpdate: currentUser, pokemonIds })
         .then(res => {

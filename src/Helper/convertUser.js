@@ -1,5 +1,6 @@
 // this file imports the Helper functions to update user/items when changes are made
 const { convertUsableItems } = require("./itemFunctions")
+const { raisePokemonStats } = require("./statsFunctions")
 
 {/* FROM API: res.data = {user, userPokemon, userItems}
     const user = { 
@@ -20,7 +21,7 @@ const convertUser = (user) => {
     // apply all changes to user properties here
     newUser.currentItems = convertUsableItems(newUser.currentItems)
 
-    // raisePokemonStats(newUser.currentPokemon, pokemonDVs)
+    raisePokemonStats(newUser.currentPokemon)
 
     return newUser
 }

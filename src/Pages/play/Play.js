@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { UserContext } from '../../UserContext'
+import { createRandomPokemonIds, getEnemyStarterId } from '../../Helper/createPokemonFunctions'
 import { addRemainingHp } from '../../Helper/addRemainingHp'
 import axios from 'axios'
 
@@ -12,40 +13,25 @@ const API = process.env.REACT_APP_API_URL
 
 
 export default function Play() {
-
-    // return <h1>Rendering Play page!!</h1>
     
     const { user, setUser } = useContext(UserContext)
-    const sessionUser = JSON.parse(sessionStorage.getItem('user'))
     
     const [yourDeck, setYourDeck] = useState(user.currentPokemon)
     const [randomEnemyDeck, setRandomEnemyDeck] = useState([])
     console.log('---------------------')
-    console.log('yourDeck:', yourDeck)
-    console.log('randomEnemyDeck:', randomEnemyDeck)
-    console.log('user:', user)
 
     function populateEnemyDeck() { // this doesn't finish running
-        console.log('inside populateEnemyDeck')
-        // set opponent starter as weakness to your starter
-        console.log(yourDeck) // last log
-        const yourStarter = yourDeck.find(pkm => pkm.pokemon_id === 1 || pkm.pokemon_id === 4 || pkm.pokemon_id === 7)
-        let enemyStarterId;
+        
+        // set opponent starter id as weakness to your starter
+        const enemyStarterId = getEnemyStarterId(yourDeck)
+        
+        // createRandomPokemonIds to send to back-end
+        const pokemonIds = [enemyStarterId, ...createRandomPokemonIds(5)]
 
-        switch(yourStarter.pokemon_id) { // breaking here
-            case 1:
-                enemyStarterId = 4
-                break;
-            case 4:
-                enemyStarterId = 7
-                break;
-            default:
-                enemyStarterId = 1
-                break;
-        }
-        // API call that returns 6 random enemyPokemon + enemyStarter
-        axios.get(`${API}/pokemon?getEnemyDeck=true&enemyStarterId=${enemyStarterId}`)
+        // send pokemonIds along with this get call. Add to 
+        axios.get(`${API}/pokemon`, {params: {pokemonIds: JSON.stringify(pokemonIds)}})
         .then(res => {
+            console.log('making opponentDeck call in populateEnemyDeck:', res.data)
             const enemyDeck = res.data
 
             enemyDeck.forEach(pokemon => {
@@ -55,16 +41,15 @@ export default function Play() {
                 enemyPokemon.lvl = 1
                 // enemyPokemon will now have .remaining_hp, .pokemon_id, and .id += 2000 (to prevent accidental comparisons)
             })
-            
             raisePokemonStats(enemyDeck)
             addRemainingHp(enemyDeck)
+
             // HERE I AM SETTING opponentDeck WITHIN STORAGE INSTEAD OF useState OR UserContext
             // ...to prevent cheating: changing enemy Pokemon on refresh
-            // sessionStorage.setItem('opponentDeck', JSON.stringify(enemyDeck))
-            // setRandomEnemyDeck(JSON.parse(sessionStorage.getItem('opponentDeck')))
+            sessionStorage.setItem('opponentDeck', JSON.stringify(enemyDeck))
+
             setRandomEnemyDeck(enemyDeck)
             
-            console.log('made enemyDeck API call')
         }).catch(err => console.log(err))
     }
 
@@ -75,7 +60,7 @@ export default function Play() {
             
             axios.get(`${API}/users/${user.currentUser.uuid}`)
             .then(res => {
-                console.log('making user.put call in refreshPage')
+                console.log('making user.put call in refreshPage:', res.data)
                 const refreshedUser = convertUser(res.data)
                 setUser(refreshedUser)
                 sessionStorage.setItem('user', JSON.stringify(refreshedUser))

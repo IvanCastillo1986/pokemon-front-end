@@ -40,6 +40,7 @@ export default function Register() {
             // here we not only create the user, 1 currentItem, and empty currentPokemon
             axios.post(`${API}/users`, newUser)
             .then(res => {
+                sessionStorage.clear()
                 const user = convertUser(res.data)
                 console.log('user after registering:', user)
                 

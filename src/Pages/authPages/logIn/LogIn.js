@@ -28,7 +28,9 @@ export default function LogIn() {
             axios.get(`${API}/users/${userCredentials.user.uid}`)
             .then(res => {
                 // converts user to playable state before storing them
+                sessionStorage.clear()
                 const newUser = convertUser(res.data)
+
                 setUser(newUser)
                 sessionStorage.setItem('user', JSON.stringify(newUser))
             }).catch(err => console.log('error:', err))
