@@ -17,11 +17,12 @@ const convertUser = (user) => {
         currentPokemon: [...user.userPokemon],
         currentItems: [...user.userItems]
     }
-
+    
     // apply all changes to user properties here
     newUser.currentItems = convertUsableItems(newUser.currentItems)
 
-    raisePokemonStats(newUser.currentPokemon)
+    // check so that user Registration doesn't break here
+    if (newUser.currentPokemon.length) raisePokemonStats(newUser.currentPokemon)
 
     return newUser
 }

@@ -18,10 +18,8 @@ export default function Play() {
     
     const [yourDeck, setYourDeck] = useState(user.currentPokemon)
     const [randomEnemyDeck, setRandomEnemyDeck] = useState([])
-    console.log('---------------------')
 
-    function populateEnemyDeck() { // this doesn't finish running
-        
+    function populateEnemyDeck() {
         // set opponent starter id as weakness to your starter
         const enemyStarterId = getEnemyStarterId(yourDeck)
         
@@ -31,9 +29,8 @@ export default function Play() {
         // send pokemonIds along with this get call. Add to 
         axios.get(`${API}/pokemon`, {params: {pokemonIds: JSON.stringify(pokemonIds)}})
         .then(res => {
-            console.log('making opponentDeck call in populateEnemyDeck:', res.data)
+            // console.log('making opponentDeck call in populateEnemyDeck:', res.data)
             const enemyDeck = res.data
-
             enemyDeck.forEach(pokemon => {
                 const enemyPokemon = pokemon
                 enemyPokemon.pokemon_id = enemyPokemon.id
@@ -60,8 +57,8 @@ export default function Play() {
             
             axios.get(`${API}/users/${user.currentUser.uuid}`)
             .then(res => {
-                console.log('making user.put call in refreshPage:', res.data)
                 const refreshedUser = convertUser(res.data)
+                
                 setUser(refreshedUser)
                 sessionStorage.setItem('user', JSON.stringify(refreshedUser))
             }).catch(err => console.log(err))

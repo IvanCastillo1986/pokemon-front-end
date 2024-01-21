@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { UserContext } from '../../UserContext'
 import { createRandomPokemonIds, getMyStarterId } from '../../Helper/createPokemonFunctions'
+import { convertUser } from '../../Helper/convertUser'
 import axios from 'axios'
 
 import BattleCard from './BattleCard'
@@ -49,15 +50,10 @@ export default function Deck() {
         // Make api call for updatedUser after picking Starter
         axios.put(`${API}/users/${currentUser.uuid}`, { userToUpdate: currentUser, pokemonIds })
         .then(res => {
-            const updatedUser = {
-                currentUser: res.data.user,
-                currentPokemon: res.data.userPokemon,
-                currentItems: res.data.userItems
-            }
-            console.log('updatedUser in <Deck />:', updatedUser)
+            const updatedUser = convertUser(res.data)
+            // console.log('updatedUser in <Deck />:', updatedUser)
 
             sessionStorage.setItem('user', JSON.stringify(updatedUser))
-            console.log(JSON.parse(sessionStorage.getItem('user')))
             setUser(() => {
                 return updatedUser
             })

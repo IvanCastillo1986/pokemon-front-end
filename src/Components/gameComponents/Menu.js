@@ -11,7 +11,7 @@ import Script from './Script'
 
 export default function Menu({
     menuType, setMenuType, script, myItems, handleUseItem, myPokemon, handleClickMoveBtn, myBench, 
-    handlePokemonSwitch
+    handlePokemonSwitch, handleClickPokemonAfterKO
 }) {
 
     const menuClick = (menuType) => {
@@ -95,12 +95,13 @@ export default function Menu({
                 renderItemMenu()
             }
 
+            {/* This menu needs to be different from switchMenu. It uses a different function to switch KO'd Pokemon */}
             {menuType === 'newPokemonAfterKO' &&
             <div className='switchMenu'>
                 <p>Bring out which POKEMON?</p>
                 <div className='switchOptions'>
-                    {myBench.map((pokemon, i) => {
-                        return <div className='switchOption' onClick={() => handlePokemonSwitch(pokemon.name)} key={i}>
+                    {myBench.map((pokemon) => {
+                        return <div className='switchOption' onClick={() => handleClickPokemonAfterKO(pokemon.id)} key={pokemon.id}>
                             <span className='pokeName'>{pokemon.name.toUpperCase()}</span> 
                             <span className='L'>:L</span><span className='lvl'>{pokemon.lvl}</span>
                             <span className='hp'>HP {pokemon.remaining_hp}/ {pokemon.hp}</span>

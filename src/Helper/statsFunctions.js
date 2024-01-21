@@ -14,19 +14,19 @@ const assignDVs = (pokemon) => {
     // returns DVs object with random DV values from 0-15
     const pokemonDVs = {
         deckId: pokemon.id,
-        atkDV: randomNum(0, 16),
-        defDV: randomNum(0, 16),
-        special_atkDV: randomNum(0, 16),
-        special_defDV: randomNum(0, 16),
-        speedDV: randomNum(0, 16)
+        atk_dv: randomNum(0, 16),
+        def_dv: randomNum(0, 16),
+        special_atk_dv: randomNum(0, 16),
+        special_def_dv: randomNum(0, 16),
+        speed_dv: randomNum(0, 16)
     }
-    pokemonDVs.hpDV = assignHpDV(pokemonDVs.atkDV, pokemonDVs.defDV)
+    pokemonDVs.hp_dv = assignHpDV(pokemonDVs.atk_dv, pokemonDVs.def_dv)
     
     return pokemonDVs
 }
 
-const assignHpDV = (atkDV, defDV) => {
-    return (atkDV % 8) * 2 + (defDV % 8)
+const assignHpDV = (atk_dv, def_dv) => {
+    return (atk_dv % 8) * 2 + (def_dv % 8)
 }
 
 const raiseStat = (baseStat, dv, level) => {

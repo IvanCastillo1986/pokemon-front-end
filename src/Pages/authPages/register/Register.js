@@ -41,6 +41,7 @@ export default function Register() {
             axios.post(`${API}/users`, newUser)
             .then(res => {
                 sessionStorage.clear()
+                // Don't convert user yet! Will cause error because currentPokemon is empty
                 const user = convertUser(res.data)
                 console.log('user after registering:', user)
                 
@@ -48,7 +49,7 @@ export default function Register() {
                 setUser(user)
             })
             .catch(err => {
-                console.log('error adding user:', err.message)
+                console.log('error adding user:', err)
             })
 
             history.push("/my-account")

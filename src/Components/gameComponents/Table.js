@@ -108,13 +108,12 @@ export default function Table({
 
 
     // this gets clicked, then the rest of the function 
-    async function handleClickPokemonAfterKO(e) {
+    async function handleClickPokemonAfterKO(deckId) {
         
-        const clickedPokemon = e.target.textContent
-        const switchedBenchPokemon = myBench.find(mon => mon.name === clickedPokemon)
+        const switchedBenchPokemon = myBench.find(pokemon => pokemon.id === deckId)
 
         const myNewBench = myBench.filter(mon => {
-            return mon.name !== switchedBenchPokemon.name
+            return mon.id !== switchedBenchPokemon.id
         })
 
         setMyPokemon(switchedBenchPokemon)
@@ -190,7 +189,7 @@ export default function Table({
         }
     }
 
-   
+    
     
 
     return (
