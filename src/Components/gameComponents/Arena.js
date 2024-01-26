@@ -148,7 +148,32 @@ export default function Arena({ yourDeck, opponentDeck }) {
             }).catch(err => console.log(err))
         } else if (myBench.length < 1) {
             // I lost 
+            const losingUser = {
+                email: currentUser.email,
+                uuid: currentUser.uuid,
+                wins: currentUser.wins,
+                losses: currentUser.losses + 1
+            }
+            // make API call to update user with +1 losses, and update their items
             setMenuType('playerLostMenu')
+
+            const bagIdsFromGame = createBagIdsFromGame(myItems)
+
+            axios.put(`${API}/users/${losingUser.uuid}?matchEnd=true`, 
+                {userToUpdate: losingUser, bagIdsFromGame}
+            ).then(res => {
+                const updatedUser = convertUser(res.data)
+                
+                setUser(() => updatedUser)
+                sessionStorage.setItem('user', JSON.stringify(updatedUser))
+                
+                // updates the winning Pokemon's current Level for display (and preserves current HP)
+                const myUpdatedPokemon = updatedUser.currentPokemon.find(pokemon => pokemon.name === myPokemon.name)
+                const myCurrentHp = myPokemon.remaining_hp
+                myUpdatedPokemon.remaining_hp = myCurrentHp
+
+                setMyPokemon(myUpdatedPokemon)
+            }).catch(err => console.log(err))
         }
     }
 
@@ -178,7 +203,6 @@ export default function Arena({ yourDeck, opponentDeck }) {
         // remove this pokemon from the rest of pokemon in bench
         const bench = yourDeck.filter((pokemon, i) => i !== idx)
         
-        // myClickedPokemon.remaining_hp = 1
         setMyPokemon(myClickedPokemon)
         setMyBench(bench)
 
