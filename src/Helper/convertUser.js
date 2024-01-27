@@ -30,5 +30,5 @@ const convertUser = (user) => {
 
 
 // it should be imported in files such as Login.js on signin, Play.js on refresh, and Table.js after user wins
-module.exports = { convertUser }
+export { convertUser }
 

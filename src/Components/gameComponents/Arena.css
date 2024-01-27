@@ -7,11 +7,13 @@
     display: flex;
     width: 80%;
     margin: auto;
+    flex-wrap: wrap;
 }
 .Arena button {
     background-color: #346856;
     color: #e0f8d0;
     border-color: #081820;
+    width: 150px;
 }
 .Arena button:hover {
     background-color: #081820;
@@ -180,6 +182,7 @@
     grid-template-rows: 18px 18px;
     border-radius: 3px;
     padding: 5px 5px;
+    overflow-x: hidden;
 }
 .switchOption:hover {
     cursor: pointer;
@@ -211,6 +214,9 @@
 }
 
 
+.itemMenu {
+    overflow-y: hidden;
+}
 .itemMenu .itemsContainer {
     height: 100px;
     margin-top: 20px;

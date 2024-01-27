@@ -8,8 +8,8 @@ function getNewLvlFromExp(currentExp) {
   }
 
   return level - 1;
-}
+};
 
 
 
-module.exports = { getNewLvlFromExp };
+export { getNewLvlFromExp };

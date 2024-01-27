@@ -48,4 +48,4 @@ const getMyStarterId = (e) => {
     return starterId;
 }
 
-module.exports = { createRandomPokemonIds, getMyStarterId, getEnemyStarterId }
+export { createRandomPokemonIds, getMyStarterId, getEnemyStarterId }

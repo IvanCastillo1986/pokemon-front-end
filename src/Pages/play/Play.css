@@ -7,45 +7,6 @@
     margin: 60px;
 }
 
-.Deck {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 60px;
-}
-
-.Buttons {
-    display: flex;
-    margin: 20px auto;
-    width: 50%;
-    justify-content: space-between;
-}
-.Deck .Grass-btn {
-    background-color: rgb(0, 158, 0);
-    border-color: rgb(8, 94, 8);
-}
-.Deck .Grass-btn:hover {
-    background-color: green;
-}
-.Deck .Fire-btn {
-    background-color: rgb(255, 81, 0);
-    border-color: rgb(193, 0, 0);
-}
-.Deck .Fire-btn:hover {
-    background-color: red;
-}
-
-.RandomDeck .BattleCard {
-    margin: 10px;
-}
-
-.ArenaPrompt {
-    line-height: 1.6;
-}
-.ArenaPromptBtn {
-    margin: 40px auto;
-}
-
-
 
 
 

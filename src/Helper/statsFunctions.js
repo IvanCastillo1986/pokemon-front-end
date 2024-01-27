@@ -92,4 +92,4 @@ function raisePokemonStats(deck, pokemonDVs) {
 // This DV (random val from 0-15) is then saved in the back-end.
 // The statRaise is based on that stat's hard-coded DV.
 
-module.exports = { randomNum, statFluctuation, assignDVs, assignHpDV, calculateRaisedStats, raisePokemonStats }
+export { randomNum, statFluctuation, assignDVs, assignHpDV, calculateRaisedStats, raisePokemonStats }

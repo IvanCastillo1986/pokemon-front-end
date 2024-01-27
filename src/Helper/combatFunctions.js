@@ -58,4 +58,4 @@ function calculateDmg(atkPkm, defPkm) {
 
 
 
-module.exports = { calculateDmg, applyEffect }
+export { calculateDmg, applyEffect }

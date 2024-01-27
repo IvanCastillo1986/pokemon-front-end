@@ -83,7 +83,7 @@ export default function Menu({
                         return <div className='switchOption' onClick={() => handlePokemonSwitch(pokemon.name)} key={i}>
                             <span className='pokeName'>{pokemon.name.toUpperCase()}</span> 
                             <span className='L'>Level</span><span className='lvl'>{pokemon.lvl}</span>
-                            <span className='L'>HP</span><span className='lvl'>{pokemon.remaining_hp}/ {pokemon.hp}</span>
+                            <span className='hp'>HP {pokemon.remaining_hp}/ {pokemon.hp}</span>
                         </div>
                     })}
                 </div>
@@ -95,7 +95,7 @@ export default function Menu({
                 renderItemMenu()
             }
 
-            {/* This menu needs to be different from switchMenu. It uses a different function to switch KO'd Pokemon */}
+            {/* This menu needs to be separate from switchMenu. It uses a different function to switch KO'd Pokemon */}
             {menuType === 'newPokemonAfterKO' &&
             <div className='switchMenu'>
                 <p>Bring out which POKEMON?</p>

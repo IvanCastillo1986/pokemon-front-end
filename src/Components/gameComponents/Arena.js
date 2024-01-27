@@ -184,7 +184,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
         for (let i = 0; i < currentScriptArr.length; i++) {
 
             setScript(currentScriptArr[i])
-            await new Promise(res => setTimeout(res, 500))
+            await new Promise(res => setTimeout(res, 1500))
         }
         
         setMenuType('main')

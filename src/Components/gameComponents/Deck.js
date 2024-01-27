@@ -6,6 +6,7 @@ import axios from 'axios'
 
 import BattleCard from './BattleCard'
 
+import './Deck.css'
 import './BattleCard.css'
 const API = process.env.REACT_APP_API_URL
 
@@ -68,14 +69,14 @@ export default function Deck() {
             {restOfDeck.length === 0
             ?
                 <>
-                <p>Click a button below to choose your first Pokemon.<br />
-                Your comrade through thick and thin.</p>
-                <p>Which type is your favorite?</p>
-                <div className='Buttons'>
-                    <button className='Grass-btn' onClick={(e) => handleClickStarterBtn(e)}>Grass</button>
-                    <button className='Fire-btn' onClick={(e) => handleClickStarterBtn(e)}>Fire</button>
-                    <button className='Water-btn' onClick={(e) => handleClickStarterBtn(e)}>Water</button>
-                </div>
+                    <p>Click a button below to choose your first Pokemon.<br />
+                    Your comrade through thick and thin.</p>
+                    <p>Which type is your favorite?</p>
+                    <div className='Buttons'>
+                        <button className='Grass-btn' onClick={(e) => handleClickStarterBtn(e)}>Grass</button>
+                        <button className='Fire-btn' onClick={(e) => handleClickStarterBtn(e)}>Fire</button>
+                        <button className='Water-btn' onClick={(e) => handleClickStarterBtn(e)}>Water</button>
+                    </div>
                 </>
             :
                 <>
@@ -92,7 +93,7 @@ export default function Deck() {
                 You will need to evolve them through experience and levels. <br />
                 Some are able to evolve, which means they are relatively weak, but have the ability to become very strong.<br />
                 Some Pokemon can not evolve, but these Pokemon are stronger than most other basic-level Pokemon who can evolve.<br/>
-                However, these Pokemon are not as strong as many level 1 or level 2 Pokemon who have already evolved.</p>
+                However, these Pokemon may not be as strong as many Pokemon who have already evolved.</p>
                 <p>Click the button below when you're ready to enter the Arena and test out your deck!</p>
 
                 <button className='ArenaPromptBtn' onClick={updateUserInBackend}>
