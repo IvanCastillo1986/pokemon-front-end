@@ -18,6 +18,7 @@ export default function LogIn() {
     const [password, setPassword] = useState('')
     const [userUnregistered, showUserUnregistered] = useState(false)
     const [wrongPassword, showWrongPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
     const { setUser } = useContext(UserContext)
     const history = useHistory()
 
@@ -35,10 +36,13 @@ export default function LogIn() {
                 sessionStorage.setItem('user', JSON.stringify(newUser))
             }).catch(err => console.log('error:', err))
             
+            setLoading(false)
+            console.log('Loading screen should be off')
             history.push('/my-account')
         })
         .catch(err => {
             console.log(`Error in handleSignIn:`, err)
+            setLoading(false)
             if (err.code.includes('user-not-found')) showUserUnregistered(true)
             if (err.code.includes('wrong-password')) showWrongPassword(true)
         })
@@ -47,6 +51,8 @@ export default function LogIn() {
     const handleSignIn = (e) => {
         e.preventDefault()
 
+        setLoading(true)
+        console.log('sent API request. Should be displaying Loading screen')
         axios.get(`${API}`)
         .then(() => {
             signIn()
@@ -67,22 +73,36 @@ export default function LogIn() {
     }
 
     return (
-        <div className="logIn">
-            <h2>Log in</h2>
+        <div className="LogIn">
+            <h2>Sign in to access your account</h2>
 
-            <form onSubmit={handleSignIn}>
-                <input type='email' placeholder='E-mail' onChange={handleEmailChange} value={email} />
-                <input type='password' placeholder='Password' onChange={handlePasswordChange} value={password} />
-                <input type='submit' value='Log In' />
-            </form>
-            { wrongPassword &&
-            <p>Wrong password. Please check your password and try again.</p>
-            }
-            { userUnregistered &&
-            <div>
-                <p>User not found. If you've already registered, check the e-mail and try again.</p>
-                <p>If you have not yet signed up, please visit the Register page.</p>
-                <button onClick={() => history.push('/register')}>To Sign Up</button>
+            {!loading 
+            
+            ?
+            
+            <>
+                <form onSubmit={handleSignIn}>
+                    <input type='email' placeholder='E-mail' onChange={handleEmailChange} value={email} />
+                    <input type='password' placeholder='Password' onChange={handlePasswordChange} value={password} />
+                    <button>Log In</button>
+                </form>
+                { wrongPassword &&
+                <p>Wrong password. Please check your password and try again.</p>
+                }
+                { userUnregistered &&
+                <div className='NotFound'>
+                    <p>User not found. If you've already registered, check the e-mail and try again.</p>
+                    <p>If you have not yet signed up, please visit the Register page.</p>
+                    <button onClick={() => history.push('/register')}>To Sign Up</button>
+                </div>
+                }
+            </>
+
+            :
+
+            <div className='Loading'>
+                <h3>Loading...</h3>
+                <p>Please wait while we retrieve your Pokemon :3</p>
             </div>
             }
         </div>

@@ -19,6 +19,7 @@ export default function Register() {
     const [password, setPassword] = useState('')
     const [passwordTooShort, showPasswordTooShort] = useState(false)
     const [userAlreadyExists, showUserAlreadyExists] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const { setUser } = useContext(UserContext)
 
@@ -52,11 +53,12 @@ export default function Register() {
                 console.log('error adding user:', err)
             })
 
+            setLoading(false)
             history.push("/my-account")
         })
         .catch(err => {
             console.log('Error in createUserWithEmailAndPassword', err)
-
+            setLoading(false)
             if (err.code.includes('auth/weak-password')) showPasswordTooShort(true)
             if (err.code.includes('auth/email-already-in-use')) showUserAlreadyExists(true)
         })
@@ -64,6 +66,7 @@ export default function Register() {
 
     const handleRegister = (e) => {
         e.preventDefault()
+        setLoading(true)
 
         // if server is reachable, then register user
         axios.get(`${API}`)
@@ -88,12 +91,17 @@ export default function Register() {
 
     return (
         <div className='Register'>
-            <h2>Register</h2>
+            {!loading
+
+            ?
+
+            <>
+            <h2>Register a new account</h2>
             
             <form onSubmit={handleRegister}>
                 <input type='email' placeholder='E-mail' value={email} onChange={handleEmailChange} />
                 <input type='password' placeholder='Password' value={password} onChange={handlePasswordChange} />
-                <input type='submit' value='Register' />
+                <button>Register</button>
             </form>
             
             { passwordTooShort &&
@@ -101,9 +109,20 @@ export default function Register() {
             }
             
             { userAlreadyExists &&
-            <div>
-                <p>User already exists. Please sign in existing user instead</p>
+            <div className='AlreadyExists'>
+                <p>User already exists. Please register with a new user.</p>
+                <p>Or sign in existing user instead.</p>
                 <button onClick={() => history.push('/login')}>To Sign In</button>
+            </div>
+            }
+            </>
+
+            :
+
+            <div className='Loading'>
+                <h3>...Loading</h3>
+                <p>Thank you for registering.</p>
+                <p>Please wait while we retrieve your Pokemon :)</p>
             </div>
             }
         </div>

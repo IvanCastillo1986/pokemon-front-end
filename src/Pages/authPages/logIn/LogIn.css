@@ -1,32 +1,53 @@
-.logIn {
+.LogIn {
     text-align: center;
+    width: 80%;
 }
-.logIn h1 {
+.LogIn h2 {
     margin: 50px;
 }
 
-.logIn form {
+.LogIn form {
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(7, 1fr);
     gap: 10px;
     margin-bottom: 40px;
 }
 
 
-.logIn .email {
+
+
+.LogIn input {
+    border-radius: 5px;
+    border-color: #3d7dca;
+    border-width: 3px;
+    grid-column: 3 / 6;
+    height: 30px;
+    font-size: 1em;
+    padding-left: 20px;
+}
+
+.LogIn input[type=email] {
     grid-row: 1 / 2;
 }
-.logIn #email {
-    grid-column: 2 / 4;
-}
-.logIn .password {
+
+.LogIn input[type=password] {
     grid-row: 2 / 3;
 }
-.logIn #password {
-    grid-column: 2 / 4;
+
+.LogIn form button {
+    grid-row: 4 / 5;
+    grid-column: 4 / 5;
 }
-.logIn .submit {
-    grid-row: 3 / 4;
-    grid-column: 2 / 3;
+
+
+.LogIn .Loading {
+    margin-top: 150px;
+}
+.LogIn h3 {
+    font-size: 2em;
+}
+
+.LogIn .NotFound button {
+    margin-top: 20px;
 }
