@@ -45,6 +45,7 @@ export default function Register() {
                 sessionStorage.clear()
                 // Don't convert user yet! Will cause error because currentPokemon is empty
                 const user = convertUser(res.data)
+                console.log('user after registering:', user)
                 
                 sessionStorage.setItem("user", JSON.stringify(user))
                 setUser(user)
