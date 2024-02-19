@@ -34,11 +34,12 @@ export default function LogIn() {
 
                 setUser(newUser)
                 sessionStorage.setItem('user', JSON.stringify(newUser))
-            }).catch(err => console.log('error:', err))
-            
-            setLoading(false)
-            console.log('Loading screen should be off')
-            history.push('/my-account')
+            }).then(() => {
+                setLoading(false)
+                console.log('Loading screen should be off')
+                history.push('/my-account')
+
+            }).catch(err => console.log('error signing in:', err))
         })
         .catch(err => {
             console.log(`Error in handleSignIn:`, err)
