@@ -19,6 +19,7 @@ export default function Register() {
     const [password, setPassword] = useState('')
     const [passwordTooShort, showPasswordTooShort] = useState(false)
     const [userAlreadyExists, showUserAlreadyExists] = useState(false)
+    const [invalidEmail, showInvalidEmail] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const { setUser } = useContext(UserContext)
@@ -61,6 +62,7 @@ export default function Register() {
             setLoading(false)
             if (err.code.includes('auth/weak-password')) showPasswordTooShort(true)
             if (err.code.includes('auth/email-already-in-use')) showUserAlreadyExists(true)
+            if (err.code.includes('auth/invalid-email')) showInvalidEmail(true)
         })
     }
 
@@ -99,8 +101,8 @@ export default function Register() {
             <h2>Register a new account</h2>
             
             <form onSubmit={handleRegister}>
-                <input type='email' placeholder='E-mail' value={email} onChange={handleEmailChange} />
-                <input type='password' placeholder='Password' value={password} onChange={handlePasswordChange} />
+                <input type='email' placeholder='E-mail' value={email} onChange={handleEmailChange} required />
+                <input type='password' placeholder='Password' value={password} onChange={handlePasswordChange} required />
                 <button>Register</button>
             </form>
             
@@ -114,6 +116,10 @@ export default function Register() {
                 <p>Or sign in existing user instead.</p>
                 <button onClick={() => history.push('/login')}>To Sign In</button>
             </div>
+            }
+
+            { invalidEmail &&
+                <p>Invalid e-mail. Please check the e-mail and try again.</p>
             }
             </>
 

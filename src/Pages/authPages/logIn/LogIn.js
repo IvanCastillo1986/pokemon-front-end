@@ -82,8 +82,8 @@ export default function LogIn() {
             
             <>
                 <form onSubmit={handleSignIn}>
-                    <input type='email' placeholder='E-mail' onChange={handleEmailChange} value={email} />
-                    <input type='password' placeholder='Password' onChange={handlePasswordChange} value={password} />
+                    <input type='email' placeholder='E-mail' onChange={handleEmailChange} value={email} required />
+                    <input type='password' placeholder='Password' onChange={handlePasswordChange} value={password} required />
                     <button>Log In</button>
                 </form>
                 { wrongPassword &&
