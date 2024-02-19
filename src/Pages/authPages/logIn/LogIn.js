@@ -26,20 +26,17 @@ export default function LogIn() {
         
         await signInWithEmailAndPassword (auth, email, password)
         .then((userCredentials) => {
-            console.log('userCredentials in signin', userCredentials)
 
             axios.get(`${API}/users/${userCredentials.user.uid}`)
             .then(res => {
                 // converts user to playable state before storing them
                 sessionStorage.clear()
-                console.log('res after calling API:', res)
                 const newUser = convertUser(res.data)
 
                 setUser(newUser)
                 sessionStorage.setItem('user', JSON.stringify(newUser))
             }).then(() => {
                 setLoading(false)
-                console.log('Loading screen should be off')
                 history.push('/my-account')
 
             }).catch(err => console.log('error signing in:', err))
@@ -56,7 +53,7 @@ export default function LogIn() {
         e.preventDefault()
 
         setLoading(true)
-        console.log('sent API request. Should be displaying Loading screen')
+        
         axios.get(`${API}`)
         .then(() => {
             signIn()

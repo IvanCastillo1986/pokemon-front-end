@@ -39,15 +39,12 @@ export default function Register() {
                 uuid: userCredentials.user.uid,
             }
 
-            console.log('new User in register:', newUser)
-
             // here we not only create the user, 1 currentItem, and empty currentPokemon
             axios.post(`${API}/users`, newUser)
             .then(res => {
                 sessionStorage.clear()
                 // Don't convert user yet! Will cause error because currentPokemon is empty
                 const user = convertUser(res.data)
-                console.log('user after registering:', user)
                 
                 sessionStorage.setItem("user", JSON.stringify(user))
                 setUser(user)
