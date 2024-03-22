@@ -6,6 +6,8 @@ import { UserContext } from '../../../UserContext'
 import axios from 'axios'
 import { convertUser } from '../../../Helper/convertUser'
 
+import Loading from '../../../Components/authComponents/loading/Loading'
+
 import "./LogIn.css"
 
 const API = process.env.REACT_APP_API_URL
@@ -37,7 +39,6 @@ export default function LogIn() {
             }).catch(err => console.log('error:', err))
             
             setLoading(false)
-            console.log('Loading screen should be off')
             history.push('/my-account')
         })
         .catch(err => {
@@ -52,7 +53,7 @@ export default function LogIn() {
         e.preventDefault()
 
         setLoading(true)
-        console.log('sent API request. Should be displaying Loading screen')
+
         axios.get(`${API}`)
         .then(() => {
             signIn()
@@ -100,10 +101,10 @@ export default function LogIn() {
 
             :
 
-            <div className='Loading'>
-                <h3>Loading...</h3>
-                <p>Please wait while we retrieve your Pokemon :3</p>
-            </div>
+            <Loading messagesArr={
+                ['Please wait while we retrieve your Pokemon :3', 'This might take up to a minute 😅']
+            }/>
+
             }
         </div>
     )

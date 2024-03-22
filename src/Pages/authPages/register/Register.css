@@ -39,15 +39,6 @@
     grid-column: 4 / 5;
 }
 
-
-.Register .Loading {
-    margin-top: 150px;
-}
-.Register h3 {
-    font-size: 2em;
-    margin-bottom: 80px;
-}
-
 .Register .AlreadyExists button {
     margin-top: 20px;
 }

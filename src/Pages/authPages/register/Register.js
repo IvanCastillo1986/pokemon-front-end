@@ -6,6 +6,7 @@ import { convertUser } from '../../../Helper/convertUser'
 import axios from 'axios'
 
 // import NetworkError from "../../NetworkError"
+import Loading from '../../../Components/authComponents/loading/Loading'
 
 import './Register.css'
 
@@ -45,7 +46,6 @@ export default function Register() {
                 sessionStorage.clear()
                 // Don't convert user yet! Will cause error because currentPokemon is empty
                 const user = convertUser(res.data)
-                console.log('user after registering:', user)
                 
                 sessionStorage.setItem("user", JSON.stringify(user))
                 setUser(user)
@@ -98,38 +98,35 @@ export default function Register() {
             ?
 
             <>
-            <h2>Register a new account</h2>
-            
-            <form onSubmit={handleRegister}>
-                <input type='email' placeholder='E-mail' value={email} onChange={handleEmailChange} required />
-                <input type='password' placeholder='Password' value={password} onChange={handlePasswordChange} required />
-                <button>Register</button>
-            </form>
-            
-            { passwordTooShort &&
-            <p>Password should be at least 6 characters</p>
-            }
-            
-            { userAlreadyExists &&
-            <div className='AlreadyExists'>
-                <p>User already exists. Please register with a new user.</p>
-                <p>Or sign in existing user instead.</p>
-                <button onClick={() => history.push('/login')}>To Sign In</button>
-            </div>
-            }
+                <h2>Register a new account</h2>
+                
+                <form onSubmit={handleRegister}>
+                    <input type='email' placeholder='E-mail' value={email} onChange={handleEmailChange} required />
+                    <input type='password' placeholder='Password' value={password} onChange={handlePasswordChange} required />
+                    <button>Register</button>
+                </form>
+                
+                { passwordTooShort &&
+                <p>Password should be at least 6 characters</p>
+                }
+                
+                { userAlreadyExists &&
+                <div className='AlreadyExists'>
+                    <p>User already exists. Please register with a new user.</p>
+                    <p>Or sign in existing user instead.</p>
+                    <button onClick={() => history.push('/login')}>To Sign In</button>
+                </div>
+                }
 
-            { invalidEmail &&
-                <p>Invalid e-mail. Please check the e-mail and try again.</p>
-            }
+                { invalidEmail &&
+                    <p>Invalid e-mail. Please check the e-mail and try again.</p>
+                }
             </>
 
             :
 
-            <div className='Loading'>
-                <h3>...Loading</h3>
-                <p>Thank you for registering.</p>
-                <p>Please wait while we retrieve your Pokemon :)</p>
-            </div>
+            <Loading messagesArr={['Thank you for registering.','Please wait while we retrieve your Pokemon :)']} />
+
             }
         </div>
     )

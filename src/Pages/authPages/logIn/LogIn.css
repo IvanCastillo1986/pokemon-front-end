@@ -40,14 +40,6 @@
     grid-column: 4 / 5;
 }
 
-
-.LogIn .Loading {
-    margin-top: 150px;
-}
-.LogIn h3 {
-    font-size: 2em;
-}
-
 .LogIn .NotFound button {
     margin-top: 20px;
 }
