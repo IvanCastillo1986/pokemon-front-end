@@ -1,0 +1,13 @@
+.Hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 20px;
+}
+
+.burger {
+    background-color: black;
+    width: 30px;
+    height: 4px;
+    border-radius: 4px;
+}
