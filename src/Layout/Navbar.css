@@ -30,14 +30,10 @@
     margin: 30px;
 }
 
-.Navbar .account-div {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
 .Navbar .account {
     display: flex;
     align-items: center;
+    position: relative;
 }
 .Navbar .account:hover {
     cursor: pointer;
@@ -47,6 +43,13 @@
 }
 .Navbar .account img {
     width: 20px;
+}
+.Navbar .account .dropdown-div {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: -40px;
+    bottom: 30px;
 }
 
 .Navbar ul {
