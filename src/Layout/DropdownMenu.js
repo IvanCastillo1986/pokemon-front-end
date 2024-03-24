@@ -6,7 +6,7 @@ import { signOut } from 'firebase/auth'
 
 
 
-export default function DropdownMenu() {
+export default function DropdownMenu({ handleAccountClick }) {
 
     const {user, setUser} = useContext(UserContext)
     const history = useHistory()
@@ -25,7 +25,7 @@ export default function DropdownMenu() {
 
 
     return (
-        <div className='DropdownMenu'>
+        <div className='DropdownMenu' onClick={handleAccountClick} >
             {user.currentUser &&
                 <ul>
                     <li onClick={handleSignOut}>Logout</li>

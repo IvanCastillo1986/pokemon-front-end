@@ -72,31 +72,23 @@ export default function Navbar() {
                 <div className='account'>
                     <span  onClick={handleAccountClick}>Account</span>
                     <img src={showMenu ? pokeball_icon_open : pokeball_icon} alt="pokeball closed" />
+                    
                     {/* Dropdown div */}
                     { showMenu &&
-                    <DropdownMenu />
-                    // <div className='dropdown-div'>
-                        
-                    //     {user.currentUser &&
-                    //         <ul>
-                    //             <li to='/logout' onClick={handleSignOut}>Logout</li>
-                    //             <Link to='/my-account'>My Account</Link>
-                    //         </ul>
-                    //     }
-                        
-                    //     {!user.currentUser &&
-                    //         <ul>
-                    //             <Link to='/login'>Login</Link>
-                    //             <Link to='/register'>Register</Link>
-                    //         </ul>
-                    //     }
-                    // </div>
+                        <DropdownMenu handleAccountClick={handleAccountClick} />
                     }
 
-                </div> {/* closes 'account' div */}
+                </div>
             </>
             :
-            <Hamburger />
+            <div className='account'>
+                <Hamburger handleAccountClick={handleAccountClick} />
+
+                {
+                    showMenu &&
+                    <DropdownMenu handleAccountClick={handleAccountClick} />
+                }
+            </div>
             }
         </nav>
     )
