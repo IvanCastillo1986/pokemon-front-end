@@ -131,6 +131,8 @@ export default function Pokedex({ pokemon }) {
     return (
         <div className='PokedexPage'>
 
+        <h1>Pokedex drawn with vanilla CSS</h1>
+
         <div className='TopBar'>
             <div className={isOn ? 'CameraOn light' : 'Camera border light'}
             >

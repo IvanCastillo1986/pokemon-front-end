@@ -35,3 +35,10 @@ button {
 button:hover {
   background-color: rgb(65, 93, 255);
 }
+
+@media screen and (max-width: 600px) {
+  .Home h1 {
+    margin: 80px 10px;
+    text-align: center;
+  }
+}

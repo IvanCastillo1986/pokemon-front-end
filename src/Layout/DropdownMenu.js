@@ -28,8 +28,11 @@ export default function DropdownMenu({ handleAccountClick }) {
         <div className='DropdownMenu' onClick={handleAccountClick} >
             {user.currentUser &&
                 <ul>
-                    <li onClick={handleSignOut}>Logout</li>
                     <li onClick={() => history.push('/my-account')}>My Account</li>
+                    <li onClick={() => history.push('/cards')}>Cards</li>
+                    <li onClick={() => history.push('/pokedex')}>Pokedex</li>
+                    <li onClick={() => history.push('/play')}>Play</li>
+                    <li onClick={handleSignOut}>Logout</li>
                 </ul>
             }
             

@@ -11,6 +11,7 @@
     background-color: #3d7dca;
     display: flex;
     flex-wrap: wrap;
+    box-sizing: border-box;
     border: 5px inset black;
     width: 90%;
     padding: 20px;
@@ -55,4 +56,11 @@
 
 .Search {
     margin-bottom: 20px;
+}
+
+
+@media screen and (max-width: 600px) {
+    .Search {
+        text-align: center;
+    }
 }

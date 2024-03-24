@@ -16,6 +16,7 @@
     width: 100vw;
     height: 200vh;
     position: fixed;
+    z-index: 20;
 }
 .Navbar a {
     color: white;
@@ -51,6 +52,7 @@
     position: absolute;
     left: -40px;
     bottom: 30px;
+    z-index: 21;
 }
 
 .Navbar ul {
@@ -72,3 +74,79 @@
     margin-left: -1.5em;
 }
 
+@media screen and (max-width: 500px) {
+    .Navbar {
+        display: flex;
+        background-color: #3B4CCA;
+        height: 110px;
+        width: 100%;
+        border: 0;
+        border-radius: 0;
+        border-bottom: 10px;
+        padding: 0;
+        margin: 0;
+    }
+    .Navbar .account .DropdownMenu {
+        width: 190px;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        left: -120px;
+        bottom: 60px;
+    }
+    
+    .overlay {
+        background-color: rgba(0,0,0,.3);
+        width: 100%;
+        height: 200vh;
+        position: fixed;
+    }
+    .Navbar a {
+        color: white;
+        font-size: 26px;
+        text-decoration: none;
+        margin: 30px;
+    }
+    .Navbar div {
+        color: white;
+        font-size: 26px;
+        text-decoration: none;
+        margin: 0;
+    }
+    
+    .Navbar .account {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+    .Navbar .account:hover {
+        cursor: pointer;
+    }
+    .Navbar .account span {
+        padding-right: 5px;
+    }
+    .Navbar .account img {
+        width: 20px;
+    }
+    
+    
+    .Navbar ul {
+        position: absolute;
+        margin: 0;
+        top: 80px; 
+        left: 0;
+        background-color: #f0f0f0;
+        color: #222224;
+        border: 4px solid #f00000;
+        border-radius: 10px;
+    }
+    .Navbar ul:hover {
+        cursor: pointer;
+    }
+    .Navbar ul li {
+        padding: 5px 10px;
+        list-style-type: none;
+        margin-left: -1.5em;
+    }
+    
+}
