@@ -26,21 +26,21 @@ export default function UserStats() {
                     <p>{user.currentUser?.losses}</p>
                 </div>
             </div>
+
             <h1>My Items</h1>
-            <div className='my-items'>
+            <ul className='my-items'>
                 {user.currentItems.map(item => {
                     return (
-                        <ul key={item.item_id}>
-                            <li className='item'>
-                                <p className='item-name'>{capitalize(item.item_name)}</p>
-                                <p>{item.item_desc}</p>
-                                <p>Quantity: {item.bagIdArr.length}</p>
-                            </li>
-                        </ul>
+                        <li className='item' key={item.item_id}>
+                            <p className='item-name'>{capitalize(item.item_name)}</p>
+                            <p>{item.item_desc}</p>
+                            <p>Quantity: {item.bagIdArr.length}</p>
+                        </li>
                     )
                 })}
-            </div>
-            <h1 className='pokemon-header'>My Pokemon</h1>
+            </ul>
+
+            <h1>My Pokemon</h1>
             {user.currentPokemon?.length > 5 // if user has chosen starter, then show their Pokemon
             ?
             <ul className='pokemon-list'>
