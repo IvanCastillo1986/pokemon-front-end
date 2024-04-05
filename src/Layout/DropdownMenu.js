@@ -38,6 +38,8 @@ export default function DropdownMenu({ handleAccountClick }) {
             
             {!user.currentUser &&
                 <ul>
+                    <li onClick={() => history.push('/cards')}>Cards</li>
+                    <li onClick={() => history.push('/pokedex')}>Pokedex</li>
                     <li onClick={() => history.push('/login')}>Login</li>
                     <li onClick={() => history.push('/register')}>Register</li>
                 </ul>
