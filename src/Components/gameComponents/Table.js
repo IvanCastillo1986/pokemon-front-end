@@ -5,6 +5,7 @@ import { calculateDmg, applyEffect } from '../../Helper/combatFunctions'
 import BattleCard from './BattleCard'
 import Menu from './Menu'
 
+import BattleScreen from './BattleScreen'
 
 
 
@@ -212,6 +213,8 @@ export default function Table({
                 <p className='hp-display'>HP: {enemyPokemon.remaining_hp}/{enemyPokemon.hp}</p>
                 <BattleCard pokemon={enemyPokemon} />
             </div>
+
+            {/* <BattleScreen testPokemon={[myPokemon, enemyPokemon]} /> */}
         </div>
     )
 }

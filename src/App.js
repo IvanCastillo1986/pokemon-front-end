@@ -20,8 +20,10 @@ import Account from './Pages/authPages/account/Account'
 import LogIn from './Pages/authPages/logIn/LogIn'
 import LogOut from './Pages/authPages/logOut/LogOut'
 import Register from './Pages/authPages/register/Register'
+import BattleScreen from './Components/gameComponents/BattleScreen'
 import FourOFour from './Pages/FourOFour'
 import NetworkError from './Pages/NetworkError'
+import Loading from './Components/authComponents/loading/Loading'
 
 
 
@@ -33,8 +35,18 @@ export default function App() {
   const sessionUser = JSON.parse(sessionStorage.getItem('user')) || {}
   const [user, setUser] = useState(sessionUser)
   
+  const [testPokemon, setTestPokemon] = useState([])
+  useEffect(() => {
+    const testPokemonArr = []
+    axios.get(`https://pokeapi.co/api/v2/pokemon/${9}/`)
+    .then((res) => testPokemonArr.push(res.data))
+    axios.get(`https://pokeapi.co/api/v2/pokemon/${181}/`)
+    .then((res) => testPokemonArr.push(res.data))
+    setTestPokemon(testPokemonArr)
+  }, [])
   
-  const numOfPokemon = 151;
+  
+  const numOfPokemon = 21;
   useEffect(() => {
     
     // For some reason, I can't benchmark this IIFE(Immediately Invoked Function Expression) function
@@ -65,9 +77,9 @@ export default function App() {
           
           pokemonArr.push(pokemon)
         })
-        
+        console.log(pokemonArr)
         setPokemon(pokemonArr)
-      })
+      }).catch(err => console.log('Error in App getting pokemon', err))
   
     })();
 
@@ -77,6 +89,7 @@ export default function App() {
     sessionStorage.setItem('user', JSON.stringify(user))
   }, [sessionUser])
 
+
   return (
     <div className='App'>
       <UserContext.Provider value={{user, setUser}}>
@@ -84,8 +97,9 @@ export default function App() {
 
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route exact path="/battle-screen" render={() => pokemon.length > 0 ? <BattleScreen testPokemon={testPokemon} /> : <Loading />} />
           <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
-          <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />          
+          <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
           <Route path="/play" render={
             () => Object.keys(user).length === 0 ? 
             <LogOut />

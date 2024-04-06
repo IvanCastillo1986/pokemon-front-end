@@ -1,0 +1,96 @@
+.BattleScreen {
+    width: 90%;
+    height: 80vh;
+    background-color: #f6eae0;
+    border: 1px solid black;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    overflow: hidden;
+}
+.BattleScreen .pokename {
+
+}
+.BattleScreen .pokelvl {
+    font-weight: bold;
+}
+.BattleScreen .pokehp {
+
+}
+
+
+/* ROW 1 */
+.BattleScreen .top-section {
+    grid-column: 1/3;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.BattleScreen .player2-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.BattleScreen .sprite-container-p2 {
+    position: relative;
+}
+.BattleScreen .player2-sprite {
+    width: 40%;
+    padding: 0;
+}
+/* ------------------------- */
+
+/* ROWS 2 & 3 */
+.BattleScreen .middle-section {
+    grid-row: 2/3;
+    grid-column: 1/3;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 10px solid red;
+    box-sizing: border-box;
+}
+.BattleScreen .sprite-container-p1 {
+    position: relative;
+}
+.BattleScreen .player1-sprite {
+    width: 200px;
+    position: absolute;
+    top: -50px;
+}
+.BattleScreen .player1-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* ------------------------- */
+
+/* ROW 3 */
+.BattleScreen .bottom-section {
+    grid-row: 3/4;
+    grid-column: 1/3;
+    margin: 1%;
+    border: 5px solid blue;
+    box-sizing: border-box;
+    z-index: 1;
+}
+.BattleScreen .menu {
+    background-color: #f6eae0;
+    border: 5px double black;
+    border-radius: 5px;
+    text-align: center;
+    height: 100%;
+    z-index: 1;
+}
+
+/*
+The screen size will shrink with percentage total.
+
+Pokemon1 will be back_sprite, bottom left.
+HP/LVL will be bottom right.
+
+Pokemon2 will be front_sprite, top right.
+HP/LVL will be top left.
+
+Menu will be bottom of screen.
+
+*/
