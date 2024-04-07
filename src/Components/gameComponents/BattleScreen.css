@@ -1,7 +1,7 @@
 .BattleScreen {
     width: 95%;
     max-width: 800px;
-    height: 90vh;
+    padding-bottom: 10px;
     background-color: #f6eae0;
     border: 3px solid #0f380f;
     border-radius: 2px;
@@ -44,11 +44,13 @@
 
 
 
-
 /* ROW 1 */
 .BattleScreen .top-section {
     width: 100%;
     display: flex;
+}
+.BattleScreen .sprite-container-p2 {
+    margin: 0 auto;
 }
 .BattleScreen .player2-sprite {
     width: 200px;
@@ -56,7 +58,7 @@
 /* ------------------------- */
 
 
-/* ROWS 2 & 3 */
+/* ROW 2 */
 .BattleScreen .middle-section {
     width: 100%;
     display: flex;
@@ -99,9 +101,6 @@
 }
 
 
-
-
-
 .script {
     display: flex;
     justify-content: center;
@@ -141,147 +140,6 @@
     cursor: pointer;
 }
 
-/* 
-.BattleScreen .menu {
-    width: 80%;
-    height: 180px;
-    background-color: #cadc9f;
-    color: #081820;
-    font-size: 20px;
-    margin: auto;
-    padding: 10px;
-    border: 3px solid #081820;
-    border-top: 5px solid #081820;
-    border-radius: 10px;
-    position: relative;
-}
-.BattleScreen .menu > * {
-    height: 100%;
-} 
-*/
-/*  ------------------------  */
-
-@media screen and (max-width: 600px) {
-    /* .BattleScreen {
-        width: 95%;
-    } */
-    .BattleScreen .menu {
-        /* width: 80%; */
-        height: 120px;
-        font-size: 1.1em;
-    }
-    /* .BattleScreen .middle-section {
-        margin-bottom: 10px;
-        display: flex;
-    } */
-    /* .BattleScreen .player-data > hr {
-        width: 70px;
-    } */
-    .BattleScreen .player-data {
-        font-size: .8em;
-    }
-    /* .BattleScreen .player-data > p {
-        margin: 0;
-    } */
-    /* .BattleScreen .sprite-container-p1 {
-        width: 40%;
-        margin-left: 20px;
-    } */
-    .BattleScreen .player1-sprite {
-        margin-left: 10%;
-    }
-}
-
-
-@media screen and (max-width: 400px) {
-    /* .BattleScreen .player-data {
-        width: 50%;
-    } */
-    /* .BattleScreen .player-data > p {
-        margin: 0;
-    } */
-    /* .BattleScreen .sprite-container-p1 {
-        width: 160px;
-    } */
-    /* .BattleScreen .player1-sprite {
-        width: 100%;
-    } */
-    /* .BattleScreen .sprite-container-p2 {
-        width: 30%;
-    } */
-    /* .BattleScreen .player2-sprite {
-        width: 180px;
-    } */
-
-    /* .BattleScreen .menu {
-        width: 300px;
-        height: 150px;
-        background-color: #cadc9f;
-        color: #081820;
-        font-family: 'PKMNRBYGSC', monospace;
-        font-size: 1em;
-        margin: auto 0;
-        padding: 0;
-        border: 3px solid #081820;
-        border-top: 5px solid #081820;
-        border-radius: 10px;
-        position: relative;
-    } */
-    /* .BattleScreen .menu > * {
-        height: 100%;
-    } */
-    /* .BattleScreen .bottom-section {
-        width: fit-content;
-    } */
-}
-@media screen and (max-width: 420px) {
-    /* .BattleScreen .player-data {
-        width: 50%;
-        margin-left: 10px;
-    } */
-    /* .BattleScreen .player-data > p {
-        margin: 0;
-        font-size: .9em;
-    } */
-    /* .BattleScreen .sprite-container-p1 {
-        width: 130px;
-    } */
-    /* .BattleScreen .player1-sprite {
-        margin-bottom: -10px;
-        width: 100%;
-        position: absolute;
-        left: -10px;
-        top: 50px;
-    } */
-    /* .BattleScreen .sprite-container-p2 {
-        width: 30%;
-    } */
-    /* .BattleScreen .player2-sprite {
-        position: absolute;
-        left: 0px;
-        width: 130px;
-    } */
-    /* .BattleScreen .bottom-section {
-        margin-top: -10px;
-    } */
-    /* .BattleScreen .menu {
-        width: 280px;
-        height: 150px;
-        background-color: #cadc9f;
-        color: #081820;
-        font-family: 'PKMNRBYGSC', monospace;
-        font-size: 1em;
-        margin: auto 0;
-        padding: 0;
-        border: 3px solid #081820;
-        border-top: 5px solid #081820;
-        border-radius: 10px;
-        position: relative;
-    } */
-}
-
-
-/*  ------------------------  */
 
 .fightMenu {
     height: 100%;
@@ -376,18 +234,18 @@
 .itemOption .name {
     font-size: .8em;
     text-transform: uppercase;
-    grid-column-start: 4;
-    grid-column-end: 8;
+    grid-column-start: 5;
+    grid-column-end: 11;
 }
 .itemOption .quantity {
     font-size: .7em;
-    grid-column-start: 6;
+    grid-column-start: 7;
     grid-row-start: 2;
 }
 .itemMenu .backBtn {
     position: absolute;
-    left: 40px;
-    bottom: 20px;
+    left: 20px;
+    bottom: 15px;
 }
 
 .noItemsDiv span:first-of-type {
@@ -403,3 +261,55 @@
     bottom: 20px;
 } 
 
+/*  ------------------------  */
+
+@media screen and (max-width: 600px) {
+    .BattleScreen .menu {
+        height: 120px;
+        font-size: 1.1em;
+    }
+    .BattleScreen .player-data {
+        font-size: .8em;
+    }
+    .BattleScreen .player1-sprite {
+        margin-left: 10%;
+    }
+}
+
+
+@media screen and (max-width: 450px) {
+    .BattleScreen .player-data > p {
+        margin: 0;
+    }
+    .BattleScreen .sprite-container-p1 {
+        width: 50%;
+    }
+    .BattleScreen .player1-sprite {
+        width: 100%;
+        margin-left: 2%;
+    }
+    .BattleScreen .sprite-container-p2 {
+        width: 50%;
+    }
+    .BattleScreen .player2-sprite {
+        width: 100%  ;
+    }
+
+    .BattleScreen .menu {
+        font-size: 1.1em;
+        width: 82vw;
+    }
+    .switchOption {
+        grid-template-columns: 140px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 18px 18px;
+    }
+    .switchOption > .L {
+        grid-column: 3 / 5;
+    }
+    .switchOption > .lvl {
+        grid-column: 8 / 11;
+    }
+    .switchOption > .hp {
+        grid-column: 3 / 11;
+    }
+}
