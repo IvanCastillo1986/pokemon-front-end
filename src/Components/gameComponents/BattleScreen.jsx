@@ -1,46 +1,56 @@
 import React, { useState } from 'react'
 
+import Menu from './Menu'
 import './BattleScreen.css'
 
 
 
 
-export default function BattleScreen({ testPokemon }) {
+export default function BattleScreen({ myPokemon, enemyPokemon,
+    menuType, setMenuType, script, myItems, handleUseItem,
+    handleClickMoveBtn, myBench, handlePokemonSwitch, handleClickPokemonAfterKO
+}) {
 
-    const [pokemon1, setPokemon1] = useState(testPokemon[1])
-    const [pokemon2, setPokemon2] = useState(testPokemon[0])
-
-    console.log(pokemon1)
-    console.log(pokemon2)
-
+    // console.log(myPokemon)
+    // console.log(enemyPokemon)
 
     return (
         <div className='BattleScreen'>
             <div className='top-section'>
-                <div className='player2-data'>
-                    <p className='pokename'>BLASTOISE</p>
-                    <p className='pokelvl'>L77</p>
-                    <p className='pokehp'>88/291</p>
+                <div className='player-data'>
+                    <p className='player'>Player 2</p>
+                    <p className='pokename'>{enemyPokemon.name}</p>
+                    <hr />
+                    <p className='pokelvl'>:L{enemyPokemon.lvl}</p>
+                    <p className='pokehp'>{enemyPokemon.remaining_hp}/{enemyPokemon.hp}</p>
                 </div>
                 <div className='sprite-container-p2'>
-                    <img className='player2-sprite' src={pokemon2.sprites.versions['generation-iv']['diamond-pearl'].front_default}/>
-                    {/* <img className='player2-sprite' src={pokemon2.front_img}/> */}
+                    <img className='player2-sprite' src={enemyPokemon.front_img}/>
                 </div>
             </div>
+
             <div className='middle-section'>
                 <div className='sprite-container-p1'>
-                    <img className='player1-sprite' src={pokemon1.sprites.versions['generation-iv']['diamond-pearl'].back_default}/>
-                    {/* <img className='player1-sprite' src={pokemon1.rear_img}/> */}
+                    <img className='player1-sprite' src={myPokemon.rear_img}/>
                 </div>
-                <div className='player1-data'>
-                    <p className='pokename'>AMPHAROS</p>
-                    <p className='pokelvl'>L63</p>
-                    <p className='pokehp'>222/222</p>
+                <div className='player-data'>
+                    <p className='player'>Player 1</p>
+                    <p className='pokename'>{myPokemon.name}</p>
+                    <hr />
+                    <p className='pokelvl'>:L{myPokemon.lvl}</p>
+                    <p className='pokehp'>{myPokemon.remaining_hp}/{myPokemon.hp}</p>
                 </div>
             </div>
+
             <div className='bottom-section'>
-                <div className='menu'>Menu</div>
+                <Menu 
+                    menuType={menuType} setMenuType={setMenuType}
+                    script={script} myItems={myItems} handleUseItem={handleUseItem} myPokemon={myPokemon} 
+                    handleClickMoveBtn={handleClickMoveBtn} myBench={myBench} 
+                    handlePokemonSwitch={handlePokemonSwitch} handleClickPokemonAfterKO={handleClickPokemonAfterKO}
+                />
             </div>
         </div>
     )
+
 }

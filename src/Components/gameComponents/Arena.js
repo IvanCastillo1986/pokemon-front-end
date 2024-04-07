@@ -287,8 +287,7 @@ export default function Arena({ yourDeck, opponentDeck }) {
 
             <div className='game'>
                 <div className='playerDiv'>
-                    <h2>Player 1</h2>
-                    <h2>Player 2</h2>
+                    {/* <h2>Defeat the other trainer!</h2> */}
                 </div>
 
                 <Table myPokemon={myPokemon} setMyPokemon={setMyPokemon}

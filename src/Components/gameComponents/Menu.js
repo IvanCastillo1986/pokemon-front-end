@@ -17,6 +17,8 @@ export default function Menu({
     const menuClick = (menuType) => {
         setMenuType(menuType)
     }
+    console.log(script)
+    console.log(menuType)
 
     const renderItemMenu = () => {
         if (myItems.length > 0) {
@@ -47,7 +49,7 @@ export default function Menu({
 
 
     return (
-        <div className='screen'>
+        <div className='menu'>
 
             {menuType === 'script' &&
                 <Script script={script} setMenuType={setMenuType} />

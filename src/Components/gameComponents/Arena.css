@@ -33,6 +33,14 @@
     justify-content: space-around;
     border: 3px solid #0f380f;
     border-radius: 10px;
+    padding: 20px 0;
+}
+@media screen and (max-width: 600px) {
+    .Table {
+        width: 100%;
+        border: none;
+        background-color: #8bac0f;
+    }
 }
 
 .hp-display {
@@ -62,14 +70,72 @@
     flex-direction: column;
 }
 
+.player-header {
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.Bench {
+    background-color: #0f380F;
+    color: #9bbc0f;
+    margin: 30px auto;
+    width: 95%;
+    border: 3px solid #0f380f;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.player-benches {
+    display: flex;
+    justify-content: space-around;
+}
+.player1Bench {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.player2Bench {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.Discard {
+    background-color: #9bbc0f;
+    color: #306230;
+    width: 95%;
+    margin: auto;
+    border: 3px solid #306230;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.Discard h2 {
+    color: #0f380f;
+}
+.Discard h3 {
+    color: #0f380f;
+}
+
+
+
+
+
+
+
+
+
+
+/* 
 .backBtn {
     font-weight: bold;
 }
 
 .Table .screen {
-    /* background-color: rgb(237, 228, 228); */
     background-color: #cadc9f;
-    /* color: black; */
     color: #081820;
 
     font-family: 'PKMN RBYGSC' monospace;
@@ -84,7 +150,7 @@
     position: relative;
     z-index: 2;
 }
-/* .Table .screen::before {
+.Table .screen::before {
     content: '';
     background-color: rgb(237, 228, 228);
     width: 544px;
@@ -97,7 +163,7 @@
     top: -9.5px;
     left: -10px;
     z-index: 1;
-} */
+}
 .Table .screen > * {
     height: 100%;
 }
@@ -140,7 +206,6 @@
 }
 .backBtn:hover {
     cursor: pointer;
-    /* width: fit-content; */
 }
 
 .fightMenu {
@@ -159,7 +224,9 @@
 .fightMenu .second-move {
     grid-row: 2 / 3;
 }
+*/
 /* selects all spans except the back button */
+/*
 .fightMenu span:not(:last-child) {
     text-transform: uppercase;
 }
@@ -259,43 +326,7 @@
     position: absolute;
     left: 40px;
     bottom: 20px;
-}
+} 
 
+*/
 
-.Bench {
-    background-color: #0f380F;
-    color: #9bbc0f;
-    margin: 30px auto;
-    width: 95%;
-    border: 3px solid #0f380f;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-around;
-}
-.player1Bench {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-.player2Bench {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.Discard {
-    background-color: #9bbc0f;
-    color: #306230;
-    width: 95%;
-    margin: auto;
-    border: 3px solid #306230;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-around;
-}
-.Discard h2 {
-    color: #0f380f;
-}
-.Discard h3 {
-    color: #0f380f;
-}

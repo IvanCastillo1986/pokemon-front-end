@@ -77,7 +77,7 @@ export default function App() {
           
           pokemonArr.push(pokemon)
         })
-        console.log(pokemonArr)
+        // console.log(pokemonArr)
         setPokemon(pokemonArr)
       }).catch(err => console.log('Error in App getting pokemon', err))
   

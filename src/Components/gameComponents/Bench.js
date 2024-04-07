@@ -22,18 +22,22 @@ export default function Bench({ myBenchProp, enemyBenchProp }) {
     return (
         myBench &&
         <div className='Bench'>
-            <div className='player1Bench'>
-                {myBench.map((pokemon, i) => {
-                    return <p key={i}>{capitalize(pokemon.name)}: {pokemon.remaining_hp} HP</p>
-                })}
-            </div>
-            
             <h2>Bench</h2>
-            
-            <div className='player2Bench'>
-                {enemyBench.map((pokemon, i) => {
-                    return <p key={i}>{capitalize(pokemon.name)}: {pokemon.remaining_hp} HP</p>
-                })}
+
+            <div className='player-benches'>
+                <div className='player1Bench'>
+                    <p className='player-header'>Player 1</p>
+                    {myBench.map((pokemon, i) => {
+                        return <p key={i}>{capitalize(pokemon.name)}: {pokemon.remaining_hp} HP</p>
+                    })}
+                </div>
+                
+                <div className='player2Bench'>
+                    <p className='player-header'>Player 2</p>
+                    {enemyBench.map((pokemon, i) => {
+                        return <p key={i}>{capitalize(pokemon.name)}: {pokemon.remaining_hp} HP</p>
+                    })}
+                </div>
             </div>
         </div>
         

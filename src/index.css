@@ -5,9 +5,9 @@ body {
 }
 
 @font-face {
-    font-family: "PKMN-RBYGSC";
-    src: local("PKMN-RBYGSC"),
-        url("./Fonts/PKMN-RBYGSC.ttf"),
+    font-family: "PKMNRBYGSC";
+    src: local("PKMNRBYGSC"),
+        url("./Fonts/PKMNRBYGSC.ttf"),
         format("truetype");
 }
 @font-face {
