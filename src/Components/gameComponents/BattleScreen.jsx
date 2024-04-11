@@ -11,8 +11,7 @@ export default function BattleScreen({ myPokemon, enemyPokemon,
     handleClickMoveBtn, myBench, handlePokemonSwitch, handleClickPokemonAfterKO
 }) {
 
-    // console.log(myPokemon)
-    // console.log(enemyPokemon)
+
 
     return (
         <div className='BattleScreen'>

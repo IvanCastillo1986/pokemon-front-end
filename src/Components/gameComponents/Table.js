@@ -2,9 +2,6 @@ import React from 'react'
 import { handleAddToSharedExp, handleRemoveFromSharedExp } from '../../Helper/expFunctions'
 import { calculateDmg, applyEffect } from '../../Helper/combatFunctions'
 
-import BattleCard from './BattleCard'
-import Menu from './Menu'
-
 import BattleScreen from './BattleScreen'
 
 
@@ -193,63 +190,14 @@ export default function Table({
 
     return (
         <div className='Table'>
-            
+            <h1>Defeat trainer Red!</h1>
+
             <BattleScreen myPokemon={myPokemon} enemyPokemon={enemyPokemon}
                 menuType={menuType} setMenuType={setMenuType}
                 script={script} myItems={myItems} handleUseItem={handleUseItem}
                 handleClickMoveBtn={handleClickMoveBtn} myBench={myBench}
                 handlePokemonSwitch={handlePokemonSwitch} handleClickPokemonAfterKO={handleClickPokemonAfterKO}
             />
-
-            {/* <div className='BattleScreen'>
-            <div className='top-section'>
-                <div className='player2-data'>
-                    <p className='pokename'>{enemyPokemon.name}</p>
-                    <p className='pokelvl'>L77</p>
-                    <p className='pokehp'>88/291</p>
-                </div>
-                <div className='sprite-container-p2'>
-                    <img className='player2-sprite' src={enemyPokemon.front_img}/>
-                </div>
-            </div>
-            <div className='middle-section'>
-                <div className='sprite-container-p1'>
-                    <img className='player1-sprite' src={myPokemon.rear_img}/>
-                </div>
-                <div className='player1-data'>
-                    <p className='pokename'>AMPHAROS</p>
-                    <p className='pokelvl'>L63</p>
-                    <p className='pokehp'>222/222</p>
-                </div>
-            </div>
-            <div className='bottom-section'>
-                <Menu 
-                menuType={menuType} setMenuType={setMenuType}
-                script={script} myItems={myItems} handleUseItem={handleUseItem} myPokemon={myPokemon} 
-                handleClickMoveBtn={handleClickMoveBtn} myBench={myBench} 
-                handlePokemonSwitch={handlePokemonSwitch} handleClickPokemonAfterKO={handleClickPokemonAfterKO}
-                />
-            </div>
-        </div> */}
-
-            {/* <div className='player1Table'>
-                <p className='level-display'>Level: {myPokemon.lvl}</p>
-                <p className='hp-display'>HP: {myPokemon.remaining_hp}/{myPokemon.hp}</p>
-                <BattleCard pokemon={myPokemon} />
-            </div>
-            
-            <Menu 
-                menuType={menuType} setMenuType={setMenuType}
-                script={script} myItems={myItems} handleUseItem={handleUseItem} myPokemon={myPokemon} 
-                handleClickMoveBtn={handleClickMoveBtn} myBench={myBench} 
-                handlePokemonSwitch={handlePokemonSwitch} handleClickPokemonAfterKO={handleClickPokemonAfterKO}
-            />
-
-            <div className='player2Table'>
-                <p className='level-display'>Level: {enemyPokemon.lvl}</p>
-                <p className='hp-display'>HP: {enemyPokemon.remaining_hp}/{enemyPokemon.hp}</p>
-                <BattleCard pokemon={enemyPokemon} />
-            </div> */}
         </div>
     )
 }

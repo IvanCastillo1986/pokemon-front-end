@@ -35,18 +35,8 @@ export default function App() {
   const sessionUser = JSON.parse(sessionStorage.getItem('user')) || {}
   const [user, setUser] = useState(sessionUser)
   
-  const [testPokemon, setTestPokemon] = useState([])
-  useEffect(() => {
-    const testPokemonArr = []
-    axios.get(`https://pokeapi.co/api/v2/pokemon/${9}/`)
-    .then((res) => testPokemonArr.push(res.data))
-    axios.get(`https://pokeapi.co/api/v2/pokemon/${181}/`)
-    .then((res) => testPokemonArr.push(res.data))
-    setTestPokemon(testPokemonArr)
-  }, [])
   
-  
-  const numOfPokemon = 21;
+  const numOfPokemon = 151;
   useEffect(() => {
     
     // For some reason, I can't benchmark this IIFE(Immediately Invoked Function Expression) function
@@ -97,7 +87,7 @@ export default function App() {
 
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/battle-screen" render={() => pokemon.length > 0 ? <BattleScreen testPokemon={testPokemon} /> : <Loading />} />
+          <Route exact path="/battle-screen" render={() => pokemon.length > 0 ? <BattleScreen /> : <Loading />} />
           <Route exact path="/cards" render={() => <CardsPage pokemon={pokemon} />} />
           <Route exact path="/pokedex" render={() => <Pokedex pokemon={pokemon} />} />
           <Route path="/play" render={
